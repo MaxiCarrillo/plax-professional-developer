@@ -2,6 +2,8 @@ package com.maxdev.plaxbackend.modules.Stay.Service;
 
 import com.maxdev.plaxbackend.modules.Exception.ResourceNotFoundException;
 import com.maxdev.plaxbackend.modules.Stay.DTO.StayDTO;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 import java.util.Optional;
@@ -14,7 +16,7 @@ public interface IStayService {
 
     Optional<StayDTO> findByName(String name);
 
-    List<StayDTO> findAll();
+    Page<StayDTO> findAll(Pageable pageable);
 
     StayDTO update(StayDTO stayDTO) throws ResourceNotFoundException;
 

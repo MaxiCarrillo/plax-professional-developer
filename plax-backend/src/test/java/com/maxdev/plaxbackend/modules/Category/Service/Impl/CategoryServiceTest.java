@@ -78,7 +78,6 @@ class CategoryServiceTest {
         Optional<CategoryDTO> categoryDTO = categoryService.findByName("Departamentos");
         categoryDTO.ifPresent(category -> {
             assertEquals("Departamentos", categoryService.delete(category.getId()).getName());
-//            assertTrue(categoryService.findAll().isEmpty());
         });
     }
 }
