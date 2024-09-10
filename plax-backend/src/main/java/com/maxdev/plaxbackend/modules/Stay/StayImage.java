@@ -20,8 +20,4 @@ public class StayImage {
     private UUID id;
     @NotNull(message = "Url cannot be null")
     private String url;
-    @ManyToOne
-    @JoinColumn(name = "id_stay")
-    private Stay stay;
-
 }

@@ -7,6 +7,7 @@ import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
 
 public interface IStayService {
@@ -17,6 +18,8 @@ public interface IStayService {
     Optional<StayDTO> findByName(String name);
 
     Page<StayDTO> findAll(Pageable pageable);
+
+    public Set<StayDTO> getRandomStays(int size);
 
     StayDTO update(StayDTO stayDTO) throws ResourceNotFoundException;
 

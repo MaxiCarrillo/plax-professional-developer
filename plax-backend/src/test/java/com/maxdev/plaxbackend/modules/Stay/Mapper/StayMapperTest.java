@@ -32,12 +32,10 @@ class StayMapperTest {
                 StayImage.builder()
                         .id(UUID.randomUUID())
                         .url("imagen1.jpg")
-                        .stay(null)
                         .build(),
                 StayImage.builder()
                         .id(UUID.randomUUID())
                         .url("imagen2.jpg")
-                        .stay(null)
                         .build());
         stay = Stay.builder()
                 .id(UUID.randomUUID())

@@ -25,7 +25,7 @@ public class Stay {
     private String name;
     private String description;
     @NotNull(message = "Images cannot be null")
-    @OneToMany(mappedBy = "stay", cascade = CascadeType.ALL)
+    @OneToMany(cascade = CascadeType.ALL)
     private Set<StayImage> images;
     @NotNull(message = "Price cannot be null")
     @PositiveOrZero(message = "Price must be zero or positive")

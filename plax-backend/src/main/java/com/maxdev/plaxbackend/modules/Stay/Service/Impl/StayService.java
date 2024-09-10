@@ -12,9 +12,18 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import java.util.Optional;
-import java.util.UUID;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
+import java.time.format.DateTimeFormatter;
+import java.util.*;
+
+import static java.time.LocalDateTime.now;
 
 @Log4j2
 @Service
@@ -40,7 +49,6 @@ public class StayService implements IStayService {
                     throw new IllegalArgumentException("Stay with name: " + stayDTO.getName() + " already exists");
                 });
         Stay stayToSave = StayMapper.INSTANCE.dtoToEntity(stayDTO);
-        System.out.println(stayToSave.getImages());
         stayRepository.save(stayToSave);
         log.info("Stay saved: {}", stayToSave.getName());
         return StayMapper.INSTANCE.entityToDto(stayToSave);
@@ -70,6 +78,19 @@ public class StayService implements IStayService {
 
     @Override
     @Transactional
+    public Set<StayDTO> getRandomStays(int size) {
+        log.debug("Finding random stays with size: {}", size);
+        Set<StayDTO> randomStays = new HashSet<>();
+        List<Stay> stays = stayRepository.findAll();
+        if (stays.size() < size) size = stays.size();
+        Random random = new Random();
+        while (randomStays.size() < size)
+            randomStays.add(StayMapper.INSTANCE.entityToDto(stays.get(random.nextInt(stays.size()))));
+        return randomStays;
+    }
+
+    @Override
+    @Transactional
     public StayDTO update(StayDTO stayDTO) throws ResourceNotFoundException {
         stayRepository.findById(stayDTO.getId())
                 .orElseThrow(() -> new ResourceNotFoundException("Stay not found with id: " + stayDTO.getId()));
@@ -87,5 +108,26 @@ public class StayService implements IStayService {
 
         stayRepository.delete(stayToDelete);
         return StayMapper.INSTANCE.entityToDto(stayToDelete);
+    }
+
+    public Set<String> saveImages(MultipartFile[] images) throws IOException {
+        Set<String> imageNames = new HashSet<>();
+        String uploadDir = "uploads/stays";
+        Path uploadPath = Paths.get(uploadDir);
+        if (!Files.exists(uploadPath)) {
+            Files.createDirectories(uploadPath);
+        }
+        for (MultipartFile image : images) {
+            String timestamp = now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss"));
+            String fileName = timestamp + "_" + image.getOriginalFilename();
+            Path filePath = uploadPath.resolve(fileName);
+            Files.copy(image.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
+            imageNames.add(fileName);
+        }
+        return imageNames;
+    }
+
+    public String getBaseUrl() {
+        return ServletUriComponentsBuilder.fromCurrentContextPath().path("/api/stays/").toUriString();
     }
 }

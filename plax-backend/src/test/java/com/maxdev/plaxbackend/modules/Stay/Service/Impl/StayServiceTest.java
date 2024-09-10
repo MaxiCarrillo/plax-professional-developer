@@ -102,7 +102,6 @@ class StayServiceTest {
         Optional<StayDTO> stayDTO = stayService.findByName("Departamento");
         stayDTO.ifPresent(stay -> {
             assertEquals("Departamento", stayService.delete(stay.getId()).getName());
-//            assertTrue(stayService.findAll().isEmpty());
         });
     }
 }
