@@ -1,0 +1,28 @@
+a:has(> .categoryCard__container) {
+    text-decoration: none;
+    color: var(--color-base-800);
+    transition: transform .2s ease-in-out;
+
+    &:hover{
+        transform: translateY(-.2rem);
+    }
+}
+
+.categoryCard__container {
+    & figure {
+        aspect-ratio: 1/1;
+        width: 100%;
+        max-width: 200px;
+
+        &>img {
+            border-radius: 1rem;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+    }
+
+    & > h3{
+        padding-inline: .5rem;
+    }
+}

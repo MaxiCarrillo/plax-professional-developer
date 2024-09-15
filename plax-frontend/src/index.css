@@ -1,6 +1,13 @@
 :root {
   --color-primary-100: hsl(25 100% 97%);
+  --color-primary-200: hsl(25 100% 87%);
+  --color-primary-300: hsl(25 100% 77%);
+  --color-primary-400: hsl(25 100% 74%);
+  --color-primary-500: hsl(25 100% 70%);
+  --color-primary-600: hsl(25 100% 68%);	
   --color-primary-700: hsl(25 100% 62%);
+  --color-primary-800: hsl(25 100% 52%);
+  --color-primary-900: hsl(25 100% 42%);
 
   --color-base-0: hsl(223 14% 95%);
   --color-base-100: hsl(223 14% 95%);
@@ -11,6 +18,10 @@
   --color-base-700: hsl(223 10% 27%);
   --color-base-800: hsl(223 15% 16%);
   --color-base-900: hsl(223 18% 13%);
+
+  --color-danger-700: hsl(355 75% 53%);
+  --color-danger-800: hsl(355 67% 44%);
+  --color-danger-900: hsl(355 70% 35%);
 }
 
 * {
@@ -44,6 +55,18 @@ body {
   font-weight: 400;
   font-style: normal;
   background-color: var(--color-base-0);
+  color: var(--color-base-900);
+}
+
+form *{
+  font-family: 'Urbanist', sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 400;
+  font-style: normal;
+}
+
+.button:is(button){
+  font-family: 'Urbanist', sans-serif;
 }
 
 .button {
@@ -52,6 +75,7 @@ body {
   border-radius: 8px;
   font-weight: 600;
   text-decoration: none;
+  
 }
 
 .button--secondary {
@@ -75,6 +99,8 @@ body {
 .button--base {
   background-color: var(--color-base-900);
   color: var(--color-primary-100);
+  border-style: none;
+  cursor: pointer;
 
   &:hover {
     background-color: var(--color-base-800);
@@ -86,6 +112,26 @@ body {
 
   &:focus {
     outline: 2px solid var(--color-base-100);
+    outline-offset: 0px;
+  }
+}
+
+.button--primary {
+  background-color: var(--color-primary-700);
+  color: var(--color-primary-100);
+  border-style: none;
+  cursor: pointer;
+
+  &:hover {
+    background-color: var(--color-primary-800);
+  }
+
+  &:active {
+    background-color: var(--color-primary-900);
+  }
+
+  &:focus {
+    outline: 2px solid var(--color-base-900);
     outline-offset: 0px;
   }
 }

@@ -1,12 +1,11 @@
-import { TopMenu } from "./components/TopMenu"
+import { TopMenu, Footer } from "./components"
+import { Home } from "./pages"
+import { Navigation } from "./routes/Navigation"
 
 function App() {
   return (
     <>
-      <TopMenu />
-      <div style={{ height: "200vh" }}>
-        dsadsaddddddddd
-      </div>
+      <Navigation />
     </>
   )
 }
