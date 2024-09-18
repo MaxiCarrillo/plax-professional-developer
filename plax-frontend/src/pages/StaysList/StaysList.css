@@ -1,11 +1,11 @@
 .dashboardList__container {
-    padding-block-start: 2rem;
+    padding-block: 2rem;
     padding-inline-start: 3rem;
     padding-inline-end: 2rem;
     background-color: var(--color-base-200);
 
 
-    & .dashboard__header{
+    & .dashboard__header {
         margin-bottom: 1rem;
     }
 

@@ -10,11 +10,29 @@ a:has(.itemList__container) {
     display: flex;
     justify-content: space-between;
     padding-inline: 1rem;
-    padding-block: 2rem;
+    padding-block: 1rem;
     align-items: center;
+
+    & .itemList__info {
+        flex-shrink: 5;
+    }
+
+    & .itemList__info:nth-child(2) {
+        flex-shrink: 1;
+        flex-basis: 230px;
+
+        & p {
+            width: 100%;
+            max-width: 230px;
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+        }
+    }
 
     & .itemList__actions {
         display: flex;
+        flex-wrap: wrap;
         gap: .5rem;
 
         & button {

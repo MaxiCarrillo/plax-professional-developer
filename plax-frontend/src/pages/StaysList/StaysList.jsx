@@ -1,8 +1,10 @@
 import './StaysList.css';
-import { ItemList } from '../../components';
-import { Link } from 'react-router-dom';
+import { PaginateItems } from '../../components';
+import { useStay } from '../../hooks';
 
 export const StaysList = () => {
+    const { stays, getStays, loading, totalPages } = useStay();
+
     return (
         <main className="dashboardList__container">
             <header className='dashboard__header'>
@@ -10,9 +12,12 @@ export const StaysList = () => {
             </header>
             <button className='button button--primary'>Agregar estancia</button>
             <section className='dashboardList__itemSection'>
-                <Link>
-                    <ItemList />
-                </Link>
+                <PaginateItems
+                    fetchData={getStays}
+                    loading={loading}
+                    data={stays?.data}
+                    totalPages={totalPages}
+                />
             </section>
         </main>
     )

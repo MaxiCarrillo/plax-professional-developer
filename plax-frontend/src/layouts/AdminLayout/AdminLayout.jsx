@@ -28,7 +28,7 @@ export const AdminLayout = ({ children }) => {
                             {routes.map((route, index) => (
                                 <li key={index}>
                                     <NavLink to={route.path}
-                                        className={({isActive}) => {
+                                        className={({ isActive }) => {
                                             return isActive ? 'sidebar__item sidebar__item--active' : 'sidebar__item'
                                         }}>
                                         {route.name}
@@ -40,7 +40,7 @@ export const AdminLayout = ({ children }) => {
                 </section>
                 {children}
             </div>
-            <h1 className='adminLayout__displayMessage'>Debe ingresar desde un dispositivo con una resolución mayor a 768px.</h1>
+            <h1 className='adminLayout__displayMessage'>Debe ingresar desde un dispositivo con una resolución mayor a 1024px.</h1>
         </>
     )
 }

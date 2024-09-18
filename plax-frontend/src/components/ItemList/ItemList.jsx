@@ -1,15 +1,16 @@
 import './ItemList.css';
 
-export const ItemList = () => {
+export const ItemList = ({ data }) => {
+    const { id, name } = data;
     return (
         <article className='itemList__container'>
             <div className='itemList__info'>
                 <p><strong>ID</strong></p>
-                <p>7d27a8d7-f0cd-4352-a7a3-31ce0ef58d44</p>
+                <p>{id}</p>
             </div>
             <div className='itemList__info'>
                 <p><strong>NOMBRE</strong></p>
-                <p>Eliseo departamento</p>
+                <p>{name}</p>
             </div>
             <div className='itemList__actions'>
                 <button>

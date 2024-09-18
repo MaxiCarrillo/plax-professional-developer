@@ -1,4 +1,4 @@
-@media (width >=768px) {
+@media (width >=1024px) {
     .adminLayout__displayMessage {
         display: none;
     }
@@ -77,12 +77,13 @@
     }
 }
 
-@media (width < 768px) {
+@media (width < 1024px) {
     .adminLayout__container {
         display: none;
     }
 
     .adminLayout__displayMessage {
+        padding-inline: 1rem;
         display: flex;
         height: 100vh;
         justify-content: center;
