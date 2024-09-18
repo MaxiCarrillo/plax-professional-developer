@@ -2,6 +2,7 @@ package com.maxdev.plaxbackend.modules.Stay.Controller;
 
 import com.maxdev.plaxbackend.modules.Stay.DTO.StayDTO;
 import com.maxdev.plaxbackend.modules.Stay.Service.Impl.StayService;
+import com.maxdev.plaxbackend.modules.Util.ApiResponse;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
@@ -35,8 +36,8 @@ public class StayController {
     }
 
     @GetMapping
-    public ResponseEntity<List<StayDTO>> getAllStays(@RequestParam(value = "page", defaultValue = "0") int page,
-                                                     @RequestParam(value = "size", defaultValue = "10") int size) {
+    public ResponseEntity<ApiResponse<List<StayDTO>>> getAllStays(@RequestParam(value = "page", defaultValue = "0") int page,
+                                                                  @RequestParam(value = "size", defaultValue = "10") int size) {
         log.debug("Received request to get all stays with page: {} and size: {}", page, size);
         Pageable pageable = PageRequest.of(page, size);
         Page<StayDTO> stays = stayService.findAll(pageable);
@@ -45,7 +46,7 @@ public class StayController {
                 .map(image -> stayService.getBaseUrl() + "images/" + image)
                 .collect(Collectors.toSet())));
         log.info("Returning {} stays", stayDTOS.size());
-        return ResponseEntity.ok(stayDTOS);
+        return ResponseEntity.ok(new ApiResponse<>(HttpStatus.OK.value(), stays.getTotalPages(), stayDTOS, "Stays retrieved successfully"));
     }
 
     @PostMapping(consumes = {"multipart/form-data"})

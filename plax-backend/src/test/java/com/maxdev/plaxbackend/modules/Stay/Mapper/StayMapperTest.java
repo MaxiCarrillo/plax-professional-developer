@@ -4,7 +4,6 @@ import com.maxdev.plaxbackend.modules.Category.Category;
 import com.maxdev.plaxbackend.modules.Stay.DTO.StayDTO;
 import com.maxdev.plaxbackend.modules.Stay.Stay;
 import com.maxdev.plaxbackend.modules.Stay.StayImage;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

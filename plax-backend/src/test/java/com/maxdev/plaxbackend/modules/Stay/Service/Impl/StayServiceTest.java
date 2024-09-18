@@ -3,7 +3,6 @@ package com.maxdev.plaxbackend.modules.Stay.Service.Impl;
 import com.maxdev.plaxbackend.modules.Category.DTO.CategoryDTO;
 import com.maxdev.plaxbackend.modules.Category.Service.Impl.CategoryService;
 import com.maxdev.plaxbackend.modules.Stay.DTO.StayDTO;
-import com.maxdev.plaxbackend.modules.Stay.Stay;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
