@@ -1,5 +1,6 @@
 package com.maxdev.plaxbackend.modules.Stay.Controller;
 
+import com.maxdev.plaxbackend.modules.Exception.ResourceNotFoundException;
 import com.maxdev.plaxbackend.modules.Stay.DTO.StayDTO;
 import com.maxdev.plaxbackend.modules.Stay.Service.Impl.StayService;
 import com.maxdev.plaxbackend.modules.Util.ApiResponse;
@@ -36,8 +37,9 @@ public class StayController {
     }
 
     @GetMapping
-    public ResponseEntity<ApiResponse<List<StayDTO>>> getAllStays(@RequestParam(value = "page", defaultValue = "0") int page,
-                                                                  @RequestParam(value = "size", defaultValue = "10") int size) {
+    public ResponseEntity<ApiResponse<List<StayDTO>>> getAllStays(
+            @RequestParam(value = "page", defaultValue = "0") int page,
+            @RequestParam(value = "size", defaultValue = "10") int size) {
         log.debug("Received request to get all stays with page: {} and size: {}", page, size);
         Pageable pageable = PageRequest.of(page, size);
         Page<StayDTO> stays = stayService.findAll(pageable);
@@ -46,21 +48,27 @@ public class StayController {
                 .map(image -> stayService.getBaseUrl() + "images/" + image)
                 .collect(Collectors.toSet())));
         log.info("Returning {} stays", stayDTOS.size());
-        return ResponseEntity.ok(new ApiResponse<>(HttpStatus.OK.value(), stays.getTotalPages(), stayDTOS, "Stays retrieved successfully"));
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(
+                        new ApiResponse<>(
+                                stays.getTotalPages(),
+                                stayDTOS,
+                                "Stays retrieved successfully"));
     }
 
-    @PostMapping(consumes = {"multipart/form-data"})
+    @PostMapping(consumes = { "multipart/form-data" })
     public ResponseEntity<StayDTO> createStay(@RequestPart("stay") StayDTO stayDTO,
-                                              @RequestPart("images") MultipartFile[] images) {
+            @RequestPart("images") MultipartFile[] images) {
         log.debug("Received request to create stay: {}", stayDTO);
         try {
             Set<String> imageNames = stayService.saveImages(images);
             stayDTO.setImages(imageNames);
             StayDTO savedStay = stayService.save(stayDTO);
-            return ResponseEntity.ok(savedStay);
+            return ResponseEntity.status(HttpStatus.CREATED).body(savedStay);
         } catch (IllegalArgumentException | IOException e) {
             log.error("Error creating stay: {}", e.getMessage());
-            return ResponseEntity.status(HttpStatus.CONFLICT).body(null);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
     }
 
@@ -69,12 +77,12 @@ public class StayController {
         Path imagePath = Paths.get("uploads/stays").resolve(imageName);
         try {
             Resource image = new UrlResource(imagePath.toUri());
-            return ResponseEntity.ok()
+            return ResponseEntity.status(HttpStatus.OK)
                     .contentType(MediaType.IMAGE_JPEG)
                     .body(image);
         } catch (MalformedURLException e) {
             log.error("Error getting image: {}", e.getMessage());
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
     }
 
@@ -86,6 +94,18 @@ public class StayController {
                 .map(image -> stayService.getBaseUrl() + "images/" + image)
                 .collect(Collectors.toSet())));
         log.info("Returning {} random stays", randomStays.size());
-        return ResponseEntity.ok(randomStays);
+        return ResponseEntity.status(HttpStatus.OK).body(randomStays);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> deleteStay(@PathVariable UUID id) {
+        try{
+            log.debug("Received request to delete stay with id: {}", id);
+            stayService.delete(id);
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+        }catch (ResourceNotFoundException e){
+            log.error("Error deleting stay: {}", e.getMessage());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
     }
 }
