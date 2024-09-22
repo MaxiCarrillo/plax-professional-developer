@@ -34,6 +34,7 @@ a:has(.itemList__container) {
         display: flex;
         flex-wrap: wrap;
         gap: .5rem;
+        
 
         & button {
             display: flex;
