@@ -4,6 +4,11 @@ const stayService = {
         const stays = await response.json();
         return stays;
     },
+    getStay: async (id) => {
+        const response = await fetch(`http://localhost:8080/api/stays/${id}`);
+        const stay = await response.json();
+        return stay;
+    },
     deleteStay: async (id) => {
         const response = await fetch(`http://localhost:8080/api/stays/${id}`, {
             method: 'DELETE'

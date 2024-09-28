@@ -1,1 +1,1 @@
-export { useStay } from './useStay';
+export { useStay } from './useStay.jsx';

@@ -1,16 +1,10 @@
 import './StaysList.css';
-import { PaginateItems, ConfirmAction } from '../../components';
-import { useStay } from '../../hooks';
-import { useState } from 'react';
+import { PaginateItems } from '../../components';
+import { useStay } from '../../hooks/';
 
 export const StaysList = () => {
 
-    const { stays, getStays, loading, totalPages } = useStay();
-    const [showModal, setShowModal] = useState(false);
-
-    const openCloseModal = () => {
-        setShowModal((prev) => !prev);
-    }
+    const { stays, getStays, deleteStay, loading, totalPages, error } = useStay();
 
     return (
         <main className="dashboardList__container">
@@ -24,9 +18,10 @@ export const StaysList = () => {
                     loading={loading}
                     data={stays?.data}
                     totalPages={totalPages}
+                    deleteItem={deleteStay}
+                    error={error}
                 />
             </section>
-            <ConfirmAction showModal={showModal} openCloseModal={openCloseModal} />
         </main>
     )
 }

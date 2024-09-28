@@ -3,7 +3,9 @@ import { useState } from 'react';
 
 
 export const useStay = () => {
+    const [stay, setStay] = useState(null);
     const [stays, setStays] = useState(null);
+    const [error, setError] = useState(null);
     const [loading, setLoading] = useState(true);
     const [totalPages, setTotalPages] = useState(0);
 
@@ -13,17 +15,47 @@ export const useStay = () => {
             const response = await stayService.getStays(page, size);
             setStays(response);
             setTotalPages(response.totalPages);
+            setError(false);
         } catch {
             console.error('Error fetching stays');
+            setError(true);
+        } finally {
+            setLoading(false);
         }
-        setLoading(false);
     };
+
+    const getStay = async (id) => {
+        try {
+            setLoading(true);
+            const response = await stayService.getStay(id);
+            setStay(response);
+        } catch {
+            console.error('Error getting stay');
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const deleteStay = async (id) => {
+        try {
+            setLoading(true);
+            await stayService.deleteStay(id);
+        } catch {
+            console.error('Error deleting stay');
+        } finally {
+            setLoading(false);
+        }
+    }
 
 
     return {
+        stay,
         stays,
         loading,
+        error,
         totalPages,
-        getStays
+        getStays,
+        getStay,
+        deleteStay
     }
 }

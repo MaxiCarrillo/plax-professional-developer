@@ -1,9 +1,10 @@
 import './StayCard.css';
+import { Link } from 'react-router-dom';
 
 export const StayCard = ({stay}) => {
     const {id, name, images, address, price} = stay;
     return (
-        <a href="">
+        <Link to={`/estancias/${id}`}>
             <article className='stayCard__container'>
                 <figure>
                     <img src={images[0]} alt="Hotel" height={250} width={250} />
@@ -15,6 +16,6 @@ export const StayCard = ({stay}) => {
                     <p className='stayCard__price'><small>1 noche</small><strong>${price}</strong></p>
                 </div>
             </article>
-        </a>
+        </Link>
     )
 }

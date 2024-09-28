@@ -1,22 +1,37 @@
 import { useEffect, useState } from 'react';
-import { ItemList } from '../../components';
+import { ItemList, ConfirmAction } from '../../components';
 import { Link } from 'react-router-dom';
 import ReactPaginate from 'react-paginate';
 
-export const PaginateItems = ({ fetchData, loading, data, totalPages }) => {
+export const PaginateItems = ({ fetchData, loading, data, deleteItem, totalPages, error }) => {
     const [currentPage, setCurrentPage] = useState(0);
+    const [showModal, setShowModal] = useState(false);
+    const [deleteItemId, setDeleteItemId] = useState(null);
+    const [refetch, setRefetch] = useState(false);
 
     useEffect(() => {
         fetchData(currentPage);
-    }, [currentPage]);
+    }, [currentPage, refetch]);
+
+    const onRefetch = () => {
+        setRefetch((prev) => !prev);
+    }
 
     const handlePageClick = (selectedItem) => {
         const newOffset = selectedItem.selected;
         setCurrentPage(newOffset);
     }
 
+    const openCloseModal = () => {
+        setShowModal((prev) => !prev);
+    }
+
+    const selectItem = (id) => {
+        setDeleteItemId(id);
+    }
 
     return (
+        error ? <p>Ha ocurrido un error</p> : 
         <>
             {
                 loading ?
@@ -24,10 +39,15 @@ export const PaginateItems = ({ fetchData, loading, data, totalPages }) => {
                         <span className="visually-hidden">Cargando...</span>
                     </div> :
                     (
-                        data.length === 0 ? <p>No hay estancias</p> :
+                        data?.length === 0 ? <p>No hay estancias</p> :
                             data?.map((item, index) => (
-                                <Link key={index} to={`/adminitracion/estancias/${item.id}`}>
-                                    <ItemList key={index} data={item} />
+                                <Link key={index} to={`/administracion/estancias/${item.id}`}>
+                                    <ItemList
+                                        key={index}
+                                        data={item}
+                                        openCloseModal={openCloseModal}
+                                        deleteItem={selectItem}
+                                    />
                                 </Link>
                             ))
 
@@ -53,6 +73,12 @@ export const PaginateItems = ({ fetchData, loading, data, totalPages }) => {
                 activeClassName='page--active'
                 activeLinkClassName='page--active'
                 disabledClassName='page--disabled'
+            />
+            <ConfirmAction
+                showModal={showModal}
+                openCloseModal={openCloseModal}
+                deleteItem={() => deleteItem(deleteItemId)}
+                onRefetch={onRefetch}
             />
         </>
     )

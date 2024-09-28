@@ -4,6 +4,7 @@ import {
     HomeDashboard,
     NotFound,
     StaysList,
+    StayDetail,
     CategoriesList
 } from '../pages';
 
@@ -30,6 +31,12 @@ export const routesAdmin = [
         exact: true
     },
     {
+        path: '/estancias/:id',
+        component: StayDetail,
+        layout: UserLayout,
+        exact: true
+    },
+    {
         path: '/administracion',
         component: HomeDashboard,
         layout: AdminLayout,
@@ -38,6 +45,12 @@ export const routesAdmin = [
     {
         path: '/administracion/estancias',
         component: StaysList,
+        layout: AdminLayout,
+        exact: true
+    },
+    {
+        path: '/administracion/estancias/:id',
+        component: StayDetail,
         layout: AdminLayout,
         exact: true
     },
