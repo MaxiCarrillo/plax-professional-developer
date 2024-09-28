@@ -56,7 +56,7 @@ public class StayService implements IStayService {
 
     @Override
     @Transactional
-    public Optional<StayDTO> findById(UUID id) {
+    public Optional<StayDTO> findById(UUID id) throws ResourceNotFoundException{
         return stayRepository.findById(id)
                 .map(StayMapper.INSTANCE::entityToDto);
     }

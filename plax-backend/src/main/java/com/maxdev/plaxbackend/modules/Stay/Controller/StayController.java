@@ -3,7 +3,7 @@ package com.maxdev.plaxbackend.modules.Stay.Controller;
 import com.maxdev.plaxbackend.modules.Exception.ResourceNotFoundException;
 import com.maxdev.plaxbackend.modules.Stay.DTO.StayDTO;
 import com.maxdev.plaxbackend.modules.Stay.Service.Impl.StayService;
-import com.maxdev.plaxbackend.modules.Util.ApiResponse;
+import com.maxdev.plaxbackend.modules.Util.ApiPageResponse;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
@@ -23,6 +23,9 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
 import java.util.stream.Collectors;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
 
 @Log4j2
 @RestController
@@ -37,7 +40,7 @@ public class StayController {
     }
 
     @GetMapping
-    public ResponseEntity<ApiResponse<List<StayDTO>>> getAllStays(
+    public ResponseEntity<ApiPageResponse<List<StayDTO>>> getAllStays(
             @RequestParam(value = "page", defaultValue = "0") int page,
             @RequestParam(value = "size", defaultValue = "10") int size) {
         log.debug("Received request to get all stays with page: {} and size: {}", page, size);
@@ -51,7 +54,7 @@ public class StayController {
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(
-                        new ApiResponse<>(
+                        new ApiPageResponse<>(
                                 stays.getTotalPages(),
                                 stayDTOS,
                                 "Stays retrieved successfully"));
@@ -86,6 +89,8 @@ public class StayController {
         }
     }
 
+
+
     @GetMapping("/random")
     public ResponseEntity<Set<StayDTO>> getRandomStays(@RequestParam(value = "size", defaultValue = "10") int size) {
         log.debug("Received request to get random stays with size: {}", size);
@@ -108,4 +113,19 @@ public class StayController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
     }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<StayDTO> getStay(@PathVariable UUID id) {
+        Optional<StayDTO> stayFound = stayService.findById(id);
+        if(stayFound.isPresent()){
+            StayDTO stayReturn = stayFound.get();
+            stayReturn.setImages(stayReturn.getImages().stream()
+                    .map(image -> stayService.getBaseUrl() + "images/" + image)
+                    .collect(Collectors.toSet()));
+            return ResponseEntity.status(HttpStatus.OK).body(stayReturn);
+        }else{
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+    }
+    
 }
