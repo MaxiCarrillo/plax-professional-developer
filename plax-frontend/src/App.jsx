@@ -1,6 +1,4 @@
-import { TopMenu, Footer } from "./components"
-import { Home } from "./pages"
-import { Navigation } from "./routes/Navigation"
+import { Navigation } from "./modules/core/routes/Navigation"
 
 function App() {
   return (

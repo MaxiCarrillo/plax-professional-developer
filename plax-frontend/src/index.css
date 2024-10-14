@@ -227,3 +227,79 @@ form * {
   clip: rect(0, 0, 0, 0);
   border: 0;
 }
+
+.form__container {
+
+  &>.form__label {
+    display: block;
+    font-size: 0.9rem;
+
+    &>input,
+    textarea,
+    .dropzone
+    {
+      width: 100%;
+      padding: 0.5rem;
+      border-radius: 8px;
+      margin-block-start: 4px;
+      border: 1px solid var(--color-base-400);
+      resize: none;
+    }
+  }
+
+  & .label--error {
+    color: var(--color-danger-700);
+    font-size: 0.8rem;
+    display: flex;
+    align-items: center;
+    gap: 0.2rem;
+
+    & svg {
+      fill: var(--color-danger-700);
+    }
+  }
+}
+
+.dropzone {
+  width: 100%;
+  height: 100px;
+  border-radius: 8px;
+  border: 1px solid var(--color-base-400);
+  background-color: var(--color-primary-100);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+}
+
+.thumbsContainer {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  margin-block-start: .5rem;
+  gap: .5rem;
+
+  & .thumb {
+    display: inline-flex;
+    justify-content: center;
+    border-radius: 4px;
+    border: 1px solid var(--color-base-300);
+    width: 100px;
+    height: 100px;
+    overflow: hidden;
+    padding: 4px;
+    box-sizing: border-box;
+
+    & .thumb-inner {
+      display: flex;
+      min-width: 0;
+      overflow: hidden;
+
+      & .thumb__img {
+        display: block;
+        width: auto;
+        height: 100%;
+      }
+    }
+  }
+}
