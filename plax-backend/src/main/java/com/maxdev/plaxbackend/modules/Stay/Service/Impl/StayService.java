@@ -1,5 +1,6 @@
 package com.maxdev.plaxbackend.modules.Stay.Service.Impl;
 
+import com.maxdev.plaxbackend.modules.Exception.ResourceAlreadyExistsException;
 import com.maxdev.plaxbackend.modules.Exception.ResourceNotFoundException;
 import com.maxdev.plaxbackend.modules.Stay.DTO.StayDTO;
 import com.maxdev.plaxbackend.modules.Stay.Mapper.StayMapper;
@@ -7,7 +8,6 @@ import com.maxdev.plaxbackend.modules.Stay.Repository.StayRepository;
 import com.maxdev.plaxbackend.modules.Stay.Service.IStayService;
 import com.maxdev.plaxbackend.modules.Stay.Stay;
 import lombok.extern.log4j.Log4j2;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -30,12 +30,12 @@ import static java.time.LocalDateTime.now;
 public class StayService implements IStayService {
 
     /*
-     * private final: La variable debe ser inicializada una vez y no puede ser cambiada después.
+     * private final: La variable debe ser inicializada una vez y no puede ser
+     * cambiada después.
      * private: La variable puede ser cambiada después de ser inicializada.
-     * */
+     */
     private final StayRepository stayRepository;
 
-    @Autowired
     public StayService(StayRepository stayRepository) {
         this.stayRepository = stayRepository;
     }
@@ -46,7 +46,8 @@ public class StayService implements IStayService {
         stayRepository.findByName(stayDTO.getName())
                 .ifPresent(stay -> {
                     log.error("Stay with name: {} already exists", stayDTO.getName());
-                    throw new IllegalArgumentException("Stay with name: " + stayDTO.getName() + " already exists");
+                    throw new ResourceAlreadyExistsException(
+                            "Stay with name: " + stayDTO.getName() + " already exists");
                 });
         Stay stayToSave = StayMapper.INSTANCE.dtoToEntity(stayDTO);
         stayRepository.save(stayToSave);
@@ -56,7 +57,7 @@ public class StayService implements IStayService {
 
     @Override
     @Transactional
-    public Optional<StayDTO> findById(UUID id) throws ResourceNotFoundException{
+    public Optional<StayDTO> findById(UUID id) throws ResourceNotFoundException {
         return stayRepository.findById(id)
                 .map(StayMapper.INSTANCE::entityToDto);
     }
@@ -82,7 +83,8 @@ public class StayService implements IStayService {
         log.debug("Finding random stays with size: {}", size);
         Set<StayDTO> randomStays = new HashSet<>();
         List<Stay> stays = stayRepository.findAll();
-        if (stays.size() < size) size = stays.size();
+        if (stays.size() < size)
+            size = stays.size();
         Random random = new Random();
         while (randomStays.size() < size)
             randomStays.add(StayMapper.INSTANCE.entityToDto(stays.get(random.nextInt(stays.size()))));
@@ -98,7 +100,6 @@ public class StayService implements IStayService {
         Stay stayToUpdate = StayMapper.INSTANCE.dtoToEntity(stayDTO);
         return StayMapper.INSTANCE.entityToDto(stayRepository.save(stayToUpdate));
     }
-
 
     @Override
     @Transactional
