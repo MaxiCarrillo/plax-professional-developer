@@ -4,6 +4,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { useStay } from '../../hooks/useStay';
 import { Carousel } from 'react-responsive-carousel';
 import "react-responsive-carousel/lib/styles/carousel.min.css";
+import ImageFallback from '../../../../assets/images/image-fallback.jpg';
 
 export const StayDetail = () => {
     const { stay, getStay, loading } = useStay();
@@ -34,7 +35,7 @@ export const StayDetail = () => {
         if (cloneImages.length < 5) {
             for (let i = 0; i < 5; i++) {
                 if (cloneImages[i] === undefined) {
-                    cloneImages[i] = 'https://via.placeholder.com/150';
+                    cloneImages[i] = ImageFallback;
                 }
             }
         } else {

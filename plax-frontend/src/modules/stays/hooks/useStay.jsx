@@ -45,7 +45,7 @@ export const useStay = () => {
         } finally {
             setLoading(false);
         }
-    }
+    };
 
     const addStay = async (data) => {
         try {
@@ -58,9 +58,20 @@ export const useStay = () => {
         } finally {
             setLoading(false);
         }
+    };
 
+    const editStay = async (data) => {
+        try {
+            setLoading(true);
+            await stayService.editStay(data);
+            setError(false);
+        } catch (e) {
+            setError(true);
+            console.error('Error editing stay', e);
+        } finally {
+            setLoading(false);
+        }
     }
-
 
     return {
         stay,
@@ -71,6 +82,7 @@ export const useStay = () => {
         getStays,
         getStay,
         deleteStay,
-        addStay
-    }
+        addStay,
+        editStay
+    };
 }

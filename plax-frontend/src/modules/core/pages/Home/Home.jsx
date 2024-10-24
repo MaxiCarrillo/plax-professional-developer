@@ -12,12 +12,12 @@ export const Home = () => {
         fetch('http://localhost:8080/api/categories')
             .then(response => response.json())
             .then(data => {
-                setCategories(data); console.log(categories)
+                setCategories(data.data);
             });
         fetch('http://localhost:8080/api/stays/random')
             .then(response => response.json())
             .then(data => {
-                setStays(data); console.log(stays)
+                setStays(data);
             });
     }, [])
 

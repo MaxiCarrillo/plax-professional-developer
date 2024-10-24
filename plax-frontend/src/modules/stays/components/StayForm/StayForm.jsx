@@ -2,12 +2,16 @@ import './StayForm.css';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import { useStay } from '../../hooks/useStay';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useContext } from 'react';
 import { useDropzone } from 'react-dropzone';
+import { FormModalContext } from '../../../core/context';
 
-export const StayForm = ({ stay, openCloseModal, onRefetch }) => {
-    const { addStay, loading } = useStay();
+export const StayForm = ({ stay, onRefetch }) => {
+    const { openCloseModal } = useContext(FormModalContext);
+    const { addStay, editStay, loading } = useStay();
     const [files, setFiles] = useState([]);
+    const [imagesToDelete, setImagesToDelete] = useState([]);
+
     const formik = useFormik({
         initialValues: {
             name: '',
@@ -15,8 +19,7 @@ export const StayForm = ({ stay, openCloseModal, onRefetch }) => {
             description: '',
             address: '',
             category_id: '',
-            images: []
-
+            images: [],
         },
         validationSchema: Yup.object(stay ? ({
             name: Yup.string().required('El nombre es obligatorio'),
@@ -36,11 +39,40 @@ export const StayForm = ({ stay, openCloseModal, onRefetch }) => {
         ),
         validateOnChange: true,
         onSubmit: async (values) => {
-            await addStay(values);
-            openCloseModal();
-            onRefetch();
+            if (stay) {
+                if (imagesToDelete.length === stay.images.length && !formik.values.images) {
+                    alert('No se pueden eliminar todas las imagenes y no agregar nuevas');
+                } else {
+                    values.id = stay.id;
+                    values.imagesToDelete = imagesToDelete;
+                    await editStay(values);
+                    formik.resetForm();
+                    setFiles([]);
+                    setImagesToDelete([]);
+                    openCloseModal();
+                    onRefetch();
+                }
+            } else {
+                await addStay(values);
+                formik.resetForm();
+                setFiles([]);
+                openCloseModal();
+                onRefetch();
+            }
         }
     });
+
+    const handleImageChange = (event, imageUrl) => {
+        const isChecked = event.target.checked;
+        const imageName = imageUrl.split('/').pop();
+        setImagesToDelete(prevState => {
+            if (isChecked) {
+                return [...prevState, imageName];
+            } else {
+                return prevState.filter(image => image !== imageName);
+            }
+        });
+    };
 
     useEffect(() => {
         if (stay) {
@@ -129,6 +161,30 @@ export const StayForm = ({ stay, openCloseModal, onRefetch }) => {
                     </label>
                     {formik.errors.description && <label className='label--error'>{formik.errors.description}</label>}
                 </div>
+                {
+                    stay &&
+                    <div className='form__container'>
+                        <label className='form__label'>
+                            Imagenes actuales (Selecciona las imagenes a eliminar)
+                        </label>
+                        <div className='form__image-container'>
+                            {stay.images.map((image, index) => (
+                                <div key={index} className='form__image'>
+                                    <label htmlFor={`imagesToDelete[${index}]`}>
+                                        <img src={image} alt={stay.name} />
+                                    </label>
+                                    <input
+                                        type="checkbox"
+                                        id={`imagesToDelete[${index}]`}
+                                        name={`imagesToDelete[${index}]`}
+                                        value={image}
+                                        onChange={(e) => handleImageChange(e, image)}
+                                    />
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                }
                 <div className='form__container'>
                     <label className='form__label'>
                         Imágenes

@@ -1,7 +1,9 @@
+import { FormModalContext } from '../../context';
 import './FormModal.css';
-import { useRef, useEffect } from 'react';
+import { useRef, useEffect, useContext } from 'react';
 
-export const FormModal = ({ showModal, openCloseModal, children }) => {
+export const FormModal = ({ children }) => {
+    const { showModal, openCloseModal } = useContext(FormModalContext);
     const dialogRef = useRef(null);
 
     useEffect(() => {

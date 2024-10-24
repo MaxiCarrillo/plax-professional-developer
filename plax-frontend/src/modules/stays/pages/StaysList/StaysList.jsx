@@ -2,12 +2,12 @@ import './StaysList.css';
 import { PaginateItems, FormModal } from '../../../core/components';
 import { StayForm } from '../../components';
 import { useStay } from '../../hooks/useStay';
-import { useState } from 'react';
+import { useState, useContext } from 'react';
+import { FormModalContext } from '../../../core/context';
 
 export const StaysList = () => {
-
+    const { openCloseModal } = useContext(FormModalContext);
     const { stays, getStays, deleteStay, loading, totalPages, error } = useStay();
-    const [showModal, setShowModal] = useState(false);
     const [contentModal, setContentModal] = useState(null);
     const [refetch, setRefetch] = useState(false);
 
@@ -15,19 +15,14 @@ export const StaysList = () => {
         setRefetch((prev) => !prev);
     }
 
-    const openCloseModalAddEdit = () => {
-        setShowModal((prev) => !prev);
-    }
-
     const addStay = () => {
         setContentModal(
             <StayForm
                 title={'Agregar Estancia'}
-                openCloseModal={openCloseModalAddEdit}
                 onRefetch={onRefetch}
             />
         );
-        openCloseModalAddEdit();
+        openCloseModal();
     }
 
     const editStay = (stay) => {
@@ -35,11 +30,10 @@ export const StaysList = () => {
             <StayForm
                 title={'Editar Estancia'}
                 stay={stay}
-                openCloseModal={openCloseModalAddEdit}
                 onRefetch={onRefetch}
             />
         );
-        openCloseModalAddEdit();
+        openCloseModal();
     }
 
     return (
@@ -61,7 +55,7 @@ export const StaysList = () => {
                     onRefetch={onRefetch}
                 />
             </section>
-            <FormModal showModal={showModal} openCloseModal={openCloseModalAddEdit}>
+            <FormModal>
                 {contentModal}
             </FormModal>
         </main>

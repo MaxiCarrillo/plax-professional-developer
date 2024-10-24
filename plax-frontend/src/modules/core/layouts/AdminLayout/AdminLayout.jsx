@@ -1,6 +1,7 @@
 import './AdminLayout.css';
 import { NavLink, Link } from 'react-router-dom';
-import ImagePlax  from '../../../../assets/images/plax-dashboard.png';
+import ImagePlax from '../../../../assets/images/plax-dashboard.png';
+import { FormModalProvider } from '../../context';
 
 const routes = [
     {
@@ -39,7 +40,9 @@ export const AdminLayout = ({ children }) => {
                         </ul>
                     </nav>
                 </section>
-                {children}
+                <FormModalProvider>
+                    {children}
+                </FormModalProvider>
             </div>
             <h1 className='adminLayout__displayMessage'>Debe ingresar desde un dispositivo con una resolución mayor a 1024px.</h1>
         </>

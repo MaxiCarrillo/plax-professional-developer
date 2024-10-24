@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { ItemList, ConfirmAction } from '../../components';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import ReactPaginate from 'react-paginate';
 
 export const PaginateItems = ({ fetchData, loading, data, deleteItem, totalPages, error, editItem, refetch, onRefetch }) => {
@@ -30,9 +30,9 @@ export const PaginateItems = ({ fetchData, loading, data, deleteItem, totalPages
                             <span className="visually-hidden">Cargando...</span>
                         </div> :
                         (
-                            data?.length === 0 ? <p>No hay estancias</p> :
+                            data?.length === 0 ? <p>No hay elementos</p> :
                                 data?.map((item, index) => (
-                                    <Link key={index} to={`/administracion/estancias/${item.id}`}>
+                                    <Link key={index} to={`${location.pathname}/${item.id}`}>
                                         <ItemList
                                             key={index}
                                             data={item}
