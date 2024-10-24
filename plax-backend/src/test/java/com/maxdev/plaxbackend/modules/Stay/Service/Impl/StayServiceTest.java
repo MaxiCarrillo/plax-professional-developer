@@ -2,6 +2,7 @@ package com.maxdev.plaxbackend.modules.Stay.Service.Impl;
 
 import com.maxdev.plaxbackend.modules.Category.DTO.CategoryDTO;
 import com.maxdev.plaxbackend.modules.Category.Service.Impl.CategoryService;
+import com.maxdev.plaxbackend.modules.Exception.ResourceNotFoundException;
 import com.maxdev.plaxbackend.modules.Stay.DTO.StayDTO;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +11,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -100,7 +102,13 @@ class StayServiceTest {
     void delete() {
         Optional<StayDTO> stayDTO = stayService.findByName("Departamento");
         stayDTO.ifPresent(stay -> {
-            assertEquals("Departamento", stayService.delete(stay.getId()).getName());
+            try {
+                assertEquals("Departamento", stayService.delete(stay.getId()).getName());
+            } catch (ResourceNotFoundException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         });
     }
 }

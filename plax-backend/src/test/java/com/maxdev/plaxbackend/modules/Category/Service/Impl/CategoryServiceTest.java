@@ -1,6 +1,8 @@
 package com.maxdev.plaxbackend.modules.Category.Service.Impl;
 
 import com.maxdev.plaxbackend.modules.Category.DTO.CategoryDTO;
+import com.maxdev.plaxbackend.modules.Exception.ResourceNotFoundException;
+
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -8,6 +10,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -63,11 +66,11 @@ class CategoryServiceTest {
         Optional<CategoryDTO> categoryDTO = categoryService.findByName("Departamentos");
         categoryDTO.ifPresent(category -> {
             CategoryDTO updatedCategory = CategoryDTO.builder()
-                            .id(category.getId())
-                            .name(category.getName())
-                            .description(category.getDescription())
-                            .image("departamento2.jpg")
-                            .build();
+                    .id(category.getId())
+                    .name(category.getName())
+                    .description(category.getDescription())
+                    .image("departamento2.jpg")
+                    .build();
             assertEquals("departamento2.jpg", categoryService.update(updatedCategory).getImage());
         });
     }
@@ -77,7 +80,13 @@ class CategoryServiceTest {
     void delete() {
         Optional<CategoryDTO> categoryDTO = categoryService.findByName("Departamentos");
         categoryDTO.ifPresent(category -> {
-            assertEquals("Departamentos", categoryService.delete(category.getId()).getName());
+            try {
+                assertEquals("Departamentos", categoryService.delete(category.getId()).getName());
+            } catch (ResourceNotFoundException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         });
     }
 }

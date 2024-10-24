@@ -5,6 +5,7 @@ import com.maxdev.plaxbackend.modules.Stay.DTO.StayDTO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import java.io.IOException;
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
@@ -22,5 +23,5 @@ public interface IStayService {
 
     StayDTO update(StayDTO stayDTO) throws ResourceNotFoundException;
 
-    StayDTO delete(UUID id) throws ResourceNotFoundException;
+    StayDTO delete(UUID id) throws ResourceNotFoundException, IOException;
 }

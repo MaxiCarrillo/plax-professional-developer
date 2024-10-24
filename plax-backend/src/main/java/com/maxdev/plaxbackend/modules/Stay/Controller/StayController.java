@@ -22,8 +22,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
 import java.util.stream.Collectors;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 
 @Log4j2
 @RestController
@@ -67,6 +65,32 @@ public class StayController {
         return ResponseEntity.status(HttpStatus.CREATED).body(savedStay);
     }
 
+    @PutMapping(consumes = { "multipart/form-data" })
+    public ResponseEntity<StayDTO> updateStay(@RequestPart("stay") StayDTO stayDTO,
+            @RequestPart(value = "images", required = false) MultipartFile[] images,
+            @RequestPart(value = "imagesToDelete", required = false) Set<String> imagesToDelete)
+            throws ResourceNotFoundException, IOException {
+        log.debug("Received request to update stay: {}", stayDTO.getId());
+        if (stayService.findByName(stayDTO.getName()).isPresent()
+                && !stayService.findByName(stayDTO.getName()).get().getId().equals(stayDTO.getId())) {
+            throw new IllegalArgumentException("Stay with name " + stayDTO.getName() + " already exists");
+        }
+
+        stayDTO.setImages(stayService.findById(stayDTO.getId()).get().getImages());
+        if (images != null) {
+            Set<String> imageNames = stayService.saveImages(images);
+            stayDTO.getImages().addAll(imageNames);
+        }
+
+        StayDTO updatedStay = stayService.update(stayDTO);
+        if (imagesToDelete != null && !imagesToDelete.isEmpty()) {
+            stayDTO.getImages().removeAll(imagesToDelete);
+            stayService.update(stayDTO);
+            stayService.deleteImages(imagesToDelete);
+        }
+        return ResponseEntity.status(HttpStatus.OK).body(updatedStay);
+    }
+
     @GetMapping("/images/{imageName}")
     public ResponseEntity<Resource> getImage(@PathVariable String imageName) throws MalformedURLException {
         Path imagePath = Paths.get("uploads/stays").resolve(imageName);
@@ -88,7 +112,7 @@ public class StayController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteStay(@PathVariable UUID id) {
+    public ResponseEntity<String> deleteStay(@PathVariable UUID id) throws ResourceNotFoundException, IOException {
         log.debug("Received request to delete stay with id: {}", id);
         stayService.delete(id);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();

@@ -5,6 +5,7 @@ import com.maxdev.plaxbackend.modules.Exception.ResourceNotFoundException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import java.io.IOException;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -19,5 +20,5 @@ public interface ICategoryService {
 
     public Page<CategoryDTO> findAll(Pageable pageable);
 
-    CategoryDTO delete(UUID id) throws ResourceNotFoundException;
+    CategoryDTO delete(UUID id) throws ResourceNotFoundException, IOException;
 }

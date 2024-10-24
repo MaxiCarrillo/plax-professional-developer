@@ -4,10 +4,14 @@ import com.maxdev.plaxbackend.modules.Exception.ResourceAlreadyExistsException;
 import com.maxdev.plaxbackend.modules.Exception.ResourceNotFoundException;
 import com.maxdev.plaxbackend.modules.Stay.DTO.StayDTO;
 import com.maxdev.plaxbackend.modules.Stay.Mapper.StayMapper;
+import com.maxdev.plaxbackend.modules.Stay.Repository.StayImageRepository;
 import com.maxdev.plaxbackend.modules.Stay.Repository.StayRepository;
 import com.maxdev.plaxbackend.modules.Stay.Service.IStayService;
 import com.maxdev.plaxbackend.modules.Stay.Stay;
+import com.maxdev.plaxbackend.modules.Stay.StayImage;
+
 import lombok.extern.log4j.Log4j2;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -35,9 +39,11 @@ public class StayService implements IStayService {
      * private: La variable puede ser cambiada después de ser inicializada.
      */
     private final StayRepository stayRepository;
+    private final StayImageRepository stayImageRepository;
 
-    public StayService(StayRepository stayRepository) {
+    public StayService(StayRepository stayRepository, StayImageRepository stayImageRepository) {
         this.stayRepository = stayRepository;
+        this.stayImageRepository = stayImageRepository;
     }
 
     @Override
@@ -53,6 +59,24 @@ public class StayService implements IStayService {
         stayRepository.save(stayToSave);
         log.info("Stay saved: {}", stayToSave.getName());
         return StayMapper.INSTANCE.entityToDto(stayToSave);
+    }
+
+    @Override
+    @Transactional
+    public StayDTO update(StayDTO stayDTO) throws ResourceNotFoundException {
+        stayRepository.findById(stayDTO.getId())
+                .orElseThrow(() -> new ResourceNotFoundException("Stay not found with id: " + stayDTO.getId()));
+
+        Stay stayToUpdate = StayMapper.INSTANCE.dtoToEntity(stayDTO);
+
+        for (StayImage stayImage : stayToUpdate.getImages()) {
+            if (stayImageRepository.findByUrl(stayImage.getUrl()).isPresent())
+                stayImage.setId(stayImageRepository.findByUrl(stayImage.getUrl()).get().getId());
+        }
+
+        stayRepository.save(stayToUpdate);
+        log.info("Stay updated: {}", stayToUpdate.getName());
+        return StayMapper.INSTANCE.entityToDto(stayToUpdate);
     }
 
     @Override
@@ -93,21 +117,12 @@ public class StayService implements IStayService {
 
     @Override
     @Transactional
-    public StayDTO update(StayDTO stayDTO) throws ResourceNotFoundException {
-        stayRepository.findById(stayDTO.getId())
-                .orElseThrow(() -> new ResourceNotFoundException("Stay not found with id: " + stayDTO.getId()));
-
-        Stay stayToUpdate = StayMapper.INSTANCE.dtoToEntity(stayDTO);
-        return StayMapper.INSTANCE.entityToDto(stayRepository.save(stayToUpdate));
-    }
-
-    @Override
-    @Transactional
-    public StayDTO delete(UUID id) throws ResourceNotFoundException {
+    public StayDTO delete(UUID id) throws ResourceNotFoundException, IOException {
         Stay stayToDelete = stayRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Stay not found with id: " + id));
 
         stayRepository.delete(stayToDelete);
+        deleteFileImages(stayToDelete.getImages());
         return StayMapper.INSTANCE.entityToDto(stayToDelete);
     }
 
@@ -126,6 +141,18 @@ public class StayService implements IStayService {
             imageNames.add(fileName);
         }
         return imageNames;
+    }
+
+    public void deleteFileImages(Set<StayImage> imageNames) throws IOException {
+        for (StayImage imageName : imageNames) {
+            Path filePath = Paths.get("uploads/stays").resolve(imageName.getUrl()).normalize();
+            Files.deleteIfExists(filePath);
+        }
+    }
+
+    public void deleteImages(Set<String> imageNames) throws IOException {
+
+        stayImageRepository.deleteByUrls(imageNames);
     }
 
     public String getBaseUrl() {
