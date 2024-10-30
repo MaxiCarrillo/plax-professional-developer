@@ -131,5 +131,4 @@ public class StayController {
             throw new ResourceNotFoundException("Stay not found");
         }
     }
-
 }

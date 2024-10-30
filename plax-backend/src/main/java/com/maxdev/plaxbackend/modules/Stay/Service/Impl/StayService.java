@@ -49,12 +49,10 @@ public class StayService implements IStayService {
     @Override
     @Transactional
     public StayDTO save(StayDTO stayDTO) {
-        stayRepository.findByName(stayDTO.getName())
-                .ifPresent(stay -> {
-                    log.error("Stay with name: {} already exists", stayDTO.getName());
-                    throw new ResourceAlreadyExistsException(
-                            "Stay with name: " + stayDTO.getName() + " already exists");
-                });
+        stayRepository.findByName(stayDTO.getName()).ifPresent(stay -> {
+            log.error("Stay with name: {} already exists", stayDTO.getName());
+            throw new ResourceAlreadyExistsException("Stay with name: " + stayDTO.getName() + " already exists");
+        });
         Stay stayToSave = StayMapper.INSTANCE.dtoToEntity(stayDTO);
         stayRepository.save(stayToSave);
         log.info("Stay saved: {}", stayToSave.getName());
@@ -64,8 +62,7 @@ public class StayService implements IStayService {
     @Override
     @Transactional
     public StayDTO update(StayDTO stayDTO) throws ResourceNotFoundException {
-        stayRepository.findById(stayDTO.getId())
-                .orElseThrow(() -> new ResourceNotFoundException("Stay not found with id: " + stayDTO.getId()));
+        stayRepository.findById(stayDTO.getId()).orElseThrow(() -> new ResourceNotFoundException("Stay not found with id: " + stayDTO.getId()));
 
         Stay stayToUpdate = StayMapper.INSTANCE.dtoToEntity(stayDTO);
 
@@ -82,23 +79,20 @@ public class StayService implements IStayService {
     @Override
     @Transactional
     public Optional<StayDTO> findById(UUID id) throws ResourceNotFoundException {
-        return stayRepository.findById(id)
-                .map(StayMapper.INSTANCE::entityToDto);
+        return stayRepository.findById(id).map(StayMapper.INSTANCE::entityToDto);
     }
 
     @Override
     @Transactional
     public Optional<StayDTO> findByName(String name) {
-        return stayRepository.findByName(name)
-                .map(StayMapper.INSTANCE::entityToDto);
+        return stayRepository.findByName(name).map(StayMapper.INSTANCE::entityToDto);
     }
 
     @Override
     @Transactional
     public Page<StayDTO> findAll(Pageable pageable) {
         log.debug("Finding all stays with pageable: {}", pageable);
-        return stayRepository.findAll(pageable)
-                .map(StayMapper.INSTANCE::entityToDto);
+        return stayRepository.findAll(pageable).map(StayMapper.INSTANCE::entityToDto);
     }
 
     @Override
@@ -107,8 +101,7 @@ public class StayService implements IStayService {
         log.debug("Finding random stays with size: {}", size);
         Set<StayDTO> randomStays = new HashSet<>();
         List<Stay> stays = stayRepository.findAll();
-        if (stays.size() < size)
-            size = stays.size();
+        if (stays.size() < size) size = stays.size();
         Random random = new Random();
         while (randomStays.size() < size)
             randomStays.add(StayMapper.INSTANCE.entityToDto(stays.get(random.nextInt(stays.size()))));
@@ -118,8 +111,7 @@ public class StayService implements IStayService {
     @Override
     @Transactional
     public StayDTO delete(UUID id) throws ResourceNotFoundException, IOException {
-        Stay stayToDelete = stayRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Stay not found with id: " + id));
+        Stay stayToDelete = stayRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Stay not found with id: " + id));
 
         stayRepository.delete(stayToDelete);
         deleteFileImages(stayToDelete.getImages());
