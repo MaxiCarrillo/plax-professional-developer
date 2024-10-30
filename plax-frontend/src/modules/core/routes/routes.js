@@ -18,6 +18,10 @@ import {
     StaysList
 } from '../../stays/pages';
 
+import {
+    FeaturesList
+} from '../../features/pages';
+
 export const routes = [
     {
         path: '/',
@@ -67,6 +71,12 @@ export const routesAdmin = [
     {
         path: '/administracion/categorias',
         component: CategoriesList,
+        layout: AdminLayout,
+        exact: true
+    },
+    {
+        path: '/administracion/caracteristicas',
+        component: FeaturesList,
         layout: AdminLayout,
         exact: true
     }

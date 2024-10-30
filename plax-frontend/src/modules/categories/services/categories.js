@@ -49,7 +49,6 @@ const categoryService = {
         };
         formData.append('category', new Blob([JSON.stringify(category)], { type: 'application/json' }));
         data.image && formData.append('image', data.image[0]);
-        alert('Edit category');
         try {
             const response = await fetch('http://localhost:8080/api/categories', {
                 method: 'PUT',
@@ -67,7 +66,6 @@ const categoryService = {
             console.error('Error editing category', e);
         }
     }
-
 };
 
 export default categoryService;

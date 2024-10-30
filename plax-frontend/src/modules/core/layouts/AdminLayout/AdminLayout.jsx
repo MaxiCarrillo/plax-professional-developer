@@ -11,6 +11,10 @@ const routes = [
     {
         path: '/administracion/categorias',
         name: 'Categorias'
+    },
+    {
+        path: '/administracion/caracteristicas',
+        name: 'Características'
     }
 ]
 
