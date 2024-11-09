@@ -23,9 +23,28 @@
         }
 
         & .mainSection__form {
+            margin-block-start: 1rem;
+            gap: 1rem;
             display: flex;
             flex-wrap: wrap;
-            gap: 1rem;
+
+            & label:first-child{
+                flex-basis: 300px;
+                flex-grow: 1;
+
+                & .form__multiple-select {
+                    width: 100%;
+                }
+            }
+
+            & label:nth-child(2) {
+                flex-basis: 300px;
+                flex-grow: 1;
+
+                & .form__date-rage-picker {
+                    width: 100%;
+                }
+            }
         }
     }
 

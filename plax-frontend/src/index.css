@@ -340,3 +340,7 @@ form * {
     }
   }
 }
+
+.date-range__popper {
+  z-index: 99;
+}

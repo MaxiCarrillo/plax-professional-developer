@@ -1,12 +1,41 @@
 import './Home.css';
 import { CategoryCard } from '../../../categories/components/';
 import { StayCard } from '../../../stays/components/';
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
+import { DatePicker, Select } from 'antd';
+import { useNavigate } from 'react-router-dom';
+import { NotificationContext } from '../../context/notificationContext';
+
 
 export const Home = () => {
 
     const [categories, setCategories] = useState([]);
     const [stays, setStays] = useState([]);
+    const [dateRange, setDateRange] = useState([]);
+    const [place, setPlace] = useState('');
+    const navigate = useNavigate();
+    const { api } = useContext(NotificationContext);
+
+    const { RangePicker } = DatePicker;
+
+    const handleSelectOnChange = (value) => {
+        setPlace(value);
+    }
+
+    const handleDateRangeOnChange = (dateString) => {
+        setDateRange(dateString);
+    }
+
+    const handleOnSubmit = (e) => {
+        e.preventDefault();
+        if (!place || !dateRange[0] || !dateRange[1]) return api['error']({
+            message: 'Debe completar todos los campos',
+            description:
+                'Por favor, seleccione un lugar y un rango de fechas.',
+            duration: 3
+        });
+        navigate(`/search?place=${place}&checkIn=${dateRange[0]}&checkOut=${dateRange[1]}`);
+    }
 
     useEffect(() => {
         fetch('http://localhost:8080/api/categories')
@@ -26,12 +55,37 @@ export const Home = () => {
             <section className='home__mainSection'>
                 <div>
                     <h1>Encontrá tu próxima estancia</h1>
-                    <form className='mainSection__form'>
+                    <form className='mainSection__form' onSubmit={handleOnSubmit}>
                         <label htmlFor="">
-                            <input type="text" placeholder='Lugar de destino' name='hola' />
+                            <Select
+                                className='form__multiple-select'
+                                showSearch
+                                placeholder="Select a person"
+                                optionFilterProp="label"
+                                onChange={handleSelectOnChange}
+                                options={[
+                                    {
+                                        value: 'jack',
+                                        label: 'Jack',
+                                    },
+                                    {
+                                        value: 'lucy',
+                                        label: 'Lucy',
+                                    },
+                                    {
+                                        value: 'tom',
+                                        label: 'Tom',
+                                    },
+                                ]}
+                            />
                         </label>
                         <label htmlFor="">
-                            <input type="date" name="date" />
+                            <RangePicker
+                                className='form__date-rage-picker'
+                                onChange={handleDateRangeOnChange}
+                                format={'DD/MM/YYYY'}
+                                placeholder={['Check-in', 'Check-out']}
+                            />
                         </label>
                         <button className='button button--base'>
                             Buscar

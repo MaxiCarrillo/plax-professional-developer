@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import './TopMenu.css'
 import Isologo from '../../../../assets/images/Isologotipo.png'
+import { Link } from 'react-router-dom'
 
 export const TopMenu = () => {
 
@@ -12,10 +13,10 @@ export const TopMenu = () => {
 
     return (
         <header className='topMenu'>
-            <a href="/" className='topMenu__logo'>
+            <Link className='topMenu__logo' to="/">
                 <img src={Isologo} alt="logo" height={40} width={40} />
                 <span>Take me out tonight</span>
-            </a>
+            </Link>
             <nav className={`topMenu__nav ${menuOpen ? 'topMenu__nav--active' : ''}`}>
                 {menuOpen &&
                     <button
@@ -26,8 +27,10 @@ export const TopMenu = () => {
                     </button>
                 }
                 <ul>
-                    <li><a href="/">Crear Cuenta</a></li>
-                    <li><a href="/about">Iniciar Sesión</a></li>
+                    <li>
+                        <Link to="/registro">Crear Cuenta</Link>
+                    </li>
+                    <li><Link to="/iniciar-sesion">Iniciar Sesión</Link></li>
                 </ul>
             </nav>
             {!menuOpen &&

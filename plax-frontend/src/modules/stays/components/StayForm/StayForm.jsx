@@ -2,7 +2,7 @@ import './StayForm.css';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import { useStay } from '../../hooks/useStay';
-import { useEffect, useState, useContext } from 'react';
+import { useEffect, useState, useContext, useRef } from 'react';
 import { useDropzone } from 'react-dropzone';
 import { FormModalContext } from '../../../core/context';
 
@@ -74,6 +74,8 @@ export const StayForm = ({ stay, onRefetch }) => {
         });
     };
 
+    const checkboxesRef = useRef([]);
+
     useEffect(() => {
         if (stay) {
             formik.setValues({
@@ -82,6 +84,10 @@ export const StayForm = ({ stay, onRefetch }) => {
                 description: stay.description,
                 address: stay.address,
                 category_id: stay.category_id,
+            });
+            setImagesToDelete([]);
+            checkboxesRef.current.forEach(checkbox => {
+                if (checkbox) checkbox.checked = false;
             });
         } else {
             formik.resetForm();
@@ -178,6 +184,7 @@ export const StayForm = ({ stay, onRefetch }) => {
                                         id={`imagesToDelete[${index}]`}
                                         name={`imagesToDelete[${index}]`}
                                         value={image}
+                                        ref={el => (checkboxesRef.current[index] = el)}
                                         onChange={(e) => handleImageChange(e, image)}
                                     />
                                 </div>
