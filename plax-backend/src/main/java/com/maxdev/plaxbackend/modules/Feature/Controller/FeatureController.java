@@ -50,13 +50,21 @@ public class FeatureController {
     }
 
     @GetMapping
-    public ResponseEntity<ApiPageResponse<List<FeatureDTO>>> getAllFeatures(@RequestParam(value = "page", defaultValue = "0") int page, @RequestParam(value = "size", defaultValue = "10") int size) {
+    public ResponseEntity<ApiPageResponse<List<FeatureDTO>>> getAllFeatures(
+            @RequestParam(value = "page", defaultValue = "0") int page,
+            @RequestParam(value = "size", defaultValue = "10") int size) {
         log.debug("Received request to get all features");
         Pageable pageable = PageRequest.of(page, size);
         Page<FeatureDTO> pageFeatures = featureService.findAll(pageable);
         List<FeatureDTO> features = pageFeatures.getContent();
         log.info("Returning {} features", features.size());
-        return ResponseEntity.status(HttpStatus.OK).body(new ApiPageResponse<>(pageFeatures.getTotalPages(), features, "Features retrieved successfully"));
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(new ApiPageResponse<>(
+                        pageFeatures.getTotalPages(),
+                        (int) pageFeatures.getTotalElements(),
+                        features,
+                        "Features retrieved successfully"));
     }
 
     @GetMapping("/{name}")

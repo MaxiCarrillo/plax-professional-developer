@@ -2,11 +2,11 @@ package com.maxdev.plaxbackend.modules.Stay.Controller;
 
 import com.maxdev.plaxbackend.modules.Exception.ResourceNotFoundException;
 import com.maxdev.plaxbackend.modules.Stay.DTO.StayDTO;
+import com.maxdev.plaxbackend.modules.Stay.DTO.StaySaveDTO;
 import com.maxdev.plaxbackend.modules.Stay.Service.Impl.StayService;
 import com.maxdev.plaxbackend.modules.Util.ApiPageResponse;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.core.io.Resource;
-import org.springframework.core.io.UrlResource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -18,10 +18,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Log4j2
 @RestController
@@ -40,73 +37,52 @@ public class StayController {
             @RequestParam(value = "size", defaultValue = "10") int size) {
         log.debug("Received request to get all stays with page: {} and size: {}", page, size);
         Pageable pageable = PageRequest.of(page, size);
-        Page<StayDTO> stays = stayService.findAll(pageable);
-        List<StayDTO> stayDTOS = stays.getContent();
-        stayDTOS.forEach(stay -> stay.setImages(stay.getImages().stream()
-                .map(image -> stayService.getBaseUrl() + "images/" + image)
-                .collect(Collectors.toSet())));
+        Page<StayDTO> pageStays = stayService.findAll(pageable);
+        List<StayDTO> stayDTOS = pageStays.getContent();
         log.info("Returning {} stays", stayDTOS.size());
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(
                         new ApiPageResponse<>(
-                                stays.getTotalPages(),
+                                pageStays.getTotalPages(),
+                                (int) pageStays.getTotalElements(),
                                 stayDTOS,
                                 "Stays retrieved successfully"));
     }
 
-    @PostMapping(consumes = { "multipart/form-data" })
-    public ResponseEntity<StayDTO> createStay(@RequestPart("stay") StayDTO stayDTO,
-            @RequestPart("images") MultipartFile[] images) throws IOException, IllegalArgumentException {
+    @PostMapping(consumes = {"multipart/form-data"})
+    public ResponseEntity<StaySaveDTO> createStay(@RequestPart("stay") StaySaveDTO stayDTO,
+                                              @RequestPart("images") MultipartFile[] images) throws IOException, IllegalArgumentException {
         log.debug("Received request to create stay: {}", stayDTO);
-        Set<String> imageNames = stayService.saveImages(images);
-        stayDTO.setImages(imageNames);
-        StayDTO savedStay = stayService.save(stayDTO);
+        StaySaveDTO savedStay = stayService.save(stayDTO, images);
+        log.info("Stay created: {}", savedStay.getName());
         return ResponseEntity.status(HttpStatus.CREATED).body(savedStay);
     }
 
-    @PutMapping(consumes = { "multipart/form-data" })
-    public ResponseEntity<StayDTO> updateStay(@RequestPart("stay") StayDTO stayDTO,
-            @RequestPart(value = "images", required = false) MultipartFile[] images,
-            @RequestPart(value = "imagesToDelete", required = false) Set<String> imagesToDelete)
+    @PutMapping(consumes = {"multipart/form-data"})
+    public ResponseEntity<StaySaveDTO> updateStay(@RequestPart("stay") StaySaveDTO stayDTO,
+                                              @RequestPart(value = "images", required = false) MultipartFile[] images,
+                                              @RequestPart(value = "imagesToDelete", required = false) Set<String> imagesToDelete)
             throws ResourceNotFoundException, IOException {
         log.debug("Received request to update stay: {}", stayDTO.getId());
-        if (stayService.findByName(stayDTO.getName()).isPresent()
-                && !stayService.findByName(stayDTO.getName()).get().getId().equals(stayDTO.getId())) {
-            throw new IllegalArgumentException("Stay with name " + stayDTO.getName() + " already exists");
-        }
-
-        stayDTO.setImages(stayService.findById(stayDTO.getId()).get().getImages());
-        if (images != null) {
-            Set<String> imageNames = stayService.saveImages(images);
-            stayDTO.getImages().addAll(imageNames);
-        }
-
-        StayDTO updatedStay = stayService.update(stayDTO);
-        if (imagesToDelete != null && !imagesToDelete.isEmpty()) {
-            stayDTO.getImages().removeAll(imagesToDelete);
-            stayService.update(stayDTO);
-            stayService.deleteImages(imagesToDelete);
-        }
+        StaySaveDTO updatedStay = stayService.update(stayDTO, images, imagesToDelete);
+        log.info("Stay updated: {}", updatedStay.getName());
         return ResponseEntity.status(HttpStatus.OK).body(updatedStay);
     }
 
     @GetMapping("/images/{imageName}")
     public ResponseEntity<Resource> getImage(@PathVariable String imageName) throws MalformedURLException {
-        Path imagePath = Paths.get("uploads/stays").resolve(imageName);
-        Resource image = new UrlResource(imagePath.toUri());
+        log.debug("Received request to get image with name: {}", imageName);
+        Resource resource = stayService.getImage(imageName);
         return ResponseEntity.status(HttpStatus.OK)
                 .contentType(MediaType.IMAGE_JPEG)
-                .body(image);
+                .body(resource);
     }
 
     @GetMapping("/random")
     public ResponseEntity<Set<StayDTO>> getRandomStays(@RequestParam(value = "size", defaultValue = "10") int size) {
         log.debug("Received request to get random stays with size: {}", size);
         Set<StayDTO> randomStays = stayService.getRandomStays(size);
-        randomStays.forEach(stay -> stay.setImages(stay.getImages().stream()
-                .map(image -> stayService.getBaseUrl() + "images/" + image)
-                .collect(Collectors.toSet())));
         log.info("Returning {} random stays", randomStays.size());
         return ResponseEntity.status(HttpStatus.OK).body(randomStays);
     }
@@ -115,20 +91,15 @@ public class StayController {
     public ResponseEntity<String> deleteStay(@PathVariable UUID id) throws ResourceNotFoundException, IOException {
         log.debug("Received request to delete stay with id: {}", id);
         stayService.delete(id);
+        log.info("Stay deleted with id: {}", id);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<StayDTO> getStay(@PathVariable UUID id) throws ResourceNotFoundException {
-        Optional<StayDTO> stayFound = stayService.findById(id);
-        if (stayFound.isPresent()) {
-            StayDTO stayReturn = stayFound.get();
-            stayReturn.setImages(stayReturn.getImages().stream()
-                    .map(image -> stayService.getBaseUrl() + "images/" + image)
-                    .collect(Collectors.toSet()));
-            return ResponseEntity.status(HttpStatus.OK).body(stayReturn);
-        } else {
-            throw new ResourceNotFoundException("Stay not found");
-        }
+        log.debug("Received request to get stay by id: {}", id);
+        StayDTO stayFound = stayService.findById(id);
+        log.info("Stay retrieved: {}", stayFound.getName());
+        return ResponseEntity.status(HttpStatus.OK).body(stayFound);
     }
 }

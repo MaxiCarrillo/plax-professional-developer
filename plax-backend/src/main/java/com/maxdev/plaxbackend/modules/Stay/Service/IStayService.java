@@ -2,26 +2,27 @@ package com.maxdev.plaxbackend.modules.Stay.Service;
 
 import com.maxdev.plaxbackend.modules.Exception.ResourceNotFoundException;
 import com.maxdev.plaxbackend.modules.Stay.DTO.StayDTO;
+import com.maxdev.plaxbackend.modules.Stay.DTO.StaySaveDTO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 
 public interface IStayService {
-    StayDTO save(StayDTO stayDTO);
+    StaySaveDTO save(StaySaveDTO stayDTO, MultipartFile[] images) throws IOException;
 
-    Optional<StayDTO> findById(UUID id);
+    StayDTO findById(UUID id);
 
-    Optional<StayDTO> findByName(String name);
+    StayDTO findByName(String name);
 
     Page<StayDTO> findAll(Pageable pageable);
 
     public Set<StayDTO> getRandomStays(int size);
 
-    StayDTO update(StayDTO stayDTO) throws ResourceNotFoundException;
+    StaySaveDTO update(StaySaveDTO stayDTO, MultipartFile[] images, Set<String> imagesToDelete) throws IOException;
 
     StayDTO delete(UUID id) throws ResourceNotFoundException, IOException;
 }

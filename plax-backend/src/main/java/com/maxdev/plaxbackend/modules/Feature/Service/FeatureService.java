@@ -69,8 +69,7 @@ public class FeatureService implements IFeatureService {
         if (icon != null) {
             featureDTO.setIcon(saveIcon(icon));
             deleteIcon(featureToUpdate.getIcon());
-        }
-        else featureDTO.setIcon(featureToUpdate.getIcon());
+        } else featureDTO.setIcon(featureToUpdate.getIcon());
 
         featureToUpdate = FeatureMapper.INSTANCE.dtoToEntity(featureDTO);
         featureRepository.save(featureToUpdate);
@@ -107,6 +106,7 @@ public class FeatureService implements IFeatureService {
 
     @Override
     public FeatureDTO delete(UUID id) throws ResourceNotFoundException, IOException {
+        log.debug("Deleting feature by id: {}", id);
         Feature featureToDelete = featureRepository.findById(id).orElseThrow(() -> {
             log.error("Feature with id: {} not found", id);
             return new ResourceNotFoundException("Feature with id: " + id + " not found");
@@ -123,6 +123,7 @@ public class FeatureService implements IFeatureService {
         Path filePath = Paths.get("uploads/features").resolve(iconName).normalize();
         Resource resource = new UrlResource(filePath.toUri());
         if (!resource.exists()) {
+            log.error("Feature icon not found: {}", iconName);
             throw new ResourceNotFoundException("Feature icon not found: " + iconName);
         }
         return resource;

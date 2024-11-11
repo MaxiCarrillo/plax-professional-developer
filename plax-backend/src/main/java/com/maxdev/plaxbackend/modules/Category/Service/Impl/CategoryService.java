@@ -5,18 +5,22 @@ import com.maxdev.plaxbackend.modules.Category.DTO.CategoryDTO;
 import com.maxdev.plaxbackend.modules.Category.Mapper.CategoryMapper;
 import com.maxdev.plaxbackend.modules.Category.Repository.CategoryRepository;
 import com.maxdev.plaxbackend.modules.Category.Service.ICategoryService;
+import com.maxdev.plaxbackend.modules.Exception.ResourceAlreadyExistsException;
 import com.maxdev.plaxbackend.modules.Exception.ResourceNotFoundException;
+import com.maxdev.plaxbackend.modules.Util.BaseUrl;
+
 import lombok.extern.log4j.Log4j2;
 
-import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -29,7 +33,7 @@ import static java.time.LocalDateTime.*;
 
 @Log4j2
 @Service
-public class CategoryService implements ICategoryService {
+public class CategoryService implements ICategoryService, BaseUrl {
 
     private final CategoryRepository categoryRepository;
 
@@ -39,11 +43,13 @@ public class CategoryService implements ICategoryService {
 
     @Override
     @Transactional
-    public CategoryDTO save(CategoryDTO categoryDTO) throws IllegalArgumentException {
+    public CategoryDTO save(CategoryDTO categoryDTO, MultipartFile image) throws IllegalArgumentException, IOException {
         if (categoryRepository.findByName(categoryDTO.getName()).isPresent()) {
             log.error("Category with name: {} already exists", categoryDTO.getName());
             throw new IllegalArgumentException("Category with name: " + categoryDTO.getName() + " already exists");
         }
+        String fileName = saveImage(image);
+        categoryDTO.setImage(fileName);
         Category categoryToSave = CategoryMapper.INSTANCE.dtoToEntity(categoryDTO);
         categoryRepository.save(categoryToSave);
         log.info("Category saved: {}", categoryToSave.getName());
@@ -52,12 +58,27 @@ public class CategoryService implements ICategoryService {
 
     @Override
     @Transactional
-    public CategoryDTO update(CategoryDTO categoryDTO) throws ResourceNotFoundException {
+    public CategoryDTO update(CategoryDTO categoryDTO, MultipartFile image) throws IOException {
         log.debug("Updating category: {}", categoryDTO.getId());
-        categoryRepository.findById(categoryDTO.getId())
-                .orElseThrow(() -> new ResourceNotFoundException("Category not found with id: " + categoryDTO.getId()));
 
-        Category categoryToUpdate = CategoryMapper.INSTANCE.dtoToEntity(categoryDTO);
+        Category categoryToUpdate = categoryRepository.findById(categoryDTO.getId()).orElseThrow(() -> {
+            log.error("Category with id: {} not found", categoryDTO.getId());
+            return new ResourceNotFoundException("Category with id: " + categoryDTO.getId() + " not found");
+        });
+
+        if (!categoryToUpdate.getName().equals(categoryDTO.getName())) {
+            categoryRepository.findByName(categoryDTO.getName()).ifPresent(category -> {
+                log.error("Category with name: {} already exists", categoryDTO.getName());
+                throw new ResourceAlreadyExistsException("Category with name: " + categoryDTO.getName() + " already exists");
+            });
+        }
+
+        if (image != null) {
+            categoryDTO.setImage(saveImage(image));
+            deleteImage(categoryToUpdate.getImage());
+        } else categoryDTO.setImage(categoryToUpdate.getImage());
+
+        categoryToUpdate = CategoryMapper.INSTANCE.dtoToEntity(categoryDTO);
         categoryRepository.save(categoryToUpdate);
         log.info("Category updated: {}", categoryToUpdate.getName());
         return CategoryMapper.INSTANCE.entityToDto(categoryToUpdate);
@@ -83,6 +104,10 @@ public class CategoryService implements ICategoryService {
     @Transactional
     public Page<CategoryDTO> findAll(Pageable pageable) {
         log.debug("Finding all categories with pageable: {}", pageable);
+        Page<CategoryDTO> pageCategories = categoryRepository.findAll(pageable).map(CategoryMapper.INSTANCE::entityToDto);
+        pageCategories.forEach(categoryDTO -> {
+            categoryDTO.setImage(getBaseUrl() + "/api/categories/images/" + categoryDTO.getImage());
+        });
         return categoryRepository.findAll(pageable)
                 .map(CategoryMapper.INSTANCE::entityToDto);
     }
@@ -94,21 +119,25 @@ public class CategoryService implements ICategoryService {
         log.debug("Deleting category with id: {}", id);
         Category categoryToDelete = categoryRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Category not found with id: " + id));
-
-        try {
-            categoryRepository.delete(categoryToDelete);
-            if (categoryRepository.findByName(categoryToDelete.getName()).isEmpty()) {
-                deleteImage(categoryToDelete.getImage());
-            }
-        } catch (DataIntegrityViolationException e) {
-            log.error("Integrity constraint violation: {}", e.getMessage());
-            throw new IOException(
-                    "Cannot delete category with id: " + id + " due to referential integrity constraints.", e);
+        categoryRepository.delete(categoryToDelete);
+        if (!categoryRepository.existsById(id)) {
+            deleteImage(categoryToDelete.getImage());
         }
+        log.info("Category deleted with id: {}", id);
         return CategoryMapper.INSTANCE.entityToDto(categoryToDelete);
     }
 
-    public String saveImage(MultipartFile image) throws IOException {
+    public Resource getImage(String imageName) throws MalformedURLException {
+        Path filePath = Paths.get("uploads/categories").resolve(imageName).normalize();
+        Resource resource = new UrlResource(filePath.toUri());
+        if (!resource.exists()) {
+            log.error("Image not found: {}", imageName);
+            throw new ResourceNotFoundException("Image not found: " + imageName);
+        }
+        return resource;
+    }
+
+    private String saveImage(MultipartFile image) throws IOException {
         String uploadDir = "uploads/categories";
         Path uploadPath = Paths.get(uploadDir);
         if (!Files.exists(uploadPath)) {
@@ -125,8 +154,5 @@ public class CategoryService implements ICategoryService {
         Path imagePath = Paths.get("uploads/categories").resolve(imageName);
         Files.deleteIfExists(imagePath);
     }
-
-    public String getBaseUrl() {
-        return ServletUriComponentsBuilder.fromCurrentContextPath().path("/api/categories/").toUriString();
-    }
 }
+

@@ -1,8 +1,7 @@
 package com.maxdev.plaxbackend.modules.Stay.Mapper;
 
-import com.maxdev.plaxbackend.modules.Feature.DTO.FeatureDTO;
 import com.maxdev.plaxbackend.modules.Feature.Feature;
-import com.maxdev.plaxbackend.modules.Stay.DTO.StayDTO;
+import com.maxdev.plaxbackend.modules.Stay.DTO.StaySaveDTO;
 import com.maxdev.plaxbackend.modules.Stay.Stay;
 import com.maxdev.plaxbackend.modules.Stay.StayImage;
 import org.mapstruct.Mapper;
@@ -11,21 +10,22 @@ import org.mapstruct.Named;
 import org.mapstruct.factory.Mappers;
 
 import java.util.Set;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Mapper
-public interface StayMapper {
-    StayMapper INSTANCE = Mappers.getMapper(StayMapper.class);
+public interface StaySaveMapper {
+    StaySaveMapper INSTANCE = Mappers.getMapper(StaySaveMapper.class);
 
     @Mapping(source = "images", target = "images", qualifiedByName = "stayImagesToStrings")
-    @Mapping(source = "features", target = "features", qualifiedByName = "featuresToFeaturesDTO")
+    @Mapping(source = "features", target = "features", qualifiedByName = "featuresToUuids")
     @Mapping(source = "category.id", target = "category_id")
-    StayDTO entityToDto(Stay stay);
+    StaySaveDTO entityToDto(Stay stay);
 
     @Mapping(source = "images", target = "images", qualifiedByName = "stringsToStayImages")
-    @Mapping(source = "features", target = "features", qualifiedByName = "featuresDTOToFeatures")
+    @Mapping(source = "features", target = "features", qualifiedByName = "uuidsToFeatures")
     @Mapping(source = "category_id", target = "category.id")
-    Stay dtoToEntity(StayDTO stayDTO);
+    Stay dtoToEntity(StaySaveDTO staySaveDTO);
 
     @Named("stayImagesToStrings")
     default Set<String> stayImagesToStrings(Set<StayImage> stayImages) {
@@ -45,25 +45,19 @@ public interface StayMapper {
                 .collect(Collectors.toSet());
     }
 
-    @Named("featuresToFeaturesDTO")
-    default Set<FeatureDTO> featuresToFeaturesDTO(Set<Feature> features) {
+    @Named("featuresToUuids")
+    default Set<UUID> featuresToUuids(Set<Feature> features) {
         return features.stream()
-                .map(feature -> {
-                    FeatureDTO featureDTO = new FeatureDTO();
-                    featureDTO.setId(feature.getId());
-                    featureDTO.setName(feature.getName());
-                    featureDTO.setIcon(feature.getIcon());
-                    return featureDTO;
-                })
+                .map(Feature::getId)
                 .collect(Collectors.toSet());
     }
 
-    @Named("featuresDTOToFeatures")
-    default Set<Feature> featuresDTOToFeatures(Set<FeatureDTO> features) {
-        return features.stream()
-                .map(featureDTO -> {
+    @Named("uuidsToFeatures")
+    default Set<Feature> uuidsToFeatures(Set<UUID> uuids) {
+        return uuids.stream()
+                .map(uuid -> {
                     Feature feature = new Feature();
-                    feature.setId(featureDTO.getId());
+                    feature.setId(uuid);
                     return feature;
                 })
                 .collect(Collectors.toSet());

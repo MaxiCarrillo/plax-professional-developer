@@ -4,15 +4,16 @@ import com.maxdev.plaxbackend.modules.Category.DTO.CategoryDTO;
 import com.maxdev.plaxbackend.modules.Exception.ResourceNotFoundException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.Optional;
 import java.util.UUID;
 
 public interface ICategoryService {
-    CategoryDTO save(CategoryDTO categoryDTO) throws IllegalArgumentException;
+    CategoryDTO save(CategoryDTO categoryDTO, MultipartFile image) throws IllegalArgumentException, IOException;
 
-    CategoryDTO update(CategoryDTO categoryDTO) throws ResourceNotFoundException;
+    CategoryDTO update(CategoryDTO categoryDTO, MultipartFile image) throws IOException;
 
     Optional<CategoryDTO> findById(UUID id);
 

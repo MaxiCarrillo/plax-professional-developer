@@ -32,27 +32,19 @@
             <AppenderRef ref="RollingFile"/>
         </Root>
         <!--Logger for org.springframework.boot package-->
-        <Logger name="org.springframework" level="INFO" additivity="false">
+        <Logger name="org.springframework" level="DEBUG" additivity="false">
             <AppenderRef ref="Console"/>
-            <AppenderRef ref="RollingFile" level="DEBUG"/>
+            <AppenderRef ref="RollingFile"/>
         </Logger>
-        <!--Logger for org.apache.catalina package-->
-        <Logger name="org.apache.catalina" level="INFO" additivity="false">
+        <Logger name="org.apache.catalina" level="DEBUG" additivity="false">
             <AppenderRef ref="Console"/>
-            <AppenderRef ref="RollingFile" level="DEBUG"/>
+            <AppenderRef ref="RollingFile"/>
         </Logger>
-        <!--Logger for org.hibernate package-->
-        <Logger name="org.hibernate" level="INFO" additivity="false">
+        <Logger name="org.hibernate" level="DEBUG" additivity="false">
             <AppenderRef ref="Console"/>
-            <AppenderRef ref="RollingFile" level="DEBUG"/>
+            <AppenderRef ref="RollingFile"/>
         </Logger>
-        <!--Logger for com.zaxxer.hikari package-->
-        <Logger name="com.zaxxer.hikari" level="INFO" additivity="false">
-            <AppenderRef ref="Console"/>
-            <AppenderRef ref="RollingFile" level="DEBUG"/>
-        </Logger>
-        <!--Logger for com.medium package-->
-        <Logger name="com.medium" level="DEBUG" additivity="false">
+        <Logger name="com.zaxxer.hikari" level="DEBUG" additivity="false">
             <AppenderRef ref="Console"/>
             <AppenderRef ref="RollingFile"/>
         </Logger>

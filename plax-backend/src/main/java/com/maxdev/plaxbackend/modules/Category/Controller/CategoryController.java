@@ -7,7 +7,6 @@ import com.maxdev.plaxbackend.modules.Util.ApiPageResponse;
 
 import lombok.extern.log4j.Log4j2;
 import org.springframework.core.io.Resource;
-import org.springframework.core.io.UrlResource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -19,10 +18,9 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.List;
 import java.util.UUID;
+
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
@@ -45,58 +43,44 @@ public class CategoryController {
         Pageable pageable = PageRequest.of(page, size);
         Page<CategoryDTO> pageCategories = categoryService.findAll(pageable);
         List<CategoryDTO> categories = pageCategories.getContent();
-        categories
-                .forEach(category -> category.setImage(categoryService.getBaseUrl() + "images/" + category.getImage()));
         log.info("Returning {} categories", categories.size());
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(
                         new ApiPageResponse<>(
                                 pageCategories.getTotalPages(),
+                                (int) pageCategories.getTotalElements(),
                                 categories,
                                 "Categories retrieved successfully"));
     }
 
-    @PostMapping(consumes = { "multipart/form-data" })
+    @PostMapping(consumes = {"multipart/form-data"})
     public ResponseEntity<CategoryDTO> createCategory(@RequestPart("category") CategoryDTO categoryDTO,
-            @RequestPart("image") MultipartFile image) throws IOException, IllegalArgumentException {
+                                                      @RequestPart("image") MultipartFile image) throws IOException, IllegalArgumentException {
         log.debug("Received request to create category: {}", categoryDTO);
-        String fileName = categoryService.saveImage(image);
-        categoryDTO.setImage(fileName);
-        CategoryDTO savedCategory = categoryService.save(categoryDTO);
+        CategoryDTO savedCategory = categoryService.save(categoryDTO, image);
+        log.info("Category created: {}", savedCategory.getName());
         return ResponseEntity.status(HttpStatus.CREATED).body(savedCategory);
     }
 
-    @PutMapping(consumes = { "multipart/form-data" })
+    @PutMapping(consumes = {"multipart/form-data"})
     public ResponseEntity<CategoryDTO> updateCategory(@RequestPart("category") CategoryDTO categoryDTO,
-            @RequestPart(value = "image", required = false) MultipartFile image)
+                                                      @RequestPart(value = "image", required = false) MultipartFile image)
             throws ResourceNotFoundException, IOException {
         log.debug("Received request to update category: {}", categoryDTO);
-        if (image != null) {
-            String fileName = categoryService.saveImage(image);
-            categoryDTO.setImage(fileName);
-        } else {
-            categoryDTO.setImage(categoryService.findById(categoryDTO.getId()).get().getImage());
-        }
-        CategoryDTO updatedCategory = categoryService.update(categoryDTO);
+        CategoryDTO updatedCategory = categoryService.update(categoryDTO, image);
+        log.info("Category updated: {}", updatedCategory.getName());
         return ResponseEntity.status(HttpStatus.OK).body(updatedCategory);
     }
 
     @GetMapping("/images/{imageName}")
-    public ResponseEntity<Resource> getImage(@PathVariable String imageName) {
-        try {
-            Path filePath = Paths.get("uploads/categories").resolve(imageName).normalize();
-            Resource resource = new UrlResource(filePath.toUri());
-            if (resource.exists()) {
-                return ResponseEntity.ok()
-                        .contentType(MediaType.IMAGE_JPEG)
-                        .body(resource);
-            } else {
-                return ResponseEntity.notFound().build();
-            }
-        } catch (MalformedURLException e) {
-            return ResponseEntity.badRequest().build();
-        }
+    public ResponseEntity<Resource> getImage(@PathVariable String imageName) throws MalformedURLException {
+        log.debug("Received request to get image: {}", imageName);
+        Resource resource = categoryService.getImage(imageName);
+        log.info("Returning image: {}", imageName);
+        return ResponseEntity.ok()
+                .contentType(MediaType.IMAGE_JPEG)
+                .body(resource);
     }
 
     @DeleteMapping("/{id}")
@@ -104,6 +88,7 @@ public class CategoryController {
             throws ResourceNotFoundException, IOException {
         log.debug("Received request to delete category with id: {}", id);
         categoryService.delete(id);
+        log.info("Category deleted with id: {}", id);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 }

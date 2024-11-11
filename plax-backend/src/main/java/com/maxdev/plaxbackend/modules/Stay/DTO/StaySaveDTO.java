@@ -1,7 +1,9 @@
 package com.maxdev.plaxbackend.modules.Stay.DTO;
 
-import com.maxdev.plaxbackend.modules.Feature.DTO.FeatureDTO;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -12,7 +14,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class StayDTO implements Serializable {
+public class StaySaveDTO implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
 
@@ -20,8 +22,8 @@ public class StayDTO implements Serializable {
     private String name;
     private String description;
     private Set<String> images;
-    private Set<FeatureDTO> features;
     private Double price;
-    private UUID category_id;
     private String address;
+    private UUID category_id;
+    private Set<UUID> features;
 }

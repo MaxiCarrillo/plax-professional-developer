@@ -38,9 +38,9 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.CONFLICT).body(ex.getMessage());
     }
 
-    @ExceptionHandler(IOException.class)
-    public ResponseEntity<String> handleIOException(IOException ex) {
-        log.error("An error occurred while processing the file", ex.getMessage());
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred while processing the file");
-    }
+   @ExceptionHandler(IOException.class)
+   public ResponseEntity<String> handleIOException(IOException ex) {
+       log.error("An error occurred while processing the file", ex.getMessage());
+       return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred while processing the file");
+   }
 }
