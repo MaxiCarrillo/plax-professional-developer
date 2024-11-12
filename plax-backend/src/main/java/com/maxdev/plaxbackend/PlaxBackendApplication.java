@@ -1,5 +1,6 @@
 package com.maxdev.plaxbackend;
 
+import io.github.cdimascio.dotenv.Dotenv;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
@@ -7,6 +8,10 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class PlaxBackendApplication {
 
     public static void main(String[] args) {
+        Dotenv dotenv = Dotenv.configure().load();
+        System.setProperty("DATABASE_URL", dotenv.get("DATABASE_URL"));
+        System.setProperty("DATABASE_USER", dotenv.get("DATABASE_USER"));
+        System.setProperty("DATABASE_PASSWORD", dotenv.get("DATABASE_PASSWORD"));
         SpringApplication.run(PlaxBackendApplication.class, args);
     }
 

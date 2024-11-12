@@ -22,8 +22,8 @@ public class User implements UserDetails {
     @Id
     @GeneratedValue(generator = "UUID")
     private UUID id;
-    private String firstName;
-    private String lastName;
+    private String firstname;
+    private String lastname;
     private String email;
     private String password;
     @Enumerated(EnumType.STRING)
