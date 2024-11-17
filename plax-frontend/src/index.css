@@ -344,3 +344,10 @@ form * {
 .date-range__popper {
   z-index: 99;
 }
+
+.separator{
+  margin-block: 1rem;
+  border: none;
+  height: 1px;
+  background-color: var(--color-base-200);
+}

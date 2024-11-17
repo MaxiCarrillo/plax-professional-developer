@@ -31,23 +31,16 @@ export const StayDetail = () => {
     }
 
     const images = (images) => {
-        let cloneImages = [...images];
-        if (cloneImages.length < 5) {
-            for (let i = 0; i < 5; i++) {
-                if (cloneImages[i] === undefined) {
-                    cloneImages[i] = ImageFallback;
-                }
-            }
-        } else {
-            cloneImages = cloneImages.slice(0, 5);
+        const displayedImages = images.slice(0, 5);
+        while (displayedImages.length < 5) {
+            displayedImages.push(ImageFallback);
         }
-        return (
-            cloneImages?.map((image, index) =>
-                <figure key={index}>
-                    <img src={image} alt={stay.name} />
-                </figure>
-            )
-        )
+
+        return displayedImages.map((image, index) => (
+            <figure key={index}>
+                <img src={image} alt={stay.name} />
+            </figure>
+        ));
     }
 
     return (
@@ -88,6 +81,20 @@ export const StayDetail = () => {
                                 <p className='StayDetail__description'>
                                     {stay.description}
                                 </p>
+                            </section>
+                            <hr className='separator' />
+                            <section className='stayDetail__features'>
+                                <h2>Características</h2>
+                                <ul>
+                                    {
+                                        stay?.features?.map((feature, index) =>
+                                            <li key={index}>
+                                                <img src={feature.icon} alt={feature.name} width={32} height={32} />
+                                                <span>{feature.name}</span>
+                                            </li>
+                                        )
+                                    }
+                                </ul>
                             </section>
                             <dialog ref={dialogRef} className='dialogGallery__dialog'>
                                 <div className='dialogGallery__container'>

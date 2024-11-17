@@ -106,6 +106,31 @@
             max-width: 50ch;
         }
     }
+
+    & .stayDetail__features{
+        & > h2{
+            font-size: 1.2rem;
+            color: var(--color-base-700);
+        }
+
+        & > ul{
+            margin-block-start: .8rem;
+            display: grid;
+            gap: .5rem;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            list-style: none;
+
+            & li{
+                padding-block: .2rem;
+                display: flex;
+                gap: .5rem;
+                align-items: center;
+                justify-content: start;
+                font-weight: 600;
+                color: var(--color-base-700);
+            }
+        }
+    }
 }
 
 .dialogGallery__dialog {
