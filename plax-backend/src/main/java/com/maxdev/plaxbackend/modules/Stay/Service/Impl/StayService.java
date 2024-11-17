@@ -163,6 +163,22 @@ public class StayService implements IStayService, BaseUrl {
         return pageStays;
     }
 
+    public Set<StayDTO> findByCategoryIds(Set<UUID> categoryIds) {
+        log.debug("Finding stays by category ids: {}", categoryIds);
+        Set<StayDTO> stays = stayRepository.findByCategory_IdIn(categoryIds).stream()
+                .map(StayMapper.INSTANCE::entityToDto)
+                .collect(Collectors.toSet());
+        stays.forEach(stay -> {
+            stay.setImages(stay.getImages().stream()
+                    .map(image -> getBaseUrl() + "/api/stays/images/" + image)
+                    .collect(Collectors.toSet()));
+            stay.setFeatures(stay.getFeatures().stream()
+                    .peek(feature -> feature.setIcon(getBaseUrl() + "/api/features/svg/" + feature.getIcon()))
+                    .collect(Collectors.toSet()));
+        });
+        return stays;
+    }
+
     @Override
     @Transactional
     public Set<StayDTO> getRandomStays(int size) {

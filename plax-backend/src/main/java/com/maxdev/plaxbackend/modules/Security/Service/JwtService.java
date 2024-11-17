@@ -40,7 +40,7 @@ public class JwtService {
         return Jwts
                 .builder()
                 .claims(extractClaims) //Datos adicionales
-                .subject(userDetails.getUsername()) //Usuario
+                .subject(userDetails.getUsername()) //Estoy enviando el username
                 .issuedAt(new Date(System.currentTimeMillis())) //Fecha de creación
                 .expiration(new Date(System.currentTimeMillis() + 1000 * 60 * 24)) //Fecha de expiración 1 día
                 .signWith(getSignInKey()) //Firma , SignatureAlgorithm.HS256

@@ -50,9 +50,23 @@ public class StayController {
                                 "Stays retrieved successfully"));
     }
 
+    @GetMapping("/search")
+    public ResponseEntity<ApiPageResponse<Set<StayDTO>>> getStaysByCategory(@RequestParam(value = "categoryIds") Set<UUID> categoryIds) {
+        log.debug("Received request to get stays by category ids: {}", categoryIds);
+        Set<StayDTO> stays = stayService.findByCategoryIds(categoryIds);
+        log.info("Returning {} stays", stays.size());
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(
+                        new ApiPageResponse<>(
+                                1,
+                                stays.size(),
+                                stays,
+                                "Stays retrieved successfully"));
+    }
+
     @PostMapping(consumes = {"multipart/form-data"})
     public ResponseEntity<StaySaveDTO> createStay(@RequestPart("stay") StaySaveDTO stayDTO,
-                                              @RequestPart("images") MultipartFile[] images) throws IOException, IllegalArgumentException {
+                                                  @RequestPart("images") MultipartFile[] images) throws IOException, IllegalArgumentException {
         log.debug("Received request to create stay: {}", stayDTO);
         StaySaveDTO savedStay = stayService.save(stayDTO, images);
         log.info("Stay created: {}", savedStay.getName());
@@ -61,8 +75,8 @@ public class StayController {
 
     @PutMapping(consumes = {"multipart/form-data"})
     public ResponseEntity<StaySaveDTO> updateStay(@RequestPart("stay") StaySaveDTO stayDTO,
-                                              @RequestPart(value = "images", required = false) MultipartFile[] images,
-                                              @RequestPart(value = "imagesToDelete", required = false) Set<String> imagesToDelete)
+                                                  @RequestPart(value = "images", required = false) MultipartFile[] images,
+                                                  @RequestPart(value = "imagesToDelete", required = false) Set<String> imagesToDelete)
             throws ResourceNotFoundException, IOException {
         log.debug("Received request to update stay: {}", stayDTO.getId());
         StaySaveDTO updatedStay = stayService.update(stayDTO, images, imagesToDelete);

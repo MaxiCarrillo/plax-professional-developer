@@ -1,5 +1,6 @@
 package com.maxdev.plaxbackend.modules.Security.Configuration;
 
+import com.maxdev.plaxbackend.modules.User.Role;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -27,9 +28,29 @@ public class SecurityConfiguration {
                 .authorizeHttpRequests(
                         auth -> auth
                                 .requestMatchers("/api/auth/**").permitAll()
-                                .requestMatchers(HttpMethod.GET, "/swagger-ui/**").permitAll()
-                                .requestMatchers(HttpMethod.GET, "/v3/api-docs/**").permitAll()
-                                .requestMatchers(HttpMethod.GET, "/swagger-ui.html").permitAll()
+                                .requestMatchers(HttpMethod.GET,
+                                        "/swagger-ui/**",
+                                        "/v3/api-docs/**",
+                                        "/swagger-ui.html",
+                                        "/api/stays/**",
+                                        "/api/categories/**",
+                                        "/api/features/**"
+                                ).permitAll()
+                                .requestMatchers(HttpMethod.POST,
+                                        "/api/stays/**",
+                                        "/api/categories/**",
+                                        "/api/features/**"
+                                ).hasRole(Role.ADMIN.name())
+                                .requestMatchers(HttpMethod.PUT,
+                                        "/api/stays/**",
+                                        "/api/categories/**",
+                                        "/api/features/**"
+                                ).hasRole(Role.ADMIN.name())
+                                .requestMatchers(HttpMethod.DELETE,
+                                        "/api/stays/**",
+                                        "/api/categories/**",
+                                        "/api/features/**"
+                                ).hasRole(Role.ADMIN.name())
                                 .anyRequest().authenticated())
                 .sessionManagement(
                         session -> session
