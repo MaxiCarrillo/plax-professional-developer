@@ -30,7 +30,7 @@ PLAX es una plataforma en línea que te permite reservar tu próximo alojamiento
 
 - **Caracteristica 1**: Detalle.
 - **Caracteristica 2**: Detalle.
-- **Caracteristica 3**: Detalle.
+- **Caracteristica 3**: Detalles.
 
 ### Capturas de pantalla de Plax
 
