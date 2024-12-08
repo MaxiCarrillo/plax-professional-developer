@@ -7,6 +7,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -20,6 +21,8 @@ public interface ICategoryService {
     Optional<CategoryDTO> findByName(String name);
 
     public Page<CategoryDTO> findAll(Pageable pageable);
+
+    public List<CategoryDTO> findAllWithoutPagination();
 
     CategoryDTO delete(UUID id) throws ResourceNotFoundException, IOException;
 }

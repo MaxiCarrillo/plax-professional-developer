@@ -5,7 +5,6 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
@@ -20,7 +19,6 @@ public class JwtService {
 
     private final Dotenv dotenv;
 
-    @Autowired
     public JwtService(Dotenv dotenv) {
         this.dotenv = dotenv;
     }
@@ -35,16 +33,15 @@ public class JwtService {
 
     public String generateToken(
             Map<String, Object> extractClaims,
-            UserDetails userDetails
-    ) {
+            UserDetails userDetails) {
         return Jwts
                 .builder()
-                .claims(extractClaims) //Datos adicionales
-                .subject(userDetails.getUsername()) //Estoy enviando el username
-                .issuedAt(new Date(System.currentTimeMillis())) //Fecha de creación
-                .expiration(new Date(System.currentTimeMillis() + 1000 * 60 * 24)) //Fecha de expiración 1 día
-                .signWith(getSignInKey()) //Firma , SignatureAlgorithm.HS256
-                .compact(); //Compactar a un string
+                .claims(extractClaims) // Datos adicionales
+                .subject(userDetails.getUsername()) // Estoy enviando el username
+                .issuedAt(new Date(System.currentTimeMillis())) // Fecha de creación
+                .expiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 24)) // Fecha de expiración 1 día
+                .signWith(getSignInKey()) // Firma , SignatureAlgorithm.HS256
+                .compact(); // Compactar a un string
     }
 
     public boolean isTokenValid(String token, UserDetails userDetails) {

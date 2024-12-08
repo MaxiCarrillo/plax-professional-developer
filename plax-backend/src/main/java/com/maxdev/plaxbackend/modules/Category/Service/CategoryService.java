@@ -1,15 +1,17 @@
-package com.maxdev.plaxbackend.modules.Category.Service.Impl;
+package com.maxdev.plaxbackend.modules.Category.Service;
 
-import com.maxdev.plaxbackend.modules.Category.Category;
-import com.maxdev.plaxbackend.modules.Category.DTO.CategoryDTO;
-import com.maxdev.plaxbackend.modules.Category.Mapper.CategoryMapper;
-import com.maxdev.plaxbackend.modules.Category.Repository.CategoryRepository;
-import com.maxdev.plaxbackend.modules.Category.Service.ICategoryService;
-import com.maxdev.plaxbackend.modules.Exception.ResourceAlreadyExistsException;
-import com.maxdev.plaxbackend.modules.Exception.ResourceNotFoundException;
-import com.maxdev.plaxbackend.modules.Util.BaseUrl;
+import static java.time.LocalDateTime.now;
 
-import lombok.extern.log4j.Log4j2;
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
+import java.time.format.DateTimeFormatter;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
@@ -19,17 +21,15 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
-import java.time.format.DateTimeFormatter;
-import java.util.Optional;
-import java.util.UUID;
+import com.maxdev.plaxbackend.modules.Category.Category;
+import com.maxdev.plaxbackend.modules.Category.DTO.CategoryDTO;
+import com.maxdev.plaxbackend.modules.Category.Mapper.CategoryMapper;
+import com.maxdev.plaxbackend.modules.Category.Repository.CategoryRepository;
+import com.maxdev.plaxbackend.modules.Exception.ResourceAlreadyExistsException;
+import com.maxdev.plaxbackend.modules.Exception.ResourceNotFoundException;
+import com.maxdev.plaxbackend.modules.Util.BaseUrl;
 
-import static java.time.LocalDateTime.*;
+import lombok.extern.log4j.Log4j2;
 
 @Log4j2
 @Service
@@ -69,14 +69,16 @@ public class CategoryService implements ICategoryService, BaseUrl {
         if (!categoryToUpdate.getName().equals(categoryDTO.getName())) {
             categoryRepository.findByName(categoryDTO.getName()).ifPresent(category -> {
                 log.error("Category with name: {} already exists", categoryDTO.getName());
-                throw new ResourceAlreadyExistsException("Category with name: " + categoryDTO.getName() + " already exists");
+                throw new ResourceAlreadyExistsException(
+                        "Category with name: " + categoryDTO.getName() + " already exists");
             });
         }
 
         if (image != null) {
             categoryDTO.setImage(saveImage(image));
             deleteImage(categoryToUpdate.getImage());
-        } else categoryDTO.setImage(categoryToUpdate.getImage());
+        } else
+            categoryDTO.setImage(categoryToUpdate.getImage());
 
         categoryToUpdate = CategoryMapper.INSTANCE.dtoToEntity(categoryDTO);
         categoryRepository.save(categoryToUpdate);
@@ -104,12 +106,24 @@ public class CategoryService implements ICategoryService, BaseUrl {
     @Transactional
     public Page<CategoryDTO> findAll(Pageable pageable) {
         log.debug("Finding all categories with pageable: {}", pageable);
-        Page<CategoryDTO> pageCategories = categoryRepository.findAll(pageable).map(CategoryMapper.INSTANCE::entityToDto);
+        Page<CategoryDTO> pageCategories = categoryRepository.findAll(pageable)
+                .map(CategoryMapper.INSTANCE::entityToDto);
         pageCategories.forEach(categoryDTO -> {
             categoryDTO.setImage(getBaseUrl() + "/api/categories/images/" + categoryDTO.getImage());
         });
-        return categoryRepository.findAll(pageable)
-                .map(CategoryMapper.INSTANCE::entityToDto);
+        return pageCategories;
+    }
+
+    @Override
+    public List<CategoryDTO> findAllWithoutPagination() {
+        log.debug("Finding all categories without pagination");
+        List<CategoryDTO> categoryDTOS = categoryRepository.findAll().stream()
+                .map(CategoryMapper.INSTANCE::entityToDto)
+                .toList();
+        categoryDTOS.forEach(categoryDTO -> {
+            categoryDTO.setImage(getBaseUrl() + "/api/categories/images/" + categoryDTO.getImage());
+        });
+        return categoryDTOS;
     }
 
     @Override
@@ -155,4 +169,3 @@ public class CategoryService implements ICategoryService, BaseUrl {
         Files.deleteIfExists(imagePath);
     }
 }
-

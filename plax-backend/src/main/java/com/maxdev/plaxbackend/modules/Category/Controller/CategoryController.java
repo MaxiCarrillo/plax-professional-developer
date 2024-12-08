@@ -1,7 +1,7 @@
 package com.maxdev.plaxbackend.modules.Category.Controller;
 
 import com.maxdev.plaxbackend.modules.Category.DTO.CategoryDTO;
-import com.maxdev.plaxbackend.modules.Category.Service.Impl.CategoryService;
+import com.maxdev.plaxbackend.modules.Category.Service.CategoryService;
 import com.maxdev.plaxbackend.modules.Exception.ResourceNotFoundException;
 import com.maxdev.plaxbackend.modules.Util.ApiPageResponse;
 
@@ -54,18 +54,28 @@ public class CategoryController {
                                 "Categories retrieved successfully"));
     }
 
-    @PostMapping(consumes = {"multipart/form-data"})
+    @GetMapping("/all")
+    public ResponseEntity<List<CategoryDTO>> getAllCategoriesWithoutPagination(){
+        log.debug("Received request to get all categories without pagination");
+        List<CategoryDTO> categories = categoryService.findAllWithoutPagination();
+        log.info("Returning {} categories", categories.size());
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(categories);
+    }
+
+    @PostMapping(consumes = { "multipart/form-data" })
     public ResponseEntity<CategoryDTO> createCategory(@RequestPart("category") CategoryDTO categoryDTO,
-                                                      @RequestPart("image") MultipartFile image) throws IOException, IllegalArgumentException {
+            @RequestPart("image") MultipartFile image) throws IOException, IllegalArgumentException {
         log.debug("Received request to create category: {}", categoryDTO);
         CategoryDTO savedCategory = categoryService.save(categoryDTO, image);
         log.info("Category created: {}", savedCategory.getName());
         return ResponseEntity.status(HttpStatus.CREATED).body(savedCategory);
     }
 
-    @PutMapping(consumes = {"multipart/form-data"})
+    @PutMapping(consumes = { "multipart/form-data" })
     public ResponseEntity<CategoryDTO> updateCategory(@RequestPart("category") CategoryDTO categoryDTO,
-                                                      @RequestPart(value = "image", required = false) MultipartFile image)
+            @RequestPart(value = "image", required = false) MultipartFile image)
             throws ResourceNotFoundException, IOException {
         log.debug("Received request to update category: {}", categoryDTO);
         CategoryDTO updatedCategory = categoryService.update(categoryDTO, image);

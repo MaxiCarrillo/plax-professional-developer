@@ -1,19 +1,20 @@
-package com.maxdev.plaxbackend.modules.Stay.Service.Impl;
+package com.maxdev.plaxbackend.modules.Stay.Service;
 
-import com.maxdev.plaxbackend.modules.Exception.ResourceAlreadyExistsException;
-import com.maxdev.plaxbackend.modules.Exception.ResourceNotFoundException;
-import com.maxdev.plaxbackend.modules.Stay.DTO.StayDTO;
-import com.maxdev.plaxbackend.modules.Stay.DTO.StaySaveDTO;
-import com.maxdev.plaxbackend.modules.Stay.Mapper.StayMapper;
-import com.maxdev.plaxbackend.modules.Stay.Mapper.StaySaveMapper;
-import com.maxdev.plaxbackend.modules.Stay.Repository.StayImageRepository;
-import com.maxdev.plaxbackend.modules.Stay.Repository.StayRepository;
-import com.maxdev.plaxbackend.modules.Stay.Service.IStayService;
-import com.maxdev.plaxbackend.modules.Stay.Stay;
-import com.maxdev.plaxbackend.modules.Stay.StayImage;
+import static java.time.LocalDateTime.now;
 
-import com.maxdev.plaxbackend.modules.Util.BaseUrl;
-import lombok.extern.log4j.Log4j2;
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
+import java.time.format.DateTimeFormatter;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Random;
+import java.util.Set;
+import java.util.UUID;
+import java.util.stream.Collectors;
 
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
@@ -23,17 +24,19 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
-import java.time.format.DateTimeFormatter;
-import java.util.*;
-import java.util.stream.Collectors;
+import com.maxdev.plaxbackend.modules.Exception.ResourceAlreadyExistsException;
+import com.maxdev.plaxbackend.modules.Exception.ResourceNotFoundException;
+import com.maxdev.plaxbackend.modules.Stay.Stay;
+import com.maxdev.plaxbackend.modules.Stay.StayImage;
+import com.maxdev.plaxbackend.modules.Stay.DTO.StayDTO;
+import com.maxdev.plaxbackend.modules.Stay.DTO.StaySaveDTO;
+import com.maxdev.plaxbackend.modules.Stay.Mapper.StayMapper;
+import com.maxdev.plaxbackend.modules.Stay.Mapper.StaySaveMapper;
+import com.maxdev.plaxbackend.modules.Stay.Repository.StayImageRepository;
+import com.maxdev.plaxbackend.modules.Stay.Repository.StayRepository;
+import com.maxdev.plaxbackend.modules.Util.BaseUrl;
 
-import static java.time.LocalDateTime.now;
+import lombok.extern.log4j.Log4j2;
 
 @Log4j2
 @Service
@@ -69,7 +72,8 @@ public class StayService implements IStayService, BaseUrl {
 
     @Override
     @Transactional
-    public StaySaveDTO update(StaySaveDTO stayDTO, MultipartFile[] images, Set<String> imagesToDelete) throws IOException {
+    public StaySaveDTO update(StaySaveDTO stayDTO, MultipartFile[] images, Set<String> imagesToDelete)
+            throws IOException {
         log.debug("Updating stay: {}", stayDTO.getId());
         boolean hasImageToDelete = imagesToDelete != null && !imagesToDelete.isEmpty();
         Stay stayToUpdate = stayRepository.findById(stayDTO.getId()).orElseThrow(() -> {

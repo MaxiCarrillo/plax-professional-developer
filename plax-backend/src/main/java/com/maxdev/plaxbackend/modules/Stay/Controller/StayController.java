@@ -3,7 +3,7 @@ package com.maxdev.plaxbackend.modules.Stay.Controller;
 import com.maxdev.plaxbackend.modules.Exception.ResourceNotFoundException;
 import com.maxdev.plaxbackend.modules.Stay.DTO.StayDTO;
 import com.maxdev.plaxbackend.modules.Stay.DTO.StaySaveDTO;
-import com.maxdev.plaxbackend.modules.Stay.Service.Impl.StayService;
+import com.maxdev.plaxbackend.modules.Stay.Service.StayService;
 import com.maxdev.plaxbackend.modules.Util.ApiPageResponse;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.core.io.Resource;
@@ -51,7 +51,7 @@ public class StayController {
     }
 
     @GetMapping("/search")
-    public ResponseEntity<ApiPageResponse<Set<StayDTO>>> getStaysByCategory(@RequestParam(value = "categoryIds") Set<UUID> categoryIds) {
+    public ResponseEntity<ApiPageResponse<Set<StayDTO>>> getStaysByCategory(@RequestParam(value = "categoryIds", required = false) Set<UUID> categoryIds) {
         log.debug("Received request to get stays by category ids: {}", categoryIds);
         Set<StayDTO> stays = stayService.findByCategoryIds(categoryIds);
         log.info("Returning {} stays", stays.size());
