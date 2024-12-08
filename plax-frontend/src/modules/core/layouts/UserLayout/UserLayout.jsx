@@ -1,11 +1,14 @@
-import { TopMenu, Footer } from '../../components';
+import { Footer, TopMenu } from '../../components';
+import { FormModalProvider } from '../../context';
 
 export const UserLayout = ({ children }) => {
     return (
-        <>
+        <main>
             <TopMenu />
-            {children}
+            <FormModalProvider>
+                {children}
+            </FormModalProvider>
             <Footer />
-        </>
+        </main>
     )
 }

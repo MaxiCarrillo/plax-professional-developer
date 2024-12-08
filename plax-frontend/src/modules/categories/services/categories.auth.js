@@ -4,6 +4,11 @@ const categoryService = {
         const categories = await response.json();
         return categories;
     },
+    getAllCategories: async () => {
+        const response = await fetch('http://localhost:8080/api/categories/all');
+        const categories = await response.json();
+        return categories;
+    },
     getCategory: async (id) => {
         const response = await fetch(`http://localhost:8080/api/categories/${id}`);
         const category = await response.json();

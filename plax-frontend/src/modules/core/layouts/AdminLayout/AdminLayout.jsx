@@ -15,12 +15,16 @@ const routes = [
     {
         path: '/administracion/caracteristicas',
         name: 'Características'
+    },
+    {
+        path: '/administracion/usuarios',
+        name: 'Usuarios'
     }
 ]
 
 export const AdminLayout = ({ children }) => {
     return (
-        <>
+        <main>
             <div className='adminLayout__container'>
                 <section className='sidebar__container'>
                     <nav className='sidebar__nav'>
@@ -49,6 +53,6 @@ export const AdminLayout = ({ children }) => {
                 </FormModalProvider>
             </div>
             <h1 className='adminLayout__displayMessage'>Debe ingresar desde un dispositivo con una resolución mayor a 1024px.</h1>
-        </>
+        </main>
     )
 }

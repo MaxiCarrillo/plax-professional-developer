@@ -25,6 +25,7 @@
     }
 
     & .topMenu__nav.topMenu__nav--active {
+
         @media (width <=768px) {
             right: 0;
             transition: right 120ms ease-in-out;
@@ -80,7 +81,16 @@
         @media (width > 768px) {
             display: block;
 
+            .avatar {
+                display: flex;
+            }
+
             &>ul {
+
+                & .navbar__link {
+                    display: none;
+                }
+
                 & li>a {
                     padding-block: 0.5rem;
                     padding-inline: 1rem;
@@ -155,4 +165,13 @@
             display: none;
         }
     }
+}
+
+.avatar {
+    text-transform: uppercase;
+    background-color: var(--color-base-100);
+    color: var(--color-base-800);
+    font-weight: 500;
+    display: none;
+    cursor: pointer;
 }

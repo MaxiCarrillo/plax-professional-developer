@@ -165,9 +165,16 @@ public class StayService implements IStayService, BaseUrl {
 
     public Set<StayDTO> findByCategoryIds(Set<UUID> categoryIds) {
         log.debug("Finding stays by category ids: {}", categoryIds);
-        Set<StayDTO> stays = stayRepository.findByCategory_IdIn(categoryIds).stream()
-                .map(StayMapper.INSTANCE::entityToDto)
-                .collect(Collectors.toSet());
+        Set<StayDTO> stays;
+        if (categoryIds == null || categoryIds.isEmpty()) {
+            stays = stayRepository.findAll().stream()
+                    .map(StayMapper.INSTANCE::entityToDto)
+                    .collect(Collectors.toSet());
+        } else {
+            stays = stayRepository.findByCategory_IdIn(categoryIds).stream()
+                    .map(StayMapper.INSTANCE::entityToDto)
+                    .collect(Collectors.toSet());
+        }
         stays.forEach(stay -> {
             stay.setImages(stay.getImages().stream()
                     .map(image -> getBaseUrl() + "/api/stays/images/" + image)

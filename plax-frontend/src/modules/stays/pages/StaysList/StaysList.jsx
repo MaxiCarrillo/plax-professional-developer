@@ -1,9 +1,9 @@
-import './StaysList.css';
-import { PaginateItems, FormModal } from '../../../core/components';
+import { useContext, useState } from 'react';
+import { FormModal, PaginateItems } from '../../../core/components';
+import { FormModalContext } from '../../../core/context';
 import { StayForm } from '../../components';
 import { useStay } from '../../hooks/useStay';
-import { useState, useContext } from 'react';
-import { FormModalContext } from '../../../core/context';
+import './StaysList.css';
 
 export const StaysList = () => {
     const { openCloseModal } = useContext(FormModalContext);

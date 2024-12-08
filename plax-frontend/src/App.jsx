@@ -1,14 +1,15 @@
-import { Navigation } from "./modules/core/routes/Navigation"
+import { AuthProvider } from "./modules/auth/context/AuthContext"
 import { NotificationProvider } from "./modules/core/context/notificationContext"
-
-
+import { Navigation } from "./modules/core/routes/Navigation"
 
 function App() {
 
   return (
-    <NotificationProvider>
-      <Navigation />
-    </NotificationProvider>
+    <AuthProvider>
+      <NotificationProvider>
+        <Navigation />
+      </NotificationProvider>
+    </AuthProvider>
   )
 }
 

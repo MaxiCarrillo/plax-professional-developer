@@ -1,6 +1,12 @@
 const featureService = {
-    getFeatures: async (page, size) => {
-        const response = await fetch(`http://localhost:8080/api/features?page=${page}&size=${size}`);
+    getFeatures: async (page, size, token) => {
+        const response = await fetch(`http://localhost:8080/api/features?page=${page}&size=${size}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            }
+        });
         const features = await response.json();
         return features;
     },

@@ -1,4 +1,4 @@
-import categoryService from "../services/categories";
+import categoryService from "../services/categories.auth";
 import { useState } from "react";
 
 export const useCategory = () => {
@@ -22,6 +22,20 @@ export const useCategory = () => {
             setLoading(false);
         }
     };
+
+    const getAllCategories = async () => {
+        try {
+            setLoading(true);
+            const response = await categoryService.getAllCategories();
+            setCategories(response);
+            setError(false);
+        } catch {
+            console.error("Error fetching categories");
+            setError(true);
+        } finally {
+            setLoading(false);
+        }
+    }
 
     const deleteCategory = async (id) => {
         try {
@@ -67,6 +81,7 @@ export const useCategory = () => {
         loading,
         totalPages,
         getCategories,
+        getAllCategories,
         deleteCategory,
         addCategory,
         editCategory

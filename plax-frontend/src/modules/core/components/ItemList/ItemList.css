@@ -13,8 +13,14 @@ a:has(.itemList__container) {
     padding-block: 1rem;
     align-items: center;
 
+    & .itemList__info:first-child{
+        width: 200px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
     & .itemList__info {
-        flex-shrink: 5;
+        flex-shrink: 1;
     }
 
     & .itemList__info:nth-child(2) {

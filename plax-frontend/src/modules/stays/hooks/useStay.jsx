@@ -1,8 +1,10 @@
-import stayService from '../services/stays';
 import { useState } from 'react';
+import { useAuth } from '../../auth/context/AuthContext';
+import stayService from '../services/stays.service';
 
 
 export const useStay = () => {
+    const { token } = useAuth();
     const [stay, setStay] = useState(null);
     const [stays, setStays] = useState(null);
     const [error, setError] = useState(null);
@@ -12,7 +14,7 @@ export const useStay = () => {
     const getStays = async (page = 0, size = 5) => {
         try {
             setLoading(true);
-            const response = await stayService.getStays(page, size);
+            const response = await stayService.getStays(page, size, token);
             setStays(response);
             setTotalPages(response.totalPages);
             setError(false);
@@ -35,6 +37,20 @@ export const useStay = () => {
             setLoading(false);
         }
     };
+
+    const searchStays = async (categoryIds = []) => {
+        try {
+            setLoading(true);
+            const response = await stayService.searchStays(categoryIds);
+            setStays(response);
+            setError(false);
+        } catch {
+            console.error('Error searching stays');
+            setError(true);
+        } finally {
+            setLoading(false);
+        }
+    }
 
     const deleteStay = async (id) => {
         try {
@@ -80,6 +96,7 @@ export const useStay = () => {
         error,
         totalPages,
         getStays,
+        searchStays,
         getStay,
         deleteStay,
         addStay,

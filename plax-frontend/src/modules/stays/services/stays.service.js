@@ -1,6 +1,18 @@
 const stayService = {
-    getStays: async (page, size) => {
-        const response = await fetch(`http://localhost:8080/api/stays?page=${page}&size=${size}`);
+    getStays: async (page, size, token) => {
+        const response = await fetch(`http://localhost:8080/api/stays?page=${page}&size=${size}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            }
+        });
+        const stays = await response.json();
+        return stays;
+    },
+    searchStays: async (categoryIds) => {
+        categoryIds = categoryIds.map(id => `categoryIds=${id}`).join('&');
+        const response = await fetch(`http://localhost:8080/api/stays/search?${categoryIds}`);
         const stays = await response.json();
         return stays;
     },

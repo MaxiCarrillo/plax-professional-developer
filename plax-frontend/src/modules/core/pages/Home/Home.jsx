@@ -14,7 +14,7 @@ export const Home = () => {
     const [dateRange, setDateRange] = useState([]);
     const [place, setPlace] = useState('');
     const navigate = useNavigate();
-    const { api } = useContext(NotificationContext);
+    const { toaster } = useContext(NotificationContext);
 
     const { RangePicker } = DatePicker;
 
@@ -28,7 +28,7 @@ export const Home = () => {
 
     const handleOnSubmit = (e) => {
         e.preventDefault();
-        if (!place || !dateRange[0] || !dateRange[1]) return api['error']({
+        if (!place || !dateRange[0] || !dateRange[1]) return toaster['error']({
             message: 'Debe completar todos los campos',
             description:
                 'Por favor, seleccione un lugar y un rango de fechas.',

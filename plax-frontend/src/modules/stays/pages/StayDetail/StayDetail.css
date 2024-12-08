@@ -116,7 +116,7 @@
         & > ul{
             margin-block-start: .8rem;
             display: grid;
-            gap: .5rem;
+            justify-content: space-between;
             grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
             list-style: none;
 

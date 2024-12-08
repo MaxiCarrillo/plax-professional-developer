@@ -1,5 +1,6 @@
 .formModal__dialog{
     border: none;
+    z-index: 1000;
 
     & .formModal__container{
         position: fixed;
@@ -18,6 +19,7 @@
         display: flex;
         flex-direction: column;
         overflow-y: auto;
+        z-index: 1000;
 
         & .formModal__close {
             align-self: flex-end;

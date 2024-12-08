@@ -1,7 +1,9 @@
-import featureService from "../services/features";
 import { useState } from "react";
+import { useAuth } from "../../auth/context/AuthContext";
+import featureService from "../services/features.service";
 
 export const useFeature = () => {
+    const { token } = useAuth();
     const [features, setFeatures] = useState(null);
     const [feature, setFeature] = useState(null);
     const [error, setError] = useState(null);
@@ -11,7 +13,7 @@ export const useFeature = () => {
     const getFeatures = async (page = 0, size = 5) => {
         try {
             setLoading(true);
-            const response = await featureService.getFeatures(page, size);
+            const response = await featureService.getFeatures(page, size, token);
             setFeatures(response);
             setTotalPages(response.totalPages);
             setError(false);

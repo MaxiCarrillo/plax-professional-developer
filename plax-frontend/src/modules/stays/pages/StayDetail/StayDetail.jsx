@@ -5,6 +5,7 @@ import { useStay } from '../../hooks/useStay';
 import { Carousel } from 'react-responsive-carousel';
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 import ImageFallback from '../../../../assets/images/image-fallback.jpg';
+import { ReactSVG } from 'react-svg';
 
 export const StayDetail = () => {
     const { stay, getStay, loading } = useStay();
@@ -89,7 +90,12 @@ export const StayDetail = () => {
                                     {
                                         stay?.features?.map((feature, index) =>
                                             <li key={index}>
-                                                <img src={feature.icon} alt={feature.name} width={32} height={32} />
+                                                <ReactSVG
+                                                    src={feature.icon}
+                                                    beforeInjection={(svg) => {
+                                                        svg.setAttribute("fill", "#ff8e3d");
+                                                    }}
+                                                />
                                                 <span>{feature.name}</span>
                                             </li>
                                         )

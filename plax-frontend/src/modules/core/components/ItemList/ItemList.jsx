@@ -1,7 +1,7 @@
 import './ItemList.css';
 
 export const ItemList = ({ data, openCloseModal, setDeleteItemId, editItem }) => {
-    const { id, name } = data;
+    const { id, name, email } = data;
 
     const handleClickDelete = (event) => {
         event.preventDefault();
@@ -20,12 +20,22 @@ export const ItemList = ({ data, openCloseModal, setDeleteItemId, editItem }) =>
                 <p><strong>ID</strong></p>
                 <p>{id}</p>
             </div>
-            <div className='itemList__info'>
-                <p><strong>NOMBRE</strong></p>
-                <p>{name}</p>
-            </div>
+            {
+                name ? (
+                    <div className='itemList__info'>
+                        <p><strong>NOMBRE</strong></p>
+                        <p>{name}</p>
+                    </div>
+
+                ) : (
+                    <div className='itemList__info'>
+                        <p><strong>EMAIL</strong></p>
+                        <p>{email}</p>
+                    </div>
+                )
+            }
             <div className='itemList__actions'>
-                <button onClick={(event)=>handleClickEdit(event)}>
+                <button onClick={(event) => handleClickEdit(event)}>
                     <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 30 30" fill="none">
                         <path d="M6.25 26.25C5.5625 26.25 4.97396 26.0052 4.48438 25.5156C3.99479 25.026 3.75 24.4375 3.75 23.75V6.25C3.75 5.5625 3.99479 4.97396 4.48438 4.48438C4.97396 3.99479 5.5625 3.75 6.25 3.75H17.4063L14.9063 6.25H6.25V23.75H23.75V15.0625L26.25 12.5625V23.75C26.25 24.4375 26.0052 25.026 25.5156 25.5156C25.026 26.0052 24.4375 26.25 23.75 26.25H6.25ZM11.25 18.75V13.4375L22.7188 1.96875C22.9688 1.71875 23.25 1.53125 23.5625 1.40625C23.875 1.28125 24.1875 1.21875 24.5 1.21875C24.8333 1.21875 25.151 1.28125 25.4531 1.40625C25.7552 1.53125 26.0313 1.71875 26.2813 1.96875L28.0313 3.75C28.2604 4 28.4375 4.27604 28.5625 4.57813C28.6875 4.88021 28.75 5.1875 28.75 5.5C28.75 5.8125 28.6927 6.11979 28.5781 6.42188C28.4635 6.72396 28.2813 7 28.0313 7.25L16.5625 18.75H11.25ZM13.75 16.25H15.5L22.75 9L21.875 8.125L20.9688 7.25L13.75 14.4688V16.25Z" fill="#EFF0F3" />
                     </svg>

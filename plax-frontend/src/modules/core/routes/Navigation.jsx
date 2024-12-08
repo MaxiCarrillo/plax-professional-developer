@@ -1,16 +1,17 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import { routes, routesAdmin } from './routes';
+import { routes, routesAdmin, routesUser } from './routes';
+import { useAuth } from '../../auth/context/AuthContext';
 
 export const Navigation = () => {
 
-    const boolean = true;
+    const { user } = useAuth();
 
     return (
         <>
             <BrowserRouter>
                 <Routes>
                     {
-                        boolean ? routesAdmin.map((route, index) => (
+                        user?.role === 'ADMIN' ? routesAdmin.map((route, index) => (
                             <Route
                                 key={index}
                                 path={route.path}
@@ -21,8 +22,9 @@ export const Navigation = () => {
                                 }
                                 exact={route.exact}
                             />
-                        )) :
-                            routes.map((route, index) => (
+                        ))
+                            :
+                            user?.role === 'USER' ? routesUser.map((route, index) => (
                                 <Route
                                     key={index}
                                     path={route.path}
@@ -34,6 +36,19 @@ export const Navigation = () => {
                                     exact={route.exact}
                                 />
                             ))
+                                :
+                                routes.map((route, index) => (
+                                    <Route
+                                        key={index}
+                                        path={route.path}
+                                        element={
+                                            <route.layout>
+                                                <route.component />
+                                            </route.layout>
+                                        }
+                                        exact={route.exact}
+                                    />
+                                ))
                     }
                 </Routes>
             </BrowserRouter>

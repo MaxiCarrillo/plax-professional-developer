@@ -4,10 +4,10 @@ import { createContext } from 'react';
 export const NotificationContext = createContext();
 
 export const NotificationProvider = ({ children }) => {
-    const [api, contextHolder] = notification.useNotification();
+    const [toaster, contextHolder] = notification.useNotification();
 
     return (
-        <NotificationContext.Provider value={{api}}>
+        <NotificationContext.Provider value={{toaster}}>
             {contextHolder}
             {children}
         </NotificationContext.Provider>
