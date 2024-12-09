@@ -13,7 +13,7 @@ export const useFeature = () => {
     const getFeatures = async (page = 0, size = 5) => {
         try {
             setLoading(true);
-            const response = await featureService.getFeatures(page, size, token);
+            const response = await featureService.getFeatures(page, size);
             setFeatures(response);
             setTotalPages(response.totalPages);
             setError(false);
@@ -28,7 +28,7 @@ export const useFeature = () => {
     const deleteFeature = async (id) => {
         try {
             setLoading(true);
-            await featureService.deleteFeature(id);
+            await featureService.deleteFeature(id, token);
         } catch {
             console.error("Error deleting feature");
         } finally {
@@ -39,7 +39,7 @@ export const useFeature = () => {
     const addFeature = async (data) => {
         try {
             setLoading(true);
-            await featureService.createFeature(data);
+            await featureService.createFeature(data, token);
             setError(false);
         } catch (e) {
             setError(true);
@@ -52,7 +52,7 @@ export const useFeature = () => {
     const editFeature = async (data) => {
         try {
             setLoading(true);
-            await featureService.editFeature(data);
+            await featureService.editFeature(data, token);
             setError(false);
         } catch (e) {
             setError(true);

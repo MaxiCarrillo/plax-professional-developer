@@ -1,51 +1,52 @@
+import api from "../../core/api";
+
 const featureService = {
-    getFeatures: async (page, size, token) => {
-        const response = await fetch(`http://localhost:8080/api/features?page=${page}&size=${size}`, {
-            method: 'GET',
+    getFeatures: (page, size) => {
+        return api.get(`/features?page=${page}&size=${size}`)
+            .then(response => {
+                return response.data;
+            }).catch(() => {
+                throw new Error('No se pudieron obtener las características. Por favor, intente nuevamente más tarde');
+            });
+    },
+    getFeature: (id) => {
+        return api.get(`/features/${id}`)
+            .then(response => {
+                return response.data;
+            }).catch(error => {
+                if (error.response.status === 404) throw new Error('Característica no encontrada');
+                throw new Error('No se pudo obtener la característica. Por favor, intente nuevamente más tarde');
+            });
+    },
+    deleteFeature: (id, token) => {
+        api.delete(`/features/${id}`, {
             headers: {
-                'Content-Type': 'application/json',
                 'Authorization': `Bearer ${token}`
             }
+        }).catch(error => {
+            if (error.response.status === 404) throw new Error('Característica no encontrada');
+            throw new Error('No se pudo eliminar la característica. Por favor, intente nuevamente más tarde');
         });
-        const features = await response.json();
-        return features;
     },
-    getFeature: async (id) => {
-        const response = await fetch(`http://localhost:8080/api/features/${id}`);
-        const feature = await response.json();
-        return feature;
-    },
-    deleteFeature: async (id) => {
-        const response = await fetch(`http://localhost:8080/api/features/${id}`, {
-            method: 'DELETE'
-        });
-        return response.status === 204;
-    },
-    createFeature: async (data) => {
+    createFeature: (data, token) => {
         const formData = new FormData();
         const feature = {
             name: data.name,
         };
         formData.append('feature', new Blob([JSON.stringify(feature)], { type: 'application/json' }));
         data.icon[0] && formData.append('icon', data.icon[0]);
-        try {
-            const response = await fetch('http://localhost:8080/api/features', {
-                method: 'POST',
-                body: formData,
-                headers: {
-                    'Accept': 'application/json'
-                }
-            });
-            if (response.status !== 201) {
-                throw new Error('Error creating feature');
+
+        api.post('/features', formData, {
+            headers: {
+                'Accept': 'application/json',
+                'Authorization': `Bearer ${token}`
             }
-            const feature = await response.json();
-            return feature;
-        } catch (e) {
-            console.error('Error creating feature', e);
-        }
+        }).catch(error => {
+            if (error.response.status === 409) throw new Error('La característica ya se encuentra registrada');
+            throw new Error('No se pudo crear la característica. Por favor, intente nuevamente más tarde');
+        });
     },
-    editFeature: async (data) => {
+    editFeature: (data, token) => {
         const formData = new FormData();
         const feature = {
             id: data.id,
@@ -53,22 +54,16 @@ const featureService = {
         };
         formData.append('feature', new Blob([JSON.stringify(feature)], { type: 'application/json' }));
         data.icon && formData.append('icon', data.icon[0]);
-        try {
-            const response = await fetch('http://localhost:8080/api/features', {
-                method: 'PUT',
-                body: formData,
-                headers: {
-                    'Accept': 'application/json'
-                }
-            });
-            if (response.status !== 200) {
-                throw new Error('Error editing feature');
+
+        api.put('/features', formData, {
+            headers: {
+                'Accept': 'application/json',
+                'Authorization': `Bearer ${token}`
             }
-            const feature = await response.json();
-            return feature;
-        } catch (e) {
-            console.error('Error editing feature', e);
-        }
+        }).catch(error => {
+            if (error.response.status === 404) throw new Error('Característica no encontrada');
+            throw new Error('No se pudo editar la característica. Por favor, intente nuevamente más tarde');
+        });
     }
 }
 

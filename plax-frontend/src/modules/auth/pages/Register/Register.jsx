@@ -1,5 +1,5 @@
 import { useFormik } from 'formik';
-import { useContext } from 'react';
+import { useContext, useState } from 'react';
 import { Link } from 'react-router-dom';
 import * as Yup from "yup";
 import { NotificationContext } from '../../../core/context/notificationContext';
@@ -7,6 +7,7 @@ import './Register.css';
 
 export const Register = () => {
     const { toaster } = useContext(NotificationContext);
+    const [loading, setLoading] = useState(false);
 
     const formik = useFormik({
         initialValues: {
@@ -23,7 +24,13 @@ export const Register = () => {
         }),
         validateOnChange: true,
         onSubmit: (newUser) => {
+            setLoading(true);
             console.log(newUser);
+            toaster['success']({
+                message: 'Registro exitoso.',
+                description: '¡Bienvenido a Plax!',
+                duration: 3
+            })
         }
     })
 
@@ -72,7 +79,7 @@ export const Register = () => {
                     }
                 </div>
                 <div className='form__container'>
-                    <button type='submit' className='button button--base' disabled={mutation.isPending}>Registrarme</button>
+                    <button type='submit' className='button button--base'>Registrarme</button>
                 </div>
                 <p className='form__terms'><small>Al registrarse está aceptando los terminos y condiciones de Plax.</small></p>
             </form>

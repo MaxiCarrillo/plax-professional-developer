@@ -1,7 +1,9 @@
-import categoryService from "../services/categories.auth";
 import { useState } from "react";
+import { useAuth } from "../../auth/context/AuthContext";
+import categoryService from "../services/categories.service";
 
 export const useCategory = () => {
+    const { token } = useAuth();
     const [categories, setCategories] = useState(null);
     const [category, setCategory] = useState(null);
     const [error, setError] = useState(null);
@@ -40,7 +42,7 @@ export const useCategory = () => {
     const deleteCategory = async (id) => {
         try {
             setLoading(true);
-            await categoryService.deleteCategory(id);
+            await categoryService.deleteCategory(id, token);
         } catch {
             console.error("Error deleting category");
         } finally {
@@ -51,7 +53,7 @@ export const useCategory = () => {
     const addCategory = async (data) => {
         try {
             setLoading(true);
-            await categoryService.createCategory(data);
+            await categoryService.createCategory(data, token);
             setError(false);
         } catch (e) {
             setError(true);
@@ -64,7 +66,7 @@ export const useCategory = () => {
     const editCategory = async (data) => {
         try {
             setLoading(true);
-            await categoryService.editCategory(data);
+            await categoryService.editCategory(data, token);
             setError(false);
         } catch (e) {
             setError(true);

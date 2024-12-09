@@ -1,73 +1,39 @@
+import api from "../../core/api";
+
 const userService = {
-    getUsers: async (token) => {
-        try {
-            const response = await fetch('http://localhost:8080/api/users', {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`
-                }
-            });
-            switch (response.status) {
-                case 200:
-                    const users = await response.json();
-                    return users;
-                default:
-                    throw new Error('No se pudieron obtener los usuarios. Por favor, intente nuevamente más tarde.');
+    getUsers: (token) => {
+        return api.get('/users', {
+            headers: {
+                'Authorization': `Bearer ${token}`
             }
-        } catch (error) {
-            if (error.message === 'Failed to fetch') {
-                throw new Error('Verifique su conexión a Internet.');
-            }
-            throw new Error(error.message);
+        }).then(response => {
+            return response.data;
         }
+        ).catch(() => {
+            throw new Error('No se pudieron obtener los usuarios. Por favor, intente nuevamente más tarde.');
+        });
     },
-    deleteUser: async (id, token) => {
-        try {
-            const response = await fetch(`http://localhost:8080/api/users/${id}`, {
-                method: 'DELETE',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`
-                }
-            });
-            switch (response.status) {
-                case 204:
-                    return true;
-                default:
-                    throw new Error('No se pudo eliminar el usuario. Por favor, intente nuevamente más tarde.');
+    deleteUser: (id, token) => {
+        api.delete(`/users/${id}`, {
+            headers: {
+                'Authorization': `Bearer ${token}`
             }
-        } catch (error) {
-            if (error.message === 'Failed to fetch') {
-                throw new Error('Verifique su conexión a Internet.');
-            }
-            throw new Error(error.message);
-        }
+        }).catch(() => {
+            throw new Error('No se pudo eliminar el usuario. Por favor, intente nuevamente más tarde.');
+        });
     },
-    editUser: async (values, token) => {
-        try {
-            const response = await fetch('http://localhost:8080/api/users', {
-                method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`
-                },
-                body: JSON.stringify(values)
-            });
-            switch (response.status) {
-                case 200:
-                    return true;
-                case 409: 
-                    throw new Error('El email ya se encuentra registrado.');
-                default:
-                    throw new Error('No se pudo editar el usuario. Por favor, intente nuevamente más tarde.');
+    editUser: (values, token) => {
+        api.put('/users', values, {
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
             }
-        } catch (error) {
-            if (error.message === 'Failed to fetch') {
-                throw new Error('Verifique su conexión a Internet.');
+        }).catch(error => {
+            if (error.response.status === 409) {
+                throw new Error('El email ya se encuentra registrado.');
             }
-            throw new Error(error.message);
-        }
+            throw new Error('No se pudo editar el usuario. Por favor, intente nuevamente más tarde.');
+        });
     }
 }
 
