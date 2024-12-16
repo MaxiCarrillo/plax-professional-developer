@@ -1,20 +1,21 @@
-import './Home.css';
+import { DatePicker, Select } from 'antd';
+import locale from 'antd/es/date-picker/locale/es_ES';
+import { format } from 'date-fns';
+import { useContext, useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { CategoryCard } from '../../../categories/components/';
 import { StayCard } from '../../../stays/components/';
-import { useContext, useEffect, useState } from 'react';
-import { DatePicker, Select } from 'antd';
-import { useNavigate } from 'react-router-dom';
 import { NotificationContext } from '../../context/notificationContext';
-
+import './Home.css';
 
 export const Home = () => {
 
+    const { toaster } = useContext(NotificationContext);
     const [categories, setCategories] = useState([]);
     const [stays, setStays] = useState([]);
     const [dateRange, setDateRange] = useState([]);
     const [place, setPlace] = useState('');
     const navigate = useNavigate();
-    const { toaster } = useContext(NotificationContext);
 
     const { RangePicker } = DatePicker;
 
@@ -34,7 +35,9 @@ export const Home = () => {
                 'Por favor, seleccione un lugar y un rango de fechas.',
             duration: 3
         });
-        navigate(`/search?place=${place}&checkIn=${dateRange[0]}&checkOut=${dateRange[1]}`);
+        const checkIn = format(dateRange[0].$d, 'dd-MM-yyyy');
+        const checkOn = format(dateRange[1].$d, 'dd-MM-yyyy');
+        navigate(`/search?place=${place}&checkIn=${checkIn}&checkOut=${checkOn}`);
     }
 
     useEffect(() => {
@@ -56,8 +59,9 @@ export const Home = () => {
                 <div>
                     <h1>Encontrá tu próxima estancia</h1>
                     <form className='mainSection__form' onSubmit={handleOnSubmit}>
-                        <label htmlFor="">
+                        <label htmlFor="place">
                             <Select
+                                id='place'
                                 className='form__multiple-select'
                                 showSearch
                                 placeholder="Select a person"
@@ -79,12 +83,14 @@ export const Home = () => {
                                 ]}
                             />
                         </label>
-                        <label htmlFor="">
+                        <label htmlFor="date">
                             <RangePicker
+                                id="date"
                                 className='form__date-rage-picker'
                                 onChange={handleDateRangeOnChange}
                                 format={'DD/MM/YYYY'}
-                                placeholder={['Check-in', 'Check-out']}
+                                placeholder={['Fecha de Entrada', 'Fecha de Salida']}
+                                locale={locale}
                             />
                         </label>
                         <button className='button button--base'>

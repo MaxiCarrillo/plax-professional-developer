@@ -28,7 +28,7 @@
             display: flex;
             flex-wrap: wrap;
 
-            & label:first-child{
+            & label:first-child {
                 flex-basis: 300px;
                 flex-grow: 1;
 
@@ -86,17 +86,17 @@
 .home__recommendationsSection {
     &>.recommendationsSection__container {
         display: grid;
-        grid-template-columns: minmax(200px, 250px);
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
         justify-content: center;
         gap: 1rem;
         padding-block: 1rem;
 
-        @media (width > 500px) {
-            grid-template-columns: repeat(2, minmax(200px, 250px));
+        @media (width > 480px) {
+            grid-template-columns: repeat(auto-fill, minmax(450px, 1fr));
         }
 
         @media (width > 768px) {
-            grid-template-columns: repeat(2, 1fr);
+            grid-template-columns: repeat(auto-fill, minmax(600px, 1fr));
         }
     }
 }

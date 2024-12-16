@@ -81,8 +81,8 @@
         @media (width > 768px) {
             display: block;
 
-            .avatar {
-                display: flex;
+            .button__avatar {
+                display: block;
             }
 
             &>ul {
@@ -172,6 +172,14 @@
     background-color: var(--color-base-100);
     color: var(--color-base-800);
     font-weight: 500;
-    display: none;
     cursor: pointer;
+}
+
+.button__avatar {
+    display: none;
+    border: none;
+    background: none;
+    border-radius: 100%;
+
+
 }

@@ -3,7 +3,7 @@ a:has(.stayCard__container) {
     color: var(--color-base-900);
 
     &:hover {
-        & .stayCard__container > .stayCard__info > h3{
+        & .stayCard__container>.stayCard__info>h3 {
             text-decoration: underline;
         }
     }
@@ -12,12 +12,16 @@ a:has(.stayCard__container) {
 .stayCard__container {
     display: flex;
     gap: 0.5rem;
+    flex-direction: row;
     flex-direction: column;
     padding-inline: 0.5rem;
     padding-block: 0.5rem;
     background-color: var(--color-primary-100);
     border-radius: 1rem;
     box-shadow: 8px 4px 1rem rgb(0 0 0 / 25%);
+
+    & 
+
 
     & figure {
         align-self: center;
@@ -64,6 +68,30 @@ a:has(.stayCard__container) {
 
             &>strong {
                 font-size: 1.2rem;
+            }
+        }
+    }
+}
+
+@media (width > 480px) {
+    .stayCard__container {
+        flex-direction: row;
+
+        & figure {
+            flex-shrink: 0;
+        }
+
+        & .stayCard__info {
+            display: flex;
+            flex-direction: column;
+            padding-block: .5rem;
+            flex-grow: 1;
+
+            & .stayCard__price {
+                flex-grow: 1;
+                display: flex;
+                align-items: end;
+                justify-content: end;
             }
         }
     }

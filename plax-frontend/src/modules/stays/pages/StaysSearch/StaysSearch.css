@@ -69,6 +69,11 @@
     }
 }
 
+.StaySearch__form-container{
+    display: grid;
+    gap: 1rem;
+}
+
 .StaySearch__search {
     margin-top: 1rem;
     display: grid;

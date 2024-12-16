@@ -45,8 +45,11 @@ export const TopMenu = () => {
             <Dropdown
                 menu={{ items }}
                 trigger={['click']}
+
             >
-                <Avatar className='avatar' size={40}>{user ? `${user.firstname[0]}${user.lastname[0]}` : 'USER'}</Avatar>
+                <button className='button__avatar'>
+                    <Avatar className='avatar' size={40}>{user ? `${user.firstname[0]}${user.lastname[0]}` : 'USER'}</Avatar>
+                </button>
             </Dropdown>
         );
     }, [user]);

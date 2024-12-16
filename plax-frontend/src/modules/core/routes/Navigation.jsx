@@ -1,56 +1,47 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import { routes, routesAdmin, routesUser } from './routes';
-import { useAuth } from '../../auth/context/AuthContext';
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import { QueryParamProvider } from 'use-query-params';
+import { ReactRouter6Adapter } from 'use-query-params/adapters/react-router-6';
+import { PrivateRoute } from './PrivateRoute';
+import { PublicRoute } from './PublicRoute';
+import routesConfig from './routes';
 
 export const Navigation = () => {
-
-    const { user } = useAuth();
-
     return (
         <>
             <BrowserRouter>
-                <Routes>
-                    {
-                        user?.role === 'ADMIN' ? routesAdmin.map((route, index) => (
+                <QueryParamProvider
+                    adapter={ReactRouter6Adapter}
+                >
+                    <Routes>
+                        {routesConfig.map(({ path, component: Component, layout: Layout, roles }, index) => (
                             <Route
                                 key={index}
-                                path={route.path}
+                                path={path}
                                 element={
-                                    <route.layout>
-                                        <route.component />
-                                    </route.layout>
+                                    roles.length > 0 ? (
+                                        <PrivateRoute roles={roles}>
+                                            <Layout>
+                                                <Component />
+                                            </Layout>
+                                        </PrivateRoute>
+                                    ) : (
+                                        (path === '/iniciar-sesion' || path === '/registro') ? (
+                                            <PublicRoute>
+                                                <Layout>
+                                                    <Component />
+                                                </Layout>
+                                            </PublicRoute>
+                                        ) : (
+                                            <Layout>
+                                                <Component />
+                                            </Layout>
+                                        )
+                                    )
                                 }
-                                exact={route.exact}
                             />
-                        ))
-                            :
-                            user?.role === 'USER' ? routesUser.map((route, index) => (
-                                <Route
-                                    key={index}
-                                    path={route.path}
-                                    element={
-                                        <route.layout>
-                                            <route.component />
-                                        </route.layout>
-                                    }
-                                    exact={route.exact}
-                                />
-                            ))
-                                :
-                                routes.map((route, index) => (
-                                    <Route
-                                        key={index}
-                                        path={route.path}
-                                        element={
-                                            <route.layout>
-                                                <route.component />
-                                            </route.layout>
-                                        }
-                                        exact={route.exact}
-                                    />
-                                ))
-                    }
-                </Routes>
+                        ))}
+                    </Routes>
+                </QueryParamProvider>
             </BrowserRouter>
         </>
     )
