@@ -1,5 +1,6 @@
 package com.maxdev.plaxbackend.modules.Stay;
 
+import com.maxdev.plaxbackend.modules.Address.Address;
 import com.maxdev.plaxbackend.modules.Category.Category;
 import com.maxdev.plaxbackend.modules.Feature.Feature;
 import jakarta.persistence.*;
@@ -44,5 +45,8 @@ public class Stay {
     @ManyToOne
     @JoinColumn(name = "id_category")
     private Category category;
-    private String address;
+
+    @NotNull(message = "Address cannot be null")
+    @OneToOne(cascade = CascadeType.ALL)
+    private Address address;
 }

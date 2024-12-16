@@ -1,5 +1,6 @@
 package com.maxdev.plaxbackend.modules.User;
 
+import com.maxdev.plaxbackend.modules.Stay.Stay;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -11,6 +12,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 @Data
@@ -28,8 +30,11 @@ public class User implements UserDetails {
     private String password;
     @Enumerated(EnumType.STRING)
     private Role role;
+    @ManyToMany(cascade = CascadeType.DETACH)
+    private Set<Stay> favorites;
 
     @Override
+
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of(new SimpleGrantedAuthority(role.name()));
     }
