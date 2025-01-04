@@ -260,7 +260,8 @@ form * {
       resize: none;
       transition: 200ms border ease-out;
 
-      &:focus, &:hover {
+      &:focus,
+      &:hover {
         outline: none;
         border: 1px solid var(--color-primary-700);
       }

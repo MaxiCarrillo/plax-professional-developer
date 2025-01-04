@@ -61,23 +61,6 @@ const stayService = {
             }
             throw new Error('No se pudo crear el alojamiento. Por favor, intente nuevamente más tarde.');
         })
-
-        // try {
-        //     const response = await fetch('http://localhost:8080/api/stays', {
-        //         method: 'POST',
-        //         body: formData,
-        //         headers: {
-        //             'Accept': 'application/json'
-        //         },
-        //     });
-        //     if (response.status !== 201) {
-        //         throw new Error('Error creating stay');
-        //     }
-        //     const stay = await response.json();
-        //     return stay;
-        // } catch (e) {
-        //     console.error('Error creating stay', e);
-        // }
     },
     editStay: async (data) => {
         const formData = new FormData();
@@ -108,23 +91,6 @@ const stayService = {
             }
             throw new Error('No se pudo editar el alojamiento. Por favor, intente nuevamente más tarde.');
         })
-
-        // try {
-        //     const response = await fetch('http://localhost:8080/api/stays', {
-        //         method: 'PUT',
-        //         body: formData,
-        //         headers: {
-        //             'Accept': 'application/json'
-        //         },
-        //     });
-        //     if (response.status !== 200) {
-        //         throw new Error('Error editing stay');
-        //     }
-        //     const stay = await response.json();
-        //     return stay;
-        // } catch (e) {
-        //     console.error('Error editing stay', e);
-        // }
     }
 };
 

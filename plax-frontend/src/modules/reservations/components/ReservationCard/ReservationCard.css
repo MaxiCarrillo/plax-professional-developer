@@ -1,0 +1,17 @@
+.ReservationCard__container {
+    outline: 1px solid;
+    border-radius: 1rem;
+    display: flex;
+    gap: 1rem;
+
+    & .ReservationCard__figure{
+        aspect-ratio: 1/1;
+        outline: 1px solid;
+
+        & > img{
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+    }
+}

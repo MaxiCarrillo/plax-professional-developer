@@ -34,6 +34,26 @@ const userService = {
             }
             throw new Error('No se pudo editar el usuario. Por favor, intente nuevamente más tarde.');
         });
+    },
+    addFavoriteStay: (values, token) => {
+        return api.post('/users/add-favorite', values, {
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            }
+        }).catch(() => {
+            throw new Error('No se pudo agregar a favoritos. Por favor, intente nuevamente más tarde.');
+        })
+    },
+    removeFavoriteStay: (values, token) => {
+        return api.post('/users/remove-favorite', values, {
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            }
+        }).catch(() => {
+            throw new Error('No se pudo eliminar de favoritos. Por favor, intente nuevamente más tarde.');
+        })
     }
 }
 

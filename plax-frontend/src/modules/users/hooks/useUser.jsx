@@ -72,6 +72,45 @@ export const useUser = () => {
         }
     }
 
+    const addFavoriteStay = async (values) => {
+        try {
+            setLoading(true);
+            await userService.addFavoriteStay(values, token);
+            setError({
+                error: false,
+                message: null
+            })
+            return error;
+        } catch (error) {
+            console.error(error.message);
+            return {
+                error: true,
+                message: error.message
+            }
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const removeFavoriteStay = async (values) => {
+        try {
+            setLoading(true);
+            await userService.removeFavoriteStay(values, token);
+            return {
+                error: false,
+                message: null
+            }
+        } catch (error) {
+            console.error(error.message);
+            return {
+                error: true,
+                message: error.message
+            }
+        } finally {
+            setLoading(false);
+        }
+    }
+
 
     return {
         users,
@@ -82,6 +121,8 @@ export const useUser = () => {
         getUsers,
         deleteUser,
         addUser,
-        editUser
+        editUser,
+        addFavoriteStay,
+        removeFavoriteStay
     }
 }

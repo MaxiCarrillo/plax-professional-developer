@@ -14,6 +14,7 @@ import { CategoriesList } from '../../categories/pages';
 
 import {
     StayDetail,
+    StayFavorites,
     StaysList,
     StaysSearch
 } from '../../stays/pages';
@@ -23,6 +24,8 @@ import { FeaturesList } from '../../features/pages';
 import { Login, Register } from '../../auth/pages';
 
 import { UsersList } from '../../users/pages';
+
+import { ReservationsUser } from '../../reservations/pages';
 
 const publicRoutes = [
     {
@@ -67,6 +70,20 @@ const publicRoutes = [
         roles: [],
         exact: true
     },
+    {
+        path: '/favoritos',
+        component: StayFavorites,
+        layout: UserLayout,
+        roles: ['USER', 'ADMIN'],
+        exact: true
+    },
+    {
+        path: '/mis-reservas',
+        component: ReservationsUser,
+        layout: UserLayout,
+        roles: ['USER', 'ADMIN'],
+        exact: true
+    }
 ]
 
 const adminRoutes = [

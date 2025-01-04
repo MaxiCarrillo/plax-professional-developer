@@ -85,42 +85,95 @@
     }
 
     & .StayDetail__info {
-        margin-block-start: .8rem;
+        margin-block-start: 1.6rem;
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+
+        & .StayDetail__information-container {
+            order: 1;
+
+            & h2 {
+                font-size: 1.2rem;
+                color: var(--color-base-700);
+            }
+
+            & .StayDetail__description {
+                margin-block-start: .4rem;
+
+                &>p:first-child {
+                    font-size: .9rem;
+                    font-weight: bold;
+                    color: var(--color-primary-700);
+                }
+            }
+        }
 
         & .StayDetail__location {
             display: flex;
             align-items: center;
-            font-weight: 600;
-            color: #D9376E;
+        }
 
-            & svg>path {
-                fill: #D9376E;
+
+        & .StayDetail__booking {
+            order: 0;
+            padding: 1rem;
+            border-radius: 12px;
+            border: 1px solid var(--color-base-200);
+            background-color: #fff;
+            display: grid;
+            gap: 1rem;
+            box-shadow: rgba(0, 0, 0, 0.1) 0px 3px 8px;
+
+            & .StayDetail__pricePerNight {
+
+                &>span {
+                    font-size: 2rem;
+                    font-weight: 700;
+                }
             }
 
-            &~.StayDetail__description {
-                margin-block-start: .5rem;
+            & .StayDetail__price {
+                display: flex;
+                justify-content: space-between;
+                border-top: 1px solid var(--color-base-0);
+                padding-top: 1rem;
+
+                &>p {
+                    font-size: 1.1rem;
+                    font-weight: 700;
+                }
             }
         }
 
-        & .StayDetail__description {
-            max-width: 50ch;
+        @media (width > 768px) {
+            grid-template-columns: 2fr 1fr;
+            gap: 1rem;
+
+            & .StayDetail__booking {
+                order: 1;
+            }
+
+            & .StayDetail__information-container {
+                order: 0;
+            }
         }
     }
 
-    & .stayDetail__features{
-        & > h2{
+    & .stayDetail__features {
+        &>h2 {
             font-size: 1.2rem;
             color: var(--color-base-700);
         }
 
-        & > ul{
+        &>ul {
             margin-block-start: .8rem;
             display: grid;
             justify-content: space-between;
             grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
             list-style: none;
 
-            & li{
+            & li {
                 padding-block: .2rem;
                 display: flex;
                 gap: .5rem;

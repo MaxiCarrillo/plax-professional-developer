@@ -27,9 +27,13 @@ export const Home = () => {
         setDateRange(dateString);
     }
 
+    const handleSearch = (newValue) => {
+        console.log(newValue);
+    };
+
     const handleOnSubmit = (e) => {
         e.preventDefault();
-        if (!place || !dateRange[0] || !dateRange[1]) return toaster['error']({
+        if (!place || dateRange === null || !dateRange[0] || !dateRange[1]) return toaster['error']({
             message: 'Debe completar todos los campos',
             description:
                 'Por favor, seleccione un lugar y un rango de fechas.',
@@ -66,6 +70,7 @@ export const Home = () => {
                                 showSearch
                                 placeholder="Select a person"
                                 optionFilterProp="label"
+                                onSearch={handleSearch}
                                 onChange={handleSelectOnChange}
                                 options={[
                                     {

@@ -1,8 +1,8 @@
+import { Avatar, Dropdown } from 'antd'
 import { useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
 import Isologo from '../../../../assets/images/Isologotipo.png'
 import { useAuth } from '../../../auth/context/AuthContext'
-import { Avatar, Dropdown, Space } from 'antd'
 import './TopMenu.css'
 
 export const TopMenu = () => {
@@ -22,22 +22,30 @@ export const TopMenu = () => {
     const AvatarCharacter = useMemo(() => {
         const items = [
             {
-                label: <Link to="/perfil">Perfil</Link>,
+                label: <Link to="/favoritos">Favoritos</Link>,
                 key: '0',
+            },
+            {
+                label: <Link to="/perfil">Perfil</Link>,
+                key: '1',
+            },
+            {
+                label: <Link to="/mis-reservas">Reservas</Link>,
+                key: '2',
             },
             {
                 type: 'divider',
             },
             {
                 label: <Link to="/" onClick={handleLogout}>Cerrar Sesión</Link>,
-                key: '1',
+                key: '3',
             },
         ];
 
         if (user?.role === 'ADMIN') {
             items.unshift({
                 label: <Link to="/administracion">Administración</Link>,
-                key: '2',
+                key: '5',
             });
         }
 
@@ -83,6 +91,9 @@ export const TopMenu = () => {
                                         <Link to="/administracion">Administración</Link>
                                     </li>
                                 }
+                                <li className='navbar__link'>
+                                    <Link to="/favoritos">Favoritos</Link>
+                                </li>
                                 <li className='navbar__link'>
                                     <Link to="/perfil">Perfil</Link>
                                 </li>

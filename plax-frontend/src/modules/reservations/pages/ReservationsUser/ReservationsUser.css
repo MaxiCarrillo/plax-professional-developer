@@ -1,0 +1,20 @@
+.ReservationsUser__container{
+    /* margin-inline: 1.2rem; */
+    margin-block-start: 2rem;
+    max-width: 1280px;
+    padding-inline: 1rem;
+    margin-inline: auto;
+}
+
+.ReservationsUser__empty{
+    & p:first-child{
+        font-weight: 700;
+        font-size: 1.3rem;
+    }
+
+    & > a{
+        margin-block-start: 1rem;
+        display: inline-block;
+    }
+}
+
