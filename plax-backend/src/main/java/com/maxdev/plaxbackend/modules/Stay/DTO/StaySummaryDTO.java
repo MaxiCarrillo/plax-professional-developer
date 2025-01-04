@@ -15,16 +15,14 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class StaySaveDTO implements Serializable {
+public class StaySummaryDTO implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
 
     private UUID id;
     private String name;
-    private String description;
-    private Set<String> images;
     private Double price;
+    private Set<String> images;
     private AddressDTO address;
-    private UUID category_id;
-    private Set<UUID> features;
+    private Double appreciation;
 }

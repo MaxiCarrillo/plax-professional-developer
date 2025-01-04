@@ -1,5 +1,6 @@
 package com.maxdev.plaxbackend.modules.User;
 
+import com.maxdev.plaxbackend.modules.Review.Review;
 import com.maxdev.plaxbackend.modules.Stay.Stay;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -30,8 +31,11 @@ public class User implements UserDetails {
     private String password;
     @Enumerated(EnumType.STRING)
     private Role role;
-    @ManyToMany(cascade = CascadeType.DETACH)
+    @ManyToMany(cascade = CascadeType.DETACH) // No se puede eliminar un stay si esta en favoritos
     private Set<Stay> favorites;
+    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    // Si se elimina un usuario se eliminan sus reviews
+    private Set<Review> reviews;
 
     @Override
 

@@ -1,5 +1,7 @@
-package com.maxdev.plaxbackend.modules.Address.DTO;
+package com.maxdev.plaxbackend.modules.Review.DTO;
 
+import com.maxdev.plaxbackend.modules.Stay.DTO.StayDTO;
+import com.maxdev.plaxbackend.modules.User.DTO.UserDTO;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -13,12 +15,11 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class AddressDTO implements Serializable {
+public class ReviewDTO implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
 
     private UUID id;
-    private String street;
-    private String city;
-    private String country;
+    private Integer qualification;
+    private UserDTO user;
 }

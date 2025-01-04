@@ -3,6 +3,7 @@ package com.maxdev.plaxbackend.modules.Stay;
 import com.maxdev.plaxbackend.modules.Address.Address;
 import com.maxdev.plaxbackend.modules.Category.Category;
 import com.maxdev.plaxbackend.modules.Feature.Feature;
+import com.maxdev.plaxbackend.modules.Review.Review;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PositiveOrZero;
@@ -48,5 +49,13 @@ public class Stay {
 
     @NotNull(message = "Address cannot be null")
     @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "id_address")
     private Address address;
+
+    @Column(columnDefinition = "DOUBLE DEFAULT 0.0")
+    @PositiveOrZero(message = "Appreciation must be zero or positive")
+    private Double appreciation = 0.0;
+
+    @OneToMany(mappedBy = "stay", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    private Set<Review> reviews;
 }

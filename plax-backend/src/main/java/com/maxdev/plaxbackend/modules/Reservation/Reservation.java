@@ -2,17 +2,14 @@ package com.maxdev.plaxbackend.modules.Reservation;
 
 import com.maxdev.plaxbackend.modules.Stay.Stay;
 import com.maxdev.plaxbackend.modules.User.User;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.UUID;
 
 @Data
@@ -25,15 +22,18 @@ public class Reservation {
     @GeneratedValue(generator = "UUID")
     private UUID id;
     @NotNull(message = "CheckIn cannot be null")
-    private Date checkIn;
+    private LocalDate checkIn;
     @NotNull(message = "CheckOut cannot be null")
-    private Date checkOut;
+    private LocalDate checkOut;
     @NotNull(message = "Total cannot be null")
     private Double total;
+    private Boolean confirmed = false;
     @NotNull(message = "Stay cannot be null")
     @ManyToOne
+    @JoinColumn(name = "id_stay")
     private Stay stay;
     @NotNull(message = "User cannot be null")
     @ManyToOne
+    @JoinColumn(name = "id_user")
     private User user;
 }

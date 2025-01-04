@@ -22,6 +22,6 @@ public class Category {
     private String description;
     @NotNull(message = "Image cannot be null")
     private String image;
-    @OneToMany(mappedBy = "category")
+    @OneToMany(mappedBy = "category", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private Set<Stay> stays;
 }

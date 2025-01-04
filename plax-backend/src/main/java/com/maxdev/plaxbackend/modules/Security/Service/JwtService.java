@@ -39,6 +39,7 @@ public class JwtService {
                 .claims(extractClaims) // Datos adicionales
                 .subject(userDetails.getUsername()) // Estoy enviando el username
                 .issuedAt(new Date(System.currentTimeMillis())) // Fecha de creación
+//                .expiration(new Date(System.currentTimeMillis() + 1000 * 10))
                 .expiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 24)) // Fecha de expiración 1 día
                 .signWith(getSignInKey()) // Firma , SignatureAlgorithm.HS256
                 .compact(); // Compactar a un string

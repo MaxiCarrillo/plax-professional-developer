@@ -5,6 +5,7 @@ import com.maxdev.plaxbackend.modules.Stay.DTO.StayDTO;
 import com.maxdev.plaxbackend.modules.Stay.DTO.StaySaveDTO;
 import com.maxdev.plaxbackend.modules.Stay.Service.StayService;
 import com.maxdev.plaxbackend.modules.Util.ApiPageResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Page;
@@ -13,6 +14,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -22,6 +25,7 @@ import java.util.*;
 
 @Log4j2
 @RestController
+@Tag(name = "Stay Controller", description = "Operaciones relacionadas con los alojamientos.")
 @RequestMapping("/api/stays")
 public class StayController {
 

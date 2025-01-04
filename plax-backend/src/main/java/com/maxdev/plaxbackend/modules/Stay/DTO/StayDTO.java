@@ -1,7 +1,12 @@
 package com.maxdev.plaxbackend.modules.Stay.DTO;
 
+import com.maxdev.plaxbackend.modules.Address.DTO.AddressDTO;
 import com.maxdev.plaxbackend.modules.Feature.DTO.FeatureDTO;
-import lombok.*;
+import com.maxdev.plaxbackend.modules.Review.DTO.ReviewSummaryDTO;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -23,5 +28,6 @@ public class StayDTO implements Serializable {
     private Set<FeatureDTO> features;
     private Double price;
     private UUID category_id;
-    private String address;
+    private AddressDTO address;
+    private Double appreciation;
 }

@@ -1,5 +1,7 @@
 package com.maxdev.plaxbackend.modules.Stay.Mapper;
 
+import com.maxdev.plaxbackend.modules.Address.Address;
+import com.maxdev.plaxbackend.modules.Address.DTO.AddressDTO;
 import com.maxdev.plaxbackend.modules.Feature.Feature;
 import com.maxdev.plaxbackend.modules.Stay.DTO.StaySaveDTO;
 import com.maxdev.plaxbackend.modules.Stay.Stay;
@@ -20,11 +22,13 @@ public interface StaySaveMapper {
     @Mapping(source = "images", target = "images", qualifiedByName = "stayImagesToStrings")
     @Mapping(source = "features", target = "features", qualifiedByName = "featuresToUuids")
     @Mapping(source = "category.id", target = "category_id")
+    @Mapping(source = "address", target = "address")
     StaySaveDTO entityToDto(Stay stay);
 
     @Mapping(source = "images", target = "images", qualifiedByName = "stringsToStayImages")
     @Mapping(source = "features", target = "features", qualifiedByName = "uuidsToFeatures")
     @Mapping(source = "category_id", target = "category.id")
+    @Mapping(source = "address", target = "address")
     Stay dtoToEntity(StaySaveDTO staySaveDTO);
 
     @Named("stayImagesToStrings")

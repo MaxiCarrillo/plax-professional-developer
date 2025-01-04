@@ -65,6 +65,7 @@ public class StayService implements IStayService, BaseUrl {
         Set<String> imageNames = saveImages(images);
         stayDTO.setImages(imageNames);
         Stay stayToSave = StaySaveMapper.INSTANCE.dtoToEntity(stayDTO);
+        stayToSave.setAppreciation(0.0);
         stayRepository.save(stayToSave);
         log.info("Stay saved: {}", stayToSave.getName());
         return StaySaveMapper.INSTANCE.entityToDto(stayToSave);

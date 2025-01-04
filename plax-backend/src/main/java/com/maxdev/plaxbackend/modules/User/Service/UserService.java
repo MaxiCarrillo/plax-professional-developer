@@ -1,32 +1,37 @@
 package com.maxdev.plaxbackend.modules.User.Service;
 
-import java.util.UUID;
-
+import com.maxdev.plaxbackend.modules.Exception.ResourceAlreadyExistsException;
+import com.maxdev.plaxbackend.modules.Exception.ResourceNotFoundException;
+import com.maxdev.plaxbackend.modules.Stay.Repository.StayRepository;
+import com.maxdev.plaxbackend.modules.Stay.Stay;
+import com.maxdev.plaxbackend.modules.User.DTO.UserDTO;
+import com.maxdev.plaxbackend.modules.User.DTO.UserFavoriteDTO;
+import com.maxdev.plaxbackend.modules.User.DTO.UserSaveDTO;
+import com.maxdev.plaxbackend.modules.User.Mapper.UserMapper;
+import com.maxdev.plaxbackend.modules.User.Repository.UserRepository;
+import com.maxdev.plaxbackend.modules.User.User;
+import com.maxdev.plaxbackend.modules.Util.BaseUrl;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import com.maxdev.plaxbackend.modules.Exception.ResourceAlreadyExistsException;
-import com.maxdev.plaxbackend.modules.Exception.ResourceNotFoundException;
-import com.maxdev.plaxbackend.modules.User.User;
-import com.maxdev.plaxbackend.modules.User.DTO.UserDTO;
-import com.maxdev.plaxbackend.modules.User.DTO.UserSaveDTO;
-import com.maxdev.plaxbackend.modules.User.Mapper.UserMapper;
-import com.maxdev.plaxbackend.modules.User.Repository.UserRepository;
-
-import lombok.extern.log4j.Log4j2;
+import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Log4j2
 @Service
-public class UserService implements IUserService {
+public class UserService implements IUserService, BaseUrl {
 
     private final UserRepository userRepository;
+    private final StayRepository stayRepository;
 
     private final PasswordEncoder passwordEncoder;
 
-    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+    public UserService(UserRepository userRepository, StayRepository stayRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
+        this.stayRepository = stayRepository;
         this.passwordEncoder = passwordEncoder;
     }
 
@@ -100,5 +105,47 @@ public class UserService implements IUserService {
         userRepository.save(userToUpdate);
         log.info("User updated: {}", userToUpdate.getEmail());
         return UserMapper.INSTANCE.entityToDto(userToUpdate);
+    }
+
+    @Override
+    public UserDTO addFavorite(UserFavoriteDTO userFavoritesDTO) {
+        log.info("Adding favorite to user with id: {}", userFavoritesDTO.getId());
+        User user = userRepository.findById(userFavoritesDTO.getId()).orElseThrow(() -> {
+            log.error("User with id: {} not found", userFavoritesDTO.getId());
+            return new ResourceNotFoundException("User with id: " + userFavoritesDTO.getId() + " not found");
+        });
+        Stay stay = stayRepository.findById(userFavoritesDTO.getFavorite()).orElseThrow(() -> {
+            log.error("Stay with id: {} not found", userFavoritesDTO.getFavorite());
+            return new ResourceNotFoundException("Stay with id: " + userFavoritesDTO.getFavorite() + " not found");
+        });
+        user.getFavorites().add(stay);
+        userRepository.save(user);
+        log.info("Favorite added to user with id: {}", userFavoritesDTO.getId());
+        UserDTO userDTO = UserMapper.INSTANCE.entityToDto(user);
+        userDTO.getFavorites().forEach(favoriteStay -> favoriteStay.setImages(favoriteStay.getImages().stream()
+                .map(image -> getBaseUrl() + "/api/stays/images/" + image)
+                .collect(Collectors.toSet())));
+        return userDTO;
+    }
+
+    @Override
+    public UserDTO removeFavorite(UserFavoriteDTO userFavoritesDTO) {
+        log.info("Removing favorite from user with id: {}", userFavoritesDTO.getId());
+        User user = userRepository.findById(userFavoritesDTO.getId()).orElseThrow(() -> {
+            log.error("User with id: {} not found", userFavoritesDTO.getId());
+            return new ResourceNotFoundException("User with id: " + userFavoritesDTO.getId() + " not found");
+        });
+        Stay stay = stayRepository.findById(userFavoritesDTO.getFavorite()).orElseThrow(() -> {
+            log.error("Stay with id: {} not found", userFavoritesDTO.getFavorite());
+            return new ResourceNotFoundException("Stay with id: " + userFavoritesDTO.getFavorite() + " not found");
+        });
+        user.getFavorites().remove(stay);
+        userRepository.save(user);
+        log.info("Favorite removed from user with id: {}", userFavoritesDTO.getId());
+        UserDTO userDTO = UserMapper.INSTANCE.entityToDto(user);
+        userDTO.getFavorites().forEach(favoriteStay -> favoriteStay.setImages(favoriteStay.getImages().stream()
+                .map(image -> getBaseUrl() + "/api/stays/images/" + image)
+                .collect(Collectors.toSet())));
+        return userDTO;
     }
 }

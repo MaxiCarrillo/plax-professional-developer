@@ -1,6 +1,7 @@
 package com.maxdev.plaxbackend.modules.User.Service;
 
 import com.maxdev.plaxbackend.modules.User.DTO.UserDTO;
+import com.maxdev.plaxbackend.modules.User.DTO.UserFavoriteDTO;
 import com.maxdev.plaxbackend.modules.User.DTO.UserSaveDTO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -18,4 +19,8 @@ public interface IUserService {
     UserDTO delete(UUID id);
 
     UserDTO updateByAdmin(UserSaveDTO userSaveDTO);
+
+    UserDTO addFavorite(UserFavoriteDTO userFavoritesDTO);
+
+    UserDTO removeFavorite(UserFavoriteDTO userFavoritesDTO);
 }

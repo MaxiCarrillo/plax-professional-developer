@@ -1,4 +1,4 @@
-package com.maxdev.plaxbackend.modules.Address.DTO;
+package com.maxdev.plaxbackend.modules.Review.DTO;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -13,12 +13,11 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class AddressDTO implements Serializable {
+public class ReviewCreateDTO implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
 
-    private UUID id;
-    private String street;
-    private String city;
-    private String country;
+    private Integer qualification;
+    private UUID id_user;
+    private UUID id_stay;
 }
