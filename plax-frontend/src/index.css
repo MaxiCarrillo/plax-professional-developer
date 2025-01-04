@@ -131,10 +131,11 @@ form * {
 
   &:active {
     background-color: var(--color-primary-900);
+    outline: 1px solid red;
   }
 
   &:focus {
-    outline: 2px solid var(--color-base-900);
+    outline: 1px solid var(--color-base-800);
     outline-offset: 0px;
   }
 

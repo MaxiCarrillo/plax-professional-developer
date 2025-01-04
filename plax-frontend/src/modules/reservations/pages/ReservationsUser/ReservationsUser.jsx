@@ -13,7 +13,7 @@ const reservations = [
             "name": "Hotel Duna",
             "price": 50000.0,
             "images": [
-                "hotel-duna-5.jpg",
+                "http://localhost:8080/api/stays/images/hotel-duna-1.jpg",
                 "hotel-duna-2.jpg",
                 "hotel-duna-1.jpg",
                 "hotel-duna-3.jpg",
