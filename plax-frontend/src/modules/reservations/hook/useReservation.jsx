@@ -19,7 +19,7 @@ export const useReservation = () => {
         try {
             const response = await reservationService.createReservation(body, token);
             setSuccess(true);
-            return response;
+            return response.data;
         } catch (error) {
             setError(error.message);
             throw error;

@@ -88,7 +88,8 @@ export const StayDetail = () => {
 
 
         try {
-            await createReservation(body);
+            const data = await createReservation(body);
+            navigate(`/confirmar-reserva/${data.id}`);
             toaster['success']({
                 message: 'Reserva realizada',
                 description: `Se ha realizado la reserva de ${stay.name} por un total de $${reservation.total}`,

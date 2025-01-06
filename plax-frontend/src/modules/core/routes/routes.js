@@ -25,7 +25,7 @@ import { Login, Register } from '../../auth/pages';
 
 import { UsersList } from '../../users/pages';
 
-import { ReservationsUser } from '../../reservations/pages';
+import { ReservationsUser, ReservationConfirm } from '../../reservations/pages';
 
 const publicRoutes = [
     {
@@ -80,6 +80,13 @@ const publicRoutes = [
     {
         path: '/mis-reservas',
         component: ReservationsUser,
+        layout: UserLayout,
+        roles: ['USER', 'ADMIN'],
+        exact: true
+    },
+    {
+        path: '/confirmar-reserva/:id',
+        component: ReservationConfirm,
         layout: UserLayout,
         roles: ['USER', 'ADMIN'],
         exact: true
