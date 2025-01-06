@@ -11,6 +11,7 @@ public interface ReservationCreateMapper {
 
     ReservationCreateMapper INSTANCE = Mappers.getMapper(ReservationCreateMapper.class);
 
+    @Mapping(source = "id", target = "id")
     @Mapping(source = "stay.id", target = "id_stay")
     @Mapping(source = "user.id", target = "id_user")
     ReservationCreateDTO entityToDto(Reservation reservation);

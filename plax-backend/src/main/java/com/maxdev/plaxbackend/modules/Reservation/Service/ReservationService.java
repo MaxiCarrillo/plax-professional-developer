@@ -8,6 +8,7 @@ import com.maxdev.plaxbackend.modules.Reservation.Mapper.ReservationMapper;
 import com.maxdev.plaxbackend.modules.Reservation.Repository.ReservationRepository;
 import com.maxdev.plaxbackend.modules.Reservation.Reservation;
 import com.maxdev.plaxbackend.modules.Stay.Repository.StayRepository;
+import com.maxdev.plaxbackend.modules.Util.BaseUrl;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -15,10 +16,11 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Log4j2
 @Service
-public class ReservationService implements IReservationService {
+public class ReservationService implements IReservationService, BaseUrl {
 
     private final ReservationRepository reservationRepository;
     private final StayRepository stayRepository;
@@ -79,6 +81,12 @@ public class ReservationService implements IReservationService {
         log.debug("Getting reservations by user with email: {}", email);
         List<Reservation> reservations = reservationRepository.findReservationByUser_Email(email);
         List<ReservationDTO> reservationDTOS = reservations.stream().map(ReservationMapper.INSTANCE::entityToDto).toList();
+        reservationDTOS.forEach(reservationDTO -> {
+            reservationDTO.getStay().setImages(reservationDTO.getStay().getImages().stream()
+                    .map((image) -> getBaseUrl() + "/api/stays/images/" + image)
+                    .collect(Collectors.toSet())
+            );
+        });
         return reservationDTOS;
     }
 

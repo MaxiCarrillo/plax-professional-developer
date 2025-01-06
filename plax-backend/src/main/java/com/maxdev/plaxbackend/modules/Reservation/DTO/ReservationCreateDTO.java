@@ -18,6 +18,7 @@ public class ReservationCreateDTO implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
 
+    private UUID id;
     private UUID id_stay;
     private UUID id_user;
     private LocalDate checkIn;
