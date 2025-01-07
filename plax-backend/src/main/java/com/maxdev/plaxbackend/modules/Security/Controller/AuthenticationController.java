@@ -1,5 +1,6 @@
 package com.maxdev.plaxbackend.modules.Security.Controller;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -16,6 +17,7 @@ import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequestMapping("/api/auth")
+@Tag(name = "Auth", description = "Operaciones relacionadas con la autenticación.")
 @RequiredArgsConstructor
 public class AuthenticationController {
 

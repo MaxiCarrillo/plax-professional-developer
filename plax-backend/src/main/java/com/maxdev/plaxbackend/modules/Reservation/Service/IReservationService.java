@@ -6,6 +6,7 @@ import com.maxdev.plaxbackend.modules.Reservation.DTO.ReservationDTO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
 
@@ -19,5 +20,7 @@ public interface IReservationService {
 
     ReservationDTO delete(UUID id) throws ResourceNotFoundException;
 
-    List<ReservationDTO> getReservationsByUser(String email);
+    List<ReservationDTO> getReservationsByUser(String email, LocalDate date);
+
+    ReservationDTO confirmReservation(UUID id) throws ResourceNotFoundException;
 }

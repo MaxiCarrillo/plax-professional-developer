@@ -10,6 +10,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
 import java.util.UUID;
 
 @Data
@@ -24,6 +25,9 @@ public class Review {
     @NotNull
     @Positive
     private Integer qualification;
+    private String comment;
+    @NotNull
+    private LocalDate createdAt = LocalDate.now();
     @ManyToOne
     @JoinColumn(name = "id_user", nullable = false)
     private User user;

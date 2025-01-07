@@ -25,7 +25,7 @@ import java.util.*;
 
 @Log4j2
 @RestController
-@Tag(name = "Stay Controller", description = "Operaciones relacionadas con los alojamientos.")
+@Tag(name = "Stay", description = "Operaciones relacionadas con los alojamientos.")
 @RequestMapping("/api/stays")
 public class StayController {
 

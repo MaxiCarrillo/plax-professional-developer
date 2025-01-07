@@ -32,14 +32,8 @@ public class SecurityConfiguration {
                 .cors(cors -> cors.configurationSource(corsConfigurationSource())) // Configuración de
                 // CORS
                 .authorizeHttpRequests(auth -> auth
-                        // Rutas públicas (sin necesidad de autenticación)
-                        .requestMatchers("/api/auth/**").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/swagger-ui/**", "/v3/api-docs/**",
-                                "/api/stays/**", "/api/categories/**",
-                                "/api/features/**")
-                        .permitAll()
                         // Rutas que requieren autenticación
-                        .requestMatchers(HttpMethod.GET, "/api/users/**").authenticated()
+                        .requestMatchers(HttpMethod.GET, "/api/users/**", "api/reservations/user").authenticated()
                         .requestMatchers(HttpMethod.PATCH, "/api/users/**").authenticated()
                         .requestMatchers(HttpMethod.POST, "/api/users/add-favorite",
                                 "/api/users/remove-favorite").authenticated()
@@ -54,6 +48,12 @@ public class SecurityConfiguration {
                                 "/api/categories/**", "/api/features/**",
                                 "/api/users/**")
                         .hasAuthority("ADMIN")
+                        // Rutas públicas (sin necesidad de autenticación)
+                        .requestMatchers("/api/auth/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/swagger-ui/**", "/v3/api-docs/**",
+                                "/api/stays/**", "/api/categories/**",
+                                "/api/features/**", "/api/reservations/**")
+                        .permitAll()
                         // Cualquier otra solicitud requiere autenticación
                         .anyRequest().authenticated())
                 .sessionManagement(session -> session

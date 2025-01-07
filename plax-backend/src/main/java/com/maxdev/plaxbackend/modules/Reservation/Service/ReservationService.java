@@ -14,6 +14,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -77,9 +78,14 @@ public class ReservationService implements IReservationService, BaseUrl {
     }
 
     @Override
-    public List<ReservationDTO> getReservationsByUser(String email) {
+    public List<ReservationDTO> getReservationsByUser(String email, LocalDate date) {
         log.debug("Getting reservations by user with email: {}", email);
-        List<Reservation> reservations = reservationRepository.findReservationByUser_Email(email);
+        List<Reservation> reservations;
+        if (date != null) {
+            reservations = reservationRepository.findReservationByUserEmailAndDate(email, date);
+        } else {
+            reservations = reservationRepository.findReservationByUser_Email(email);
+        }
         List<ReservationDTO> reservationDTOS = reservations.stream().map(ReservationMapper.INSTANCE::entityToDto).toList();
         reservationDTOS.forEach(reservationDTO -> {
             reservationDTO.getStay().setImages(reservationDTO.getStay().getImages().stream()
@@ -88,6 +94,19 @@ public class ReservationService implements IReservationService, BaseUrl {
             );
         });
         return reservationDTOS;
+    }
+
+    @Override
+    public ReservationDTO confirmReservation(UUID id) throws ResourceNotFoundException {
+        log.debug("Confirming reservation with id: {}", id);
+        Reservation reservation = reservationRepository.findById(id).orElseThrow(() -> {
+            log.error("Reservation with id: {} not found", id);
+            return new ResourceNotFoundException("Reservation with id: " + id + " not found");
+        });
+        reservation.setConfirmed(true);
+        reservationRepository.save(reservation);
+        log.info("Reservation confirmed: {}", id);
+        return ReservationMapper.INSTANCE.entityToDto(reservation);
     }
 
 }

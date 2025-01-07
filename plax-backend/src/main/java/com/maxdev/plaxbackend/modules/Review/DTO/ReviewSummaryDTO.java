@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
 import java.util.UUID;
 
 @Data
@@ -15,5 +16,7 @@ import java.util.UUID;
 public class ReviewSummaryDTO {
     private UUID id;
     private Integer qualification;
+    private String comment;
+    private LocalDate createdAt;
     private UserSummaryDTO user;
 }

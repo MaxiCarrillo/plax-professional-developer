@@ -17,12 +17,13 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
 
 @Log4j2
 @RestController
-@Tag(name = "Reservas", description = "Operaciones relacionadas con las reservas.")
+@Tag(name = "Reservation", description = "Operaciones relacionadas con las reservas.")
 @RequestMapping("/api/reservations")
 public class ReservationController {
 
@@ -32,6 +33,7 @@ public class ReservationController {
         this.reservationService = reservationService;
     }
 
+    @PreAuthorize("isAuthenticated()")
     @PostMapping
     public ResponseEntity<ReservationCreateDTO> createReservation(@RequestBody ReservationCreateDTO reservationCreateDTO) {
         log.debug("Received request to create reservation");
@@ -83,14 +85,29 @@ public class ReservationController {
                 .build();
     }
 
+    @PreAuthorize("isAuthenticated()")
     @GetMapping("/user")
-    public ResponseEntity<List<ReservationDTO>> getReservationsByToken() {
+    public ResponseEntity<List<ReservationDTO>> getReservationsByToken(
+            @RequestParam(value = "date", required = false) LocalDate date
+    ) {
         log.debug("Received request to get reservations by token");
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-        List<ReservationDTO> reservations = reservationService.getReservationsByUser(userDetails.getUsername());
+        List<ReservationDTO> reservations = reservationService.getReservationsByUser(userDetails.getUsername(), date);
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(reservations);
     }
+
+    @PreAuthorize("isAuthenticated()")
+    @PutMapping("/confirm/{id}")
+    public ResponseEntity<ReservationDTO> confirmReservation(@PathVariable("id") UUID id) {
+        log.debug("Received request to confirm reservation with id: {}", id);
+        ReservationDTO reservation = reservationService.confirmReservation(id);
+        log.info("Reservation with id: {} confirmed successfully", id);
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(reservation);
+    }
+
 }

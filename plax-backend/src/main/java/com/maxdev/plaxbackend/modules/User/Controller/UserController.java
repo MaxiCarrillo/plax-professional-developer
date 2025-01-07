@@ -20,7 +20,7 @@ import java.util.UUID;
 
 @Log4j2
 @RestController
-@Tag(name = "User Controller", description = "Operaciones relacionadas con los usuarios.")
+@Tag(name = "User", description = "Operaciones relacionadas con los usuarios.")
 @RequestMapping("/api/users")
 public class UserController {
 

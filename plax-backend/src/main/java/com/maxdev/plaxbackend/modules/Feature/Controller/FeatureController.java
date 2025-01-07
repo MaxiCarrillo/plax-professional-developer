@@ -3,6 +3,7 @@ package com.maxdev.plaxbackend.modules.Feature.Controller;
 import com.maxdev.plaxbackend.modules.Feature.DTO.FeatureDTO;
 import com.maxdev.plaxbackend.modules.Feature.Service.FeatureService;
 import com.maxdev.plaxbackend.modules.Util.ApiPageResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Page;
@@ -22,6 +23,7 @@ import java.util.UUID;
 
 @Log4j2
 @RestController
+@Tag(name = "Feature", description = "Operaciones relacionadas con las características.")
 @RequestMapping("/api/features")
 public class FeatureController {
 

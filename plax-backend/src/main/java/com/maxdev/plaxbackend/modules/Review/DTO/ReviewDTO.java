@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 
 import java.io.Serial;
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.util.UUID;
 
 @Data
@@ -21,5 +22,8 @@ public class ReviewDTO implements Serializable {
 
     private UUID id;
     private Integer qualification;
+    private String comment;
+    private LocalDate createdAt;
     private UserDTO user;
+    private StayDTO stay;
 }
