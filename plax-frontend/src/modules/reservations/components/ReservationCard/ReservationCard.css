@@ -71,6 +71,17 @@
         }
     }
 
+    & .ReservationCard__confirm {
+        font-weight: 600;
+        color: #08875D;
+
+
+        &>.icon {
+            font-size: 1rem;
+            font-weight: 800;
+        }
+    }
+
     @media (width > 768px) {
 
         & {

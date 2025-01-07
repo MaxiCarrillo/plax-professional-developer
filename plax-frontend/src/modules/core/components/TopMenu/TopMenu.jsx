@@ -97,7 +97,9 @@ export const TopMenu = () => {
                                 <li className='navbar__link'>
                                     <Link to="/perfil">Perfil</Link>
                                 </li>
-
+                                <li className='navbar__link'>
+                                    <Link to="/mis-reservas">Reservas</Link>
+                                </li>
                                 <li className='navbar__link'>
                                     <Link to="/" onClick={handleLogout}>Cerrar Sesión</Link>
                                 </li>

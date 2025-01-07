@@ -1,10 +1,19 @@
+import { format } from 'date-fns';
+import { useContext, useState } from 'react';
+import { FormModalContext } from '../../../core/context';
+import { ReviewForm } from '../../../reviews/components';
 import './ReservationCard.css';
+import { CheckCircleOutlined } from '@ant-design/icons';
 
 export const ReservationCard = ({ reservation }) => {
 
+    const { handleShowModal, handleContentModal } = useContext(FormModalContext);
+
     const handleConfirm = () => {
-        //TODO: Implementar la lógica para confirmar la reserva
-        console.log('Confirmar reserva', reservation.id);
+        handleContentModal(
+            <ReviewForm reservation={reservation} />
+        )
+        handleShowModal();
     }
 
     return (
@@ -19,14 +28,20 @@ export const ReservationCard = ({ reservation }) => {
                     <p>{reservation.stay.address.street} {reservation.stay.address.city}, {reservation.stay.address.country}</p>
                 </section>
                 <section className='ReservationCard__reservation-info'>
-                    <p className='ReservationCard__info-text'>Entrada<strong>{reservation.checkIn}</strong></p>
-                    <p className='ReservationCard__info-text'>Salida<strong>{reservation.checkOut}</strong></p>
+                    <p className='ReservationCard__info-text'>Entrada<strong>{format(reservation.checkIn, "dd/MM/yyyy")}</strong></p>
+                    <p className='ReservationCard__info-text'>Salida<strong>{format(reservation.checkOut, "dd/MM/yyyy")}</strong></p>
                     <p className='ReservationCard__info-text'>Precio total<strong>${reservation.total}</strong></p>
                 </section>
                 <p className='ReservationCard__info-text'>Nombre del cliente<strong>{reservation.user.firstname} {reservation.user.lastname}</strong></p>
                 <p className='ReservationCard__info-text'>Email<strong>{reservation.user.email}</strong></p>
-                <button className='button button--primary' onClick={handleConfirm}>Confirmar reserva</button>
+                {
+                    reservation.confirmed ?
+                        <p className='ReservationCard__confirm' ><CheckCircleOutlined className='icon' /> Confirmada</p>
+                        :
+                        <button className='button button--primary' onClick={handleConfirm}>Confirmar reserva</button>
+                }
             </section>
+
         </article>
     )
 }

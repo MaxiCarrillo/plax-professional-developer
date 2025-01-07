@@ -6,6 +6,7 @@ export const FormModalProvider = ({ children }) => {
 
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [showModal, setShowModal] = useState(false);
+    const [contentModal, setContentModal] = useState(null);
 
     const openCloseModal = () => {
         setShowModal((prev) => !prev);
@@ -19,6 +20,10 @@ export const FormModalProvider = ({ children }) => {
         setIsModalOpen(false);
     };
 
+    const handleContentModal = (content) => {
+        setContentModal(content);
+    }
+
     return (
         <FormModalContext.Provider value={
             {
@@ -26,7 +31,9 @@ export const FormModalProvider = ({ children }) => {
                 openCloseModal,
                 isModalOpen,
                 handleShowModal,
-                handleCancel
+                handleCancel,
+                handleContentModal,
+                contentModal
             }
         }>
             {children}

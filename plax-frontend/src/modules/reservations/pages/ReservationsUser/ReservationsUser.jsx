@@ -1,62 +1,69 @@
+import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import './ReservationsUser.css';
+import { BooleanParam, useQueryParam } from 'use-query-params';
+import { Modal } from '../../../core/components/Modal/Modal';
 import { ReservationCard } from '../../components/ReservationCard/ReservationCard';
+import { useReservation } from '../../hook/useReservation';
+import './ReservationsUser.css';
+import { format } from 'date-fns';
 
-const reservations = [
-    {
-        "id": "4e2a0782-6c38-4b91-9e87-758deb44ba72",
-        "checkIn": "2024-12-28",
-        "checkOut": "2024-12-28",
-        "total": 50000.0,
-        "stay": {
-            "id": "8a9b6e3d-27b2-4a0d-9992-d35031e5c7a8",
-            "name": "Hotel Duna",
-            "price": 50000.0,
-            "images": [
-                "http://localhost:8080/api/stays/images/hotel-duna-1.jpg",
-                "hotel-duna-2.jpg",
-                "hotel-duna-1.jpg",
-                "hotel-duna-3.jpg",
-                "hotel-duna-4.jpg"
-            ],
-            "address": {
-                "id": "fccf90c9-288e-451c-9543-d03375c9efab",
-                "street": "Av. Playa 123",
-                "city": "Buenos Aires",
-                "country": "Argentina"
-            },
-            "appreciation": 0.0
-        },
-        "user": {
-            "id": "8b07383c-cfbe-4dfe-b122-3ee0f5ac4234",
-            "firstname": "Lionel",
-            "lastname": "Messi",
-            "email": "messi@gmail.com"
-        }
-    }
-]
 
 export const ReservationsUser = () => {
+
+    const [query, setQuery] = useQueryParam('history', BooleanParam);
+    const { isLoading, success, error, reservations, getReservationsByUser } = useReservation();
+
+    useEffect(() => {
+        query ?
+            getReservationsByUser()
+            :
+            getReservationsByUser(format(new Date(), 'yyyy-MM-dd'));
+    }, [query])
+
+    const handleViewHistory = () => {
+        setQuery(true);
+    }
+
+    const handleViewCurrent = () => {
+        setQuery(null);
+    }
+
     return (
         <main className='ReservationsUser__container'>
             <h1>Mis reservas</h1>
-            <Link>Ver historial completo</Link>
+            {
+                query ?
+                    <p className='ReservationsUser__container__option' onClick={handleViewCurrent}>Ver reservas actuales</p>
+                    :
+                    <p className='ReservationsUser__container__option' onClick={handleViewHistory}>Ver historial de reservas</p>
+            }
             <hr className='separator' />
-            {/* <CardEmpty
-                title='¡No tienes reservas actualmente!'
-                description='Sacá las valijas del armario y empezá a planificar tu próxima aventura.'
-            /> */}
-            <section className='ReservationsUser__list'>
-                {
-                    reservations.map((reservation, index) => {
-                        return (
-                            <ReservationCard reservation={reservation} key={index} />
-                        )
-                    })
-                }
-            </section>
+            {
+                isLoading ?
+                    <p>Cargando...</p>
+                    :
+                    error ?
+                        <p>{error}</p>
+                        :
+                        (success && reservations.length > 0) ? < section className='ReservationsUser__list'>
+                            {
+                                reservations.map((reservation, index) => {
+                                    return (
+                                        <ReservationCard reservation={reservation} key={index} />
+                                    )
+                                })
+                            }
+                        </section>
+                            :
+                            <CardEmpty
+                                title='¡No tienes reservas realizadas!'
+                                description='Busca alojamientos y comienza a planificar tu próximo viaje.'
+                            />
+            }
+
             <hr className='separator' />
-        </main>
+            <Modal />
+        </main >
     )
 }
 

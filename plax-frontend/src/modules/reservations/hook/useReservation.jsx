@@ -28,12 +28,29 @@ export const useReservation = () => {
         }
     }
 
+    const getReservationsByUser = async (date) => {
+        setIsLoading(true);
+        setError(null);
+        try {
+            const response = await reservationService.getReservationsByUser(token, date);
+            setReservations(response.data);
+            setSuccess(true);
+            return response.data;
+        } catch (error) {
+            setError(error.message);
+            throw error;
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
     return {
         isLoading,
         error,
         reservations,
         totalPages,
         success,
-        createReservation
+        createReservation,
+        getReservationsByUser
     }
 };
