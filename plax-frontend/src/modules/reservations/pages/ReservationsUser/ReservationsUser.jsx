@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { BooleanParam, useQueryParam } from 'use-query-params';
 import { Modal } from '../../../core/components/Modal/Modal';
@@ -12,13 +12,18 @@ export const ReservationsUser = () => {
 
     const [query, setQuery] = useQueryParam('history', BooleanParam);
     const { isLoading, success, error, reservations, getReservationsByUser } = useReservation();
+    const [onRefetch, setOnRefetch] = useState(false);
 
     useEffect(() => {
         query ?
             getReservationsByUser()
             :
             getReservationsByUser(format(new Date(), 'yyyy-MM-dd'));
-    }, [query])
+    }, [query, onRefetch]);
+
+    const onRefetchData = () => {
+        setOnRefetch(!onRefetch);
+    }
 
     const handleViewHistory = () => {
         setQuery(true);
@@ -49,7 +54,7 @@ export const ReservationsUser = () => {
                             {
                                 reservations.map((reservation, index) => {
                                     return (
-                                        <ReservationCard reservation={reservation} key={index} />
+                                        <ReservationCard reservation={reservation} key={index} onRefetch={onRefetchData} />
                                     )
                                 })
                             }

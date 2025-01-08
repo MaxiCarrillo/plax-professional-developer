@@ -22,6 +22,19 @@ const reservationService = {
         }).catch(() => {
             throw new Error('No se pudieron obtener las reservas. Por favor, intente nuevamente más tarde.');
         });
+    },
+
+    confirmReservation: async (id, token) => {
+        console.log(id);
+        console.log(token);
+        return api.put(`/reservations/confirm/${id}`, {}, {
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            }
+        }).catch(() => {
+            throw new Error('No se pudo confirmar la reserva. Por favor, intente nuevamente más tarde.');
+        });
     }
 };
 

@@ -1,15 +1,39 @@
-import { format } from 'date-fns';
-import { useContext, useState } from 'react';
-import { FormModalContext } from '../../../core/context';
-import { ReviewForm } from '../../../reviews/components';
-import './ReservationCard.css';
 import { CheckCircleOutlined } from '@ant-design/icons';
+import { format } from 'date-fns';
+import { useContext } from 'react';
+import { FormModalContext } from '../../../core/context';
+import { NotificationContext } from '../../../core/context/notificationContext';
+import { ReviewForm } from '../../../reviews/components';
+import { useReservation } from '../../hook/useReservation';
 
-export const ReservationCard = ({ reservation }) => {
+import './ReservationCard.css';
 
+export const ReservationCard = ({ reservation, onRefetch }) => {
+
+    const { toaster } = useContext(NotificationContext);
     const { handleShowModal, handleContentModal } = useContext(FormModalContext);
+    const { confirmReservation } = useReservation();
 
-    const handleConfirm = () => {
+    const handleConfirm = async () => {
+        try {
+            await confirmReservation(reservation.id);
+            onRefetch();
+            toaster['success']({
+                message: 'Reserva confirmada.',
+                description: `Su reserva con el código ${reservation.id} ha sido confirmada.`,
+                duration: 3
+            });
+        } catch (error) {
+            toaster['error']({
+                message: 'Error al confirmar reserva.',
+                description: error.message,
+                duration: 3
+            });
+        }
+    }
+
+    const handleShowReviewModal = () => {
+        console.log(reservation.id);
         handleContentModal(
             <ReviewForm reservation={reservation} />
         )
@@ -21,6 +45,10 @@ export const ReservationCard = ({ reservation }) => {
             <figure className='ReservationCard__figure'>
                 <p className='ReservationCard__appreciation'>{reservation.stay.appreciation}</p>
                 <img src={reservation.stay.images[0]} alt={reservation.stay.name} />
+                {
+                    reservation.confirmed &&
+                    <button className='button button--secondary' onClick={handleShowReviewModal}>Calificar estancia</button>
+                }
             </figure>
             <section className='ReservationCard__content'>
                 <section className='ReservationCard__stay-header'>

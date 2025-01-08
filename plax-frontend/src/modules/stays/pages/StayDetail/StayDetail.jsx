@@ -66,8 +66,6 @@ export const StayDetail = () => {
         }
     }
 
-
-
     const handleReservation = async () => {
         if (reservation.dateRange === null || !reservation.dateRange[0] || !reservation.dateRange[1] || reservation.total === 0) {
             toaster['error']({
@@ -86,6 +84,7 @@ export const StayDetail = () => {
             total: reservation.total
         }
 
+        console.log(body);
 
         try {
             const data = await createReservation(body);

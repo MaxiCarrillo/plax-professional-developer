@@ -9,6 +9,8 @@
 
     & .ReservationCard__figure {
         position: relative;
+        aspect-ratio: 1/1;
+        width: 100%;
 
         & .ReservationCard__appreciation {
             position: absolute;
@@ -29,6 +31,12 @@
             width: 100%;
             height: 100%;
             object-fit: cover;
+        }
+
+        &>button {
+            position: absolute;
+            bottom: .5rem;
+            right: .5rem;
         }
     }
 

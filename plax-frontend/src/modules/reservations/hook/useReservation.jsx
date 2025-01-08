@@ -44,6 +44,21 @@ export const useReservation = () => {
         }
     };
 
+    const confirmReservation = async (id) => {
+        setIsLoading(true);
+        setError(null);
+        try {
+            const response = await reservationService.confirmReservation(id, token);
+            setSuccess(true);
+            return response.data;
+        } catch (error) {
+            setError(error.message);
+            throw error;
+        } finally {
+            setIsLoading(false);
+        }
+    }
+
     return {
         isLoading,
         error,
@@ -51,6 +66,7 @@ export const useReservation = () => {
         totalPages,
         success,
         createReservation,
-        getReservationsByUser
+        getReservationsByUser,
+        confirmReservation
     }
 };
