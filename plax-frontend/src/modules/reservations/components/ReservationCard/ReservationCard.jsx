@@ -6,6 +6,7 @@ import { NotificationContext } from '../../../core/context/notificationContext';
 import { ReviewForm } from '../../../reviews/components';
 import { useReservation } from '../../hook/useReservation';
 
+import numeral from 'numeral';
 import './ReservationCard.css';
 
 export const ReservationCard = ({ reservation, onRefetch }) => {
@@ -33,9 +34,8 @@ export const ReservationCard = ({ reservation, onRefetch }) => {
     }
 
     const handleShowReviewModal = () => {
-        console.log(reservation.id);
         handleContentModal(
-            <ReviewForm reservation={reservation} />
+            <ReviewForm reservation={reservation} onRefetch={onRefetch}/>
         )
         handleShowModal();
     }
@@ -43,11 +43,14 @@ export const ReservationCard = ({ reservation, onRefetch }) => {
     return (
         <article className='ReservationCard__container'>
             <figure className='ReservationCard__figure'>
-                <p className='ReservationCard__appreciation'>{reservation.stay.appreciation}</p>
+                {
+                    reservation.stay.appreciation > 0 &&
+                    <p className='ReservationCard__appreciation'>{numeral(reservation.stay.appreciation).format('0.0')}</p>
+                }
                 <img src={reservation.stay.images[0]} alt={reservation.stay.name} />
                 {
                     reservation.confirmed &&
-                    <button className='button button--secondary' onClick={handleShowReviewModal}>Calificar estancia</button>
+                    (reservation.reviewed ? null : <button className='button button--secondary' onClick={handleShowReviewModal}>Calificar estancia</button>)
                 }
             </figure>
             <section className='ReservationCard__content'>

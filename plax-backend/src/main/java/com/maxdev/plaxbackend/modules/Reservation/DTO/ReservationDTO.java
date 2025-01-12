@@ -27,5 +27,5 @@ public class ReservationDTO implements Serializable {
     private StaySummaryDTO stay;
     private UserSummaryDTO user;
     private Boolean confirmed;
-
+    private Boolean reviewed;
 }

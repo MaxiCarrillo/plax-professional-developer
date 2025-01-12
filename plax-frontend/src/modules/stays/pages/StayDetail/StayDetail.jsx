@@ -1,6 +1,8 @@
+import { StarFilled } from '@ant-design/icons';
 import { DatePicker } from 'antd';
 import locale from 'antd/es/date-picker/locale/es_ES';
 import { differenceInDays } from 'date-fns';
+import numeral from 'numeral';
 import { useContext, useEffect, useRef, useState } from 'react';
 import { Carousel } from 'react-responsive-carousel';
 import "react-responsive-carousel/lib/styles/carousel.min.css";
@@ -10,6 +12,8 @@ import ImageFallback from '../../../../assets/images/image-fallback.jpg';
 import { useAuth } from '../../../auth/context/AuthContext';
 import { NotificationContext } from '../../../core/context/notificationContext';
 import { useReservation } from '../../../reservations/hook/useReservation';
+import { ReviewCard } from '../../../reviews/components/ReviewCard/ReviewCard';
+import { useReview } from '../../../reviews/hooks/useReview';
 import { useStay } from '../../hooks/useStay';
 import './StayDetail.css';
 
@@ -24,6 +28,7 @@ export const StayDetail = () => {
     const { RangePicker } = DatePicker;
     const { stay, getStay, loading } = useStay();
     const { createReservation, isLoading } = useReservation();
+    const { getReviewsByStay, isLoading: isLoadingReview, error: errorReview, reviews } = useReview();
     const { id } = useParams();
 
     const dialogRef = useRef(null);
@@ -36,6 +41,7 @@ export const StayDetail = () => {
 
     useEffect(() => {
         getStay(id);
+        getReviewsByStay(id);
     }, [])
 
     const handleClickShowImages = () => {
@@ -210,6 +216,28 @@ export const StayDetail = () => {
                                     }
                                 </ul>
                             </section>
+                            <hr className='separator' />
+                            {
+                                stay.totalReviews === 0 ?
+                                    // TODO: Crear componente de mensaje de no hay calificaciones 
+                                    <p>No hay calificaciones</p>
+                                    :
+                                    <section className='stayDetail__reviews'>
+                                        <h2><StarFilled /> {numeral(stay.appreciation).format('0.0')} • {stay.totalReviews} Calificaciones</h2>
+                                        <div className='stayDetail__reviews-comments'>
+                                            {
+                                                isLoadingReview ?
+                                                    <p>Cargando...</p>
+                                                    :
+                                                    errorReview ?
+                                                        <p>{errorReview}</p>
+                                                        :
+                                                        reviews.map((review, index) =>
+                                                            <ReviewCard key={index} review={review} />
+                                                        )}
+                                        </div>
+                                    </section>
+                            }
                             <dialog ref={dialogRef} className='dialogGallery__dialog'>
                                 <div className='dialogGallery__container'>
                                     <button

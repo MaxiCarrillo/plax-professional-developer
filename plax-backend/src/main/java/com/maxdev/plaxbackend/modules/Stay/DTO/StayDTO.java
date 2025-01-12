@@ -30,4 +30,5 @@ public class StayDTO implements Serializable {
     private UUID category_id;
     private AddressDTO address;
     private Double appreciation;
+    private Integer totalReviews;
 }

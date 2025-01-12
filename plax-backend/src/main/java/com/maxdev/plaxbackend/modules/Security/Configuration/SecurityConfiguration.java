@@ -34,6 +34,7 @@ public class SecurityConfiguration {
                 .authorizeHttpRequests(auth -> auth
                         // Rutas que requieren autenticación
                         .requestMatchers(HttpMethod.GET, "/api/users/**", "api/reservations/user").authenticated()
+                        .requestMatchers(HttpMethod.PUT, "/api/reservations/confirm/").authenticated()
                         .requestMatchers(HttpMethod.PATCH, "/api/users/**").authenticated()
                         .requestMatchers(HttpMethod.POST, "/api/users/add-favorite",
                                 "/api/users/remove-favorite").authenticated()
@@ -52,7 +53,7 @@ public class SecurityConfiguration {
                         .requestMatchers("/api/auth/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/swagger-ui/**", "/v3/api-docs/**",
                                 "/api/stays/**", "/api/categories/**",
-                                "/api/features/**", "/api/reservations/**")
+                                "/api/features/**", "/api/reservations/**", "/api/reviews/**")
                         .permitAll()
                         // Cualquier otra solicitud requiere autenticación
                         .anyRequest().authenticated())

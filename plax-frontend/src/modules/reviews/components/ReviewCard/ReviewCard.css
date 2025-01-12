@@ -1,0 +1,53 @@
+.ReviewCard__container {
+    background-color: #fff;
+    box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+    border-radius: .5rem;
+    padding: 1rem;
+
+    & .ReviewCard__header {
+        display: flex;
+        gap: .6rem;
+        justify-content: start;
+        align-items: center;
+    }
+
+
+    & .ReviewCard__user {
+        display: flex;
+        flex-direction: column;
+        gap: .1rem;
+        align-items: center;
+        width: 50px;
+
+        & .ReviewCard__avatar {
+            font-weight: 800;
+            aspect-ratio: 1/1;
+            width: 90%;
+            border-radius: 100%;
+            display: grid;
+            place-content: center;
+            background-color: var(--color-base-500);
+        }
+
+        & .ReviewCard__stars {
+            font-size: .5rem;
+            text-align: center;
+        }
+    }
+
+    & .ReviewCard__info {
+        & p:first-child {
+            font-weight: 600;
+        }
+
+        & p:last-child {
+            font-size: .7rem;
+        }
+    }
+
+    & .ReviewCard__comment {
+        margin-block-start: 1rem;
+        max-height: 100px;
+        overflow-y: auto;
+    }
+}

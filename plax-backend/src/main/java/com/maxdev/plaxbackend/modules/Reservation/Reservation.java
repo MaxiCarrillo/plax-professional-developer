@@ -1,5 +1,6 @@
 package com.maxdev.plaxbackend.modules.Reservation;
 
+import com.maxdev.plaxbackend.modules.Review.Review;
 import com.maxdev.plaxbackend.modules.Stay.Stay;
 import com.maxdev.plaxbackend.modules.User.User;
 import jakarta.persistence.*;
@@ -27,7 +28,10 @@ public class Reservation {
     private LocalDate checkOut;
     @NotNull(message = "Total cannot be null")
     private Double total;
+    private Boolean reviewed = false;
     private Boolean confirmed = false;
+    @OneToOne
+    private Review review;
     @NotNull(message = "Stay cannot be null")
     @ManyToOne
     @JoinColumn(name = "id_stay")

@@ -13,5 +13,6 @@ public interface ReservationMapper {
 
     @Mapping(source = "stay.images", target = "stay.images", qualifiedByName = "stayImagesToStrings")
     @Mapping(source = "confirmed", target = "confirmed")
+    @Mapping(source = "reviewed", target = "reviewed")
     ReservationDTO entityToDto(Reservation reservation);
 }

@@ -12,6 +12,7 @@ public interface ReviewSummaryMapper {
     ReviewSummaryMapper INSTANCE = Mappers.getMapper(ReviewSummaryMapper.class);
 
     @Mapping(source = "user", target = "user")
+    @Mapping(source = "comment", target = "comment")
     ReviewSummaryDTO entityToDto(Review review);
 
     @Mapping(source = "user", target = "user")

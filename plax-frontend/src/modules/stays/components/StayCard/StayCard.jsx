@@ -5,6 +5,7 @@ import { useAuth } from '../../../auth/context/AuthContext';
 import { NotificationContext } from '../../../core/context/notificationContext';
 import userService from '../../../users/services/user.service';
 import './StayCard.css';
+import numeral from 'numeral';
 
 export const StayCard = ({ stay }) => {
     const { toaster } = useContext(NotificationContext);
@@ -58,7 +59,7 @@ export const StayCard = ({ stay }) => {
         }
     }
 
-    const { id, name, images, address, price } = stay;
+    const { id, name, images, address, price, appreciation, totalReviews } = stay;
     return (
         <article className='stayCard'>
             {
@@ -84,7 +85,11 @@ export const StayCard = ({ stay }) => {
                     <div className='stayCard__info'>
                         <h3 className='stayCard__titulo'>{name}</h3>
                         <p>{address.street}</p>
-                        <p className='stayCard___score'><span>9.1</span>10 comentarios</p>
+                        {
+                            totalReviews === 0 ? <p className='stayCard___score'>Sin calificaciones</p>
+                                :
+                                <p className='stayCard___score'><span>{numeral(appreciation).format('0.0')}</span>{totalReviews} calificaciones</p>
+                        }
                         <p className='stayCard__price'><small>1 noche</small><strong>${price}</strong></p>
                     </div>
                 </article>

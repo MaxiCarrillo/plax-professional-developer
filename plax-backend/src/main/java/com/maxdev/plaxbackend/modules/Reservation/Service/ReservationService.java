@@ -44,6 +44,7 @@ public class ReservationService implements IReservationService, BaseUrl {
         if (days == 0) days = 1;
         reservation.setTotal(price * days);
         reservation.setConfirmed(false);
+        reservation.setReviewed(false);
         reservationRepository.save(reservation);
         log.info("Reservation saved: {}", reservation.getId());
         return ReservationCreateMapper.INSTANCE.entityToDto(reservation);

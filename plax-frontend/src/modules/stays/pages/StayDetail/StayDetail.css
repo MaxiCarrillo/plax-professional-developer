@@ -184,6 +184,27 @@
             }
         }
     }
+
+    & .stayDetail__reviews {
+
+        &>h2 {
+            font-size: 1.2rem;
+            color: var(--color-base-700);
+        }
+
+        & .stayDetail__reviews-comments {
+            margin-top: 1rem;
+            display: grid;
+            gap: 1rem;
+
+            @media (width > 768px) {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 1rem;
+            }
+        }
+
+
+    }
 }
 
 .dialogGallery__dialog {

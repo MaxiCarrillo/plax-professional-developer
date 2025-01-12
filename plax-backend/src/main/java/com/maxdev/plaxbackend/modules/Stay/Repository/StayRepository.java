@@ -10,6 +10,7 @@ import java.util.UUID;
 
 @Repository
 public interface StayRepository extends JpaRepository<Stay, UUID> {
+
     Optional<Stay> findByName(String name);
 
     Set<Stay> findByCategory_IdIn(Set<UUID> categoryIds);

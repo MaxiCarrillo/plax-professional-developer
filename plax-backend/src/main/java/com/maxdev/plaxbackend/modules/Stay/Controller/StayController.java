@@ -3,6 +3,7 @@ package com.maxdev.plaxbackend.modules.Stay.Controller;
 import com.maxdev.plaxbackend.modules.Exception.ResourceNotFoundException;
 import com.maxdev.plaxbackend.modules.Stay.DTO.StayDTO;
 import com.maxdev.plaxbackend.modules.Stay.DTO.StaySaveDTO;
+import com.maxdev.plaxbackend.modules.Stay.DTO.StaySummaryDTO;
 import com.maxdev.plaxbackend.modules.Stay.Service.StayService;
 import com.maxdev.plaxbackend.modules.Util.ApiPageResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -14,14 +15,14 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
-import java.util.*;
+import java.util.List;
+import java.util.Set;
+import java.util.UUID;
 
 @Log4j2
 @RestController
@@ -55,9 +56,9 @@ public class StayController {
     }
 
     @GetMapping("/search")
-    public ResponseEntity<ApiPageResponse<Set<StayDTO>>> getStaysByCategory(@RequestParam(value = "categoryIds", required = false) Set<UUID> categoryIds) {
+    public ResponseEntity<ApiPageResponse<Set<StaySummaryDTO>>> getStaysByCategory(@RequestParam(value = "categoryIds", required = false) Set<UUID> categoryIds) {
         log.debug("Received request to get stays by category ids: {}", categoryIds);
-        Set<StayDTO> stays = stayService.findByCategoryIds(categoryIds);
+        Set<StaySummaryDTO> stays = stayService.findByCategoryIds(categoryIds);
         log.info("Returning {} stays", stays.size());
         return ResponseEntity.status(HttpStatus.OK)
                 .body(
@@ -117,7 +118,7 @@ public class StayController {
     public ResponseEntity<StayDTO> getStay(@PathVariable UUID id) throws ResourceNotFoundException {
         log.debug("Received request to get stay by id: {}", id);
         StayDTO stayFound = stayService.findById(id);
-        log.info("Stay retrieved: {}", stayFound.getName());
+        log.info("Stay retrieved: {}", stayFound);
         return ResponseEntity.status(HttpStatus.OK).body(stayFound);
     }
 }

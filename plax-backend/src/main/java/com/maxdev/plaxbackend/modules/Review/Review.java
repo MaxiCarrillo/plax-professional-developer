@@ -1,5 +1,6 @@
 package com.maxdev.plaxbackend.modules.Review;
 
+import com.maxdev.plaxbackend.modules.Reservation.Reservation;
 import com.maxdev.plaxbackend.modules.Stay.Stay;
 import com.maxdev.plaxbackend.modules.User.User;
 import jakarta.persistence.*;
@@ -10,7 +11,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Data
@@ -27,11 +28,13 @@ public class Review {
     private Integer qualification;
     private String comment;
     @NotNull
-    private LocalDate createdAt = LocalDate.now();
+    private LocalDateTime createdAt = LocalDateTime.now();
     @ManyToOne
     @JoinColumn(name = "id_user", nullable = false)
     private User user;
     @ManyToOne
     @JoinColumn(name = "id_stay", nullable = false)
     private Stay stay;
+    @OneToOne
+    private Reservation reservation;
 }

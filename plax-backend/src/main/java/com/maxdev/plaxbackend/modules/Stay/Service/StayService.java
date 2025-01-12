@@ -1,21 +1,20 @@
 package com.maxdev.plaxbackend.modules.Stay.Service;
 
-import static java.time.LocalDateTime.now;
-
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
-import java.time.format.DateTimeFormatter;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Random;
-import java.util.Set;
-import java.util.UUID;
-import java.util.stream.Collectors;
-
+import com.maxdev.plaxbackend.modules.Exception.ResourceAlreadyExistsException;
+import com.maxdev.plaxbackend.modules.Exception.ResourceNotFoundException;
+import com.maxdev.plaxbackend.modules.Review.Repository.ReviewRepository;
+import com.maxdev.plaxbackend.modules.Stay.DTO.StayDTO;
+import com.maxdev.plaxbackend.modules.Stay.DTO.StaySaveDTO;
+import com.maxdev.plaxbackend.modules.Stay.DTO.StaySummaryDTO;
+import com.maxdev.plaxbackend.modules.Stay.Mapper.StayMapper;
+import com.maxdev.plaxbackend.modules.Stay.Mapper.StaySaveMapper;
+import com.maxdev.plaxbackend.modules.Stay.Mapper.StaySummaryMapper;
+import com.maxdev.plaxbackend.modules.Stay.Repository.StayImageRepository;
+import com.maxdev.plaxbackend.modules.Stay.Repository.StayRepository;
+import com.maxdev.plaxbackend.modules.Stay.Stay;
+import com.maxdev.plaxbackend.modules.Stay.StayImage;
+import com.maxdev.plaxbackend.modules.Util.BaseUrl;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.data.domain.Page;
@@ -24,19 +23,17 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.maxdev.plaxbackend.modules.Exception.ResourceAlreadyExistsException;
-import com.maxdev.plaxbackend.modules.Exception.ResourceNotFoundException;
-import com.maxdev.plaxbackend.modules.Stay.Stay;
-import com.maxdev.plaxbackend.modules.Stay.StayImage;
-import com.maxdev.plaxbackend.modules.Stay.DTO.StayDTO;
-import com.maxdev.plaxbackend.modules.Stay.DTO.StaySaveDTO;
-import com.maxdev.plaxbackend.modules.Stay.Mapper.StayMapper;
-import com.maxdev.plaxbackend.modules.Stay.Mapper.StaySaveMapper;
-import com.maxdev.plaxbackend.modules.Stay.Repository.StayImageRepository;
-import com.maxdev.plaxbackend.modules.Stay.Repository.StayRepository;
-import com.maxdev.plaxbackend.modules.Util.BaseUrl;
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
+import java.time.format.DateTimeFormatter;
+import java.util.*;
+import java.util.stream.Collectors;
 
-import lombok.extern.log4j.Log4j2;
+import static java.time.LocalDateTime.now;
 
 @Log4j2
 @Service
@@ -49,10 +46,12 @@ public class StayService implements IStayService, BaseUrl {
      */
     private final StayRepository stayRepository;
     private final StayImageRepository stayImageRepository;
+    private final ReviewRepository reviewRepository;
 
-    public StayService(StayRepository stayRepository, StayImageRepository stayImageRepository) {
+    public StayService(StayRepository stayRepository, StayImageRepository stayImageRepository, ReviewRepository reviewRepository) {
         this.stayRepository = stayRepository;
         this.stayImageRepository = stayImageRepository;
+        this.reviewRepository = reviewRepository;
     }
 
     @Override
@@ -124,6 +123,7 @@ public class StayService implements IStayService, BaseUrl {
                     log.error("Stay with id: {} not found", id);
                     return new ResourceNotFoundException("Stay with id: " + id + " not found");
                 });
+        log.info("Stay found: {}", stay);
         StayDTO stayFound = StayMapper.INSTANCE.entityToDto(stay);
         stayFound.setImages(stayFound.getImages().stream()
                 .map(image -> getBaseUrl() + "/api/stays/images/" + image)
@@ -168,24 +168,25 @@ public class StayService implements IStayService, BaseUrl {
         return pageStays;
     }
 
-    public Set<StayDTO> findByCategoryIds(Set<UUID> categoryIds) {
+    public Set<StaySummaryDTO> findByCategoryIds(Set<UUID> categoryIds) {
         log.debug("Finding stays by category ids: {}", categoryIds);
-        Set<StayDTO> stays;
+        Set<StaySummaryDTO> stays;
         if (categoryIds == null || categoryIds.isEmpty()) {
             stays = stayRepository.findAll().stream()
-                    .map(StayMapper.INSTANCE::entityToDto)
+                    .map(StaySummaryMapper.INSTANCE::entityToDto)
                     .collect(Collectors.toSet());
         } else {
+            log.info("Buscando estancias por ids de categoría: {}", categoryIds);
+            Set<Stay> staysTest = stayRepository.findByCategory_IdIn(categoryIds);
+            log.info("staysTest: {}", staysTest);
             stays = stayRepository.findByCategory_IdIn(categoryIds).stream()
-                    .map(StayMapper.INSTANCE::entityToDto)
+                    .map(StaySummaryMapper.INSTANCE::entityToDto)
                     .collect(Collectors.toSet());
         }
+        log.info("Returning {} stays", stays.size());
         stays.forEach(stay -> {
             stay.setImages(stay.getImages().stream()
                     .map(image -> getBaseUrl() + "/api/stays/images/" + image)
-                    .collect(Collectors.toSet()));
-            stay.setFeatures(stay.getFeatures().stream()
-                    .peek(feature -> feature.setIcon(getBaseUrl() + "/api/features/svg/" + feature.getIcon()))
                     .collect(Collectors.toSet()));
         });
         return stays;

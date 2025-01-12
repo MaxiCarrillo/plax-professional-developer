@@ -7,10 +7,7 @@ import com.maxdev.plaxbackend.modules.Review.Review;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PositiveOrZero;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.Set;
 import java.util.UUID;
@@ -56,6 +53,10 @@ public class Stay {
     @PositiveOrZero(message = "Appreciation must be zero or positive")
     private Double appreciation = 0.0;
 
+    @Column(columnDefinition = "INT DEFAULT 0")
+    private Integer totalReviews = 0;
+
+    @EqualsAndHashCode.Exclude // Excluye esta relación del hashCode para evitar ciclos
     @OneToMany(mappedBy = "stay", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private Set<Review> reviews;
 }

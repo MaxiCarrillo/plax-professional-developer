@@ -4,6 +4,7 @@ import com.maxdev.plaxbackend.modules.Address.Address;
 import com.maxdev.plaxbackend.modules.Address.DTO.AddressDTO;
 import com.maxdev.plaxbackend.modules.Feature.DTO.FeatureDTO;
 import com.maxdev.plaxbackend.modules.Feature.Feature;
+import com.maxdev.plaxbackend.modules.Review.Mapper.ReviewSummaryMapper;
 import com.maxdev.plaxbackend.modules.Stay.DTO.StayDTO;
 import com.maxdev.plaxbackend.modules.Stay.Stay;
 import com.maxdev.plaxbackend.modules.Stay.StayImage;
@@ -15,7 +16,7 @@ import org.mapstruct.factory.Mappers;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-@Mapper()
+@Mapper(uses = {ReviewSummaryMapper.class})
 public interface StayMapper {
     StayMapper INSTANCE = Mappers.getMapper(StayMapper.class);
 
