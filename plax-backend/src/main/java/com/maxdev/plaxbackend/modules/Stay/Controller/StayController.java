@@ -15,6 +15,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -56,9 +57,11 @@ public class StayController {
     }
 
     @GetMapping("/search")
-    public ResponseEntity<ApiPageResponse<Set<StaySummaryDTO>>> getStaysByCategory(@RequestParam(value = "categoryIds", required = false) Set<UUID> categoryIds) {
+    public ResponseEntity<ApiPageResponse<Set<StaySummaryDTO>>> getStaysByCategoryAndCountryOrCity(
+            @RequestParam(value = "categoryIds", required = false) Set<UUID> categoryIds,
+            @RequestParam(value = "searchTerm", required = false) String searchTerm) {
         log.debug("Received request to get stays by category ids: {}", categoryIds);
-        Set<StaySummaryDTO> stays = stayService.findByCategoryIds(categoryIds);
+        Set<StaySummaryDTO> stays = stayService.findByCategoryIdsAndCountryOrCity(categoryIds, searchTerm);
         log.info("Returning {} stays", stays.size());
         return ResponseEntity.status(HttpStatus.OK)
                 .body(
@@ -73,6 +76,7 @@ public class StayController {
     public ResponseEntity<StaySaveDTO> createStay(@RequestPart("stay") StaySaveDTO stayDTO,
                                                   @RequestPart("images") MultipartFile[] images) throws IOException, IllegalArgumentException {
         log.debug("Received request to create stay: {}", stayDTO);
+        log.info(stayDTO);
         StaySaveDTO savedStay = stayService.save(stayDTO, images);
         log.info("Stay created: {}", savedStay.getName());
         return ResponseEntity.status(HttpStatus.CREATED).body(savedStay);

@@ -24,4 +24,15 @@ public class EmailService {
                 "El equipo de Plax");
         mailSender.send(message);
     }
+
+    public void sendConfirmReservation(String firstname, String lastname, String email) {
+        SimpleMailMessage message = new SimpleMailMessage();
+        message.setTo(email);
+        message.setSubject("¡Reserva confirmada!");
+        message.setText("Hola " + firstname + " " + lastname + ",\n" +
+                "¡Gracias por reservar en Plax! Tu reserva ha sido confirmada.\n\n" +
+                "¡Nos vemos pronto!\n" +
+                "El equipo de Plax");
+        mailSender.send(message);
+    }
 }

@@ -3,6 +3,7 @@ package com.maxdev.plaxbackend.modules.Stay.DTO;
 import com.maxdev.plaxbackend.modules.Address.DTO.AddressDTO;
 import com.maxdev.plaxbackend.modules.Feature.DTO.FeatureDTO;
 import com.maxdev.plaxbackend.modules.Review.DTO.ReviewSummaryDTO;
+import com.maxdev.plaxbackend.modules.Stay.Service.StayPolicy;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -31,4 +32,5 @@ public class StayDTO implements Serializable {
     private AddressDTO address;
     private Double appreciation;
     private Integer totalReviews;
+    private Set<StayPolicy> policies;
 }

@@ -25,4 +25,5 @@ public class StaySummaryDTO implements Serializable {
     private Set<String> images;
     private AddressDTO address;
     private Double appreciation;
+    private Integer totalReviews;
 }

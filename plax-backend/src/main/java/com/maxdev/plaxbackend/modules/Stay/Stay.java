@@ -4,6 +4,7 @@ import com.maxdev.plaxbackend.modules.Address.Address;
 import com.maxdev.plaxbackend.modules.Category.Category;
 import com.maxdev.plaxbackend.modules.Feature.Feature;
 import com.maxdev.plaxbackend.modules.Review.Review;
+import com.maxdev.plaxbackend.modules.Stay.Service.StayPolicy;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PositiveOrZero;
@@ -21,9 +22,12 @@ public class Stay {
     @Id
     @GeneratedValue(generator = "UUID")
     private UUID id;
+
     @NotNull(message = "Name cannot be null")
     private String name;
+
     private String description;
+
     @NotNull(message = "Images cannot be null")
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<StayImage> images;
@@ -40,6 +44,7 @@ public class Stay {
     @NotNull(message = "Price cannot be null")
     @PositiveOrZero(message = "Price must be zero or positive")
     private Double price;
+
     @ManyToOne
     @JoinColumn(name = "id_category")
     private Category category;
@@ -59,4 +64,8 @@ public class Stay {
     @EqualsAndHashCode.Exclude // Excluye esta relación del hashCode para evitar ciclos
     @OneToMany(mappedBy = "stay", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private Set<Review> reviews;
+
+    @NotNull(message = "Policies cannot be null")
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<StayPolicy> policies;
 }

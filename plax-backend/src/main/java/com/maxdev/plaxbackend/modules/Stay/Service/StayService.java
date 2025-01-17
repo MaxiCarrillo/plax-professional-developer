@@ -57,13 +57,17 @@ public class StayService implements IStayService, BaseUrl {
     @Override
     @Transactional
     public StaySaveDTO save(StaySaveDTO stayDTO, MultipartFile[] images) throws IOException {
+        log.info(stayDTO);
         stayRepository.findByName(stayDTO.getName()).ifPresent(stay -> {
             log.error("Stay with name: {} already exists", stayDTO.getName());
             throw new ResourceAlreadyExistsException("Stay with name: " + stayDTO.getName() + " already exists");
         });
+
+        log.info("Saving stay: {}", stayDTO.getName());
         Set<String> imageNames = saveImages(images);
         stayDTO.setImages(imageNames);
         Stay stayToSave = StaySaveMapper.INSTANCE.dtoToEntity(stayDTO);
+        log.info("Stay to save: {}", stayToSave);
         stayToSave.setAppreciation(0.0);
         stayRepository.save(stayToSave);
         log.info("Stay saved: {}", stayToSave.getName());
@@ -168,18 +172,18 @@ public class StayService implements IStayService, BaseUrl {
         return pageStays;
     }
 
-    public Set<StaySummaryDTO> findByCategoryIds(Set<UUID> categoryIds) {
-        log.debug("Finding stays by category ids: {}", categoryIds);
+    @Override
+    public Set<StaySummaryDTO> findByCategoryIdsAndCountryOrCity(Set<UUID> categoryIds, String searchTerm) {
+        log.debug("Finding stays by category ids: {} and search term: {}", categoryIds, searchTerm);
         Set<StaySummaryDTO> stays;
-        if (categoryIds == null || categoryIds.isEmpty()) {
+        if ((categoryIds == null || categoryIds.isEmpty()) && (searchTerm == null || searchTerm.isEmpty())) {
             stays = stayRepository.findAll().stream()
                     .map(StaySummaryMapper.INSTANCE::entityToDto)
                     .collect(Collectors.toSet());
         } else {
             log.info("Buscando estancias por ids de categoría: {}", categoryIds);
-            Set<Stay> staysTest = stayRepository.findByCategory_IdIn(categoryIds);
-            log.info("staysTest: {}", staysTest);
-            stays = stayRepository.findByCategory_IdIn(categoryIds).stream()
+            log.info("Buscando estancias por término de búsqueda: {}", searchTerm);
+            stays = stayRepository.findByCategoryAndCountryOrCityContainingIgnoreCase(categoryIds, searchTerm).stream()
                     .map(StaySummaryMapper.INSTANCE::entityToDto)
                     .collect(Collectors.toSet());
         }

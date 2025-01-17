@@ -103,7 +103,9 @@ public class ReservationController {
     @PutMapping("/confirm/{id}")
     public ResponseEntity<ReservationDTO> confirmReservation(@PathVariable("id") UUID id) {
         log.debug("Received request to confirm reservation with id: {}", id);
-        ReservationDTO reservation = reservationService.confirmReservation(id);
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+        ReservationDTO reservation = reservationService.confirmReservation(id, userDetails.getUsername());
         log.info("Reservation with id: {} confirmed successfully", id);
         return ResponseEntity
                 .status(HttpStatus.OK)

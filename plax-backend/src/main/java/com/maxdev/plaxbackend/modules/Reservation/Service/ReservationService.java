@@ -1,5 +1,6 @@
 package com.maxdev.plaxbackend.modules.Reservation.Service;
 
+import com.maxdev.plaxbackend.modules.Email.Service.EmailService;
 import com.maxdev.plaxbackend.modules.Exception.ResourceNotFoundException;
 import com.maxdev.plaxbackend.modules.Reservation.DTO.ReservationCreateDTO;
 import com.maxdev.plaxbackend.modules.Reservation.DTO.ReservationDTO;
@@ -25,10 +26,12 @@ public class ReservationService implements IReservationService, BaseUrl {
 
     private final ReservationRepository reservationRepository;
     private final StayRepository stayRepository;
+    private final EmailService emailService;
 
-    public ReservationService(ReservationRepository reservationRepository, StayRepository stayRepository) {
+    public ReservationService(ReservationRepository reservationRepository, StayRepository stayRepository, EmailService emailService) {
         this.reservationRepository = reservationRepository;
         this.stayRepository = stayRepository;
+        this.emailService = emailService;
     }
 
     @Override
@@ -98,15 +101,24 @@ public class ReservationService implements IReservationService, BaseUrl {
     }
 
     @Override
-    public ReservationDTO confirmReservation(UUID id) throws ResourceNotFoundException {
+    public ReservationDTO confirmReservation(UUID id, String email) throws ResourceNotFoundException {
         log.debug("Confirming reservation with id: {}", id);
         Reservation reservation = reservationRepository.findById(id).orElseThrow(() -> {
             log.error("Reservation with id: {} not found", id);
             return new ResourceNotFoundException("Reservation with id: " + id + " not found");
         });
+        if (!reservation.getUser().getEmail().equals(email)) {
+            log.error("User with email: {} is not the owner of the reservation with id: {}", email, id);
+            throw new ResourceNotFoundException("User with email: " + email + " is not the owner of the reservation with id: " + id);
+        }
         reservation.setConfirmed(true);
         reservationRepository.save(reservation);
         log.info("Reservation confirmed: {}", id);
+        try {
+            emailService.sendConfirmReservation(reservation.getUser().getFirstname(), reservation.getUser().getLastname(), reservation.getUser().getEmail());
+        } catch (Exception e) {
+            log.error("Error sending email: {}", e.getMessage());
+        }
         return ReservationMapper.INSTANCE.entityToDto(reservation);
     }
 

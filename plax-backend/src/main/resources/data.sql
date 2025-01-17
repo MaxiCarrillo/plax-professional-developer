@@ -1,59 +1,126 @@
-INSERT INTO
-  users (id, email, firstname, lastname, password, role)
-VALUES
-  (UUID_TO_BIN('8b07383c-cfbe-4dfe-b122-3ee0f5ac4230'), 'admin@gmail.com', 'admin', 'admin', '$2a$12$lVJtPYap0O4AM.jNpV8eYeDzTYuVZlDmGLTWZ0BxPbcYfbfusfzq2', 'ADMIN'),
-  (UUID_TO_BIN('8b07383c-cfbe-4dfe-b122-3ee0f5ac4231'), 'maxi11carrillo@gmail.com', 'Maximiliano', 'Carrillo', '$2a$10$OihT73n.ut7G9nk9FXoSfehRQA9O46XQcHxkFIaDWY8HZjMPut9Oy', 'ADMIN'),
-  (UUID_TO_BIN('8b07383c-cfbe-4dfe-b122-3ee0f5ac4232'), 'sofi@gmail.com', 'Sofia', 'Carrillo', '$2a$12$Fh9FRwrIJAHLHs9KTSe8n.EBzErIlNyZYaxeR1PwHZSPzEi9le5T6', 'USER'),
-  (UUID_TO_BIN('8b07383c-cfbe-4dfe-b122-3ee0f5ac4233'), 'zoe@gmail.com', 'Zoe', 'Carrillo', '$2a$12$GwT1EO2A6HevpV2hy/lDk.QJb4T3IzcCyUwIylXQYAcy.obduSrBi', 'USER'),
-  (UUID_TO_BIN('8b07383c-cfbe-4dfe-b122-3ee0f5ac4234'), 'messi@gmail.com', 'Lionel', 'Messi', '$2a$12$hCxOwkgEQ2iQ39MiWEj/7eWgDBaEoCqG/Zz3tF148AOaMEiisLB7W', 'USER'),
-  (UUID_TO_BIN('8b07383c-cfbe-4dfe-b122-3ee0f5ac4235'), 'goku@gmail.com', 'Goku', 'Son', '$2a$12$3QmyP5Ad4l/o4082KVPpmuaqtzjEaDlSVE2zMeBILbykC17OJKBbi', 'USER');
+INSERT INTO users (id, email, firstname, lastname, password, role)
+VALUES (UUID_TO_BIN('8b07383c-cfbe-4dfe-b122-3ee0f5ac4230'), 'admin@gmail.com', 'admin', 'admin',
+        '$2a$12$lVJtPYap0O4AM.jNpV8eYeDzTYuVZlDmGLTWZ0BxPbcYfbfusfzq2', 'ADMIN'),
+       (UUID_TO_BIN('8b07383c-cfbe-4dfe-b122-3ee0f5ac4231'), 'maxi11carrillo@gmail.com', 'Maximiliano', 'Carrillo',
+        '$2a$10$OihT73n.ut7G9nk9FXoSfehRQA9O46XQcHxkFIaDWY8HZjMPut9Oy', 'ADMIN'),
+       (UUID_TO_BIN('8b07383c-cfbe-4dfe-b122-3ee0f5ac4232'), 'sofi@gmail.com', 'Sofia', 'Carrillo',
+        '$2a$12$Fh9FRwrIJAHLHs9KTSe8n.EBzErIlNyZYaxeR1PwHZSPzEi9le5T6', 'USER'),
+       (UUID_TO_BIN('8b07383c-cfbe-4dfe-b122-3ee0f5ac4233'), 'zoe@gmail.com', 'Zoe', 'Carrillo',
+        '$2a$12$GwT1EO2A6HevpV2hy/lDk.QJb4T3IzcCyUwIylXQYAcy.obduSrBi', 'USER'),
+       (UUID_TO_BIN('8b07383c-cfbe-4dfe-b122-3ee0f5ac4234'), 'messi@gmail.com', 'Lionel', 'Messi',
+        '$2a$12$hCxOwkgEQ2iQ39MiWEj/7eWgDBaEoCqG/Zz3tF148AOaMEiisLB7W', 'USER'),
+       (UUID_TO_BIN('8b07383c-cfbe-4dfe-b122-3ee0f5ac4235'), 'goku@gmail.com', 'Goku', 'Son',
+        '$2a$12$3QmyP5Ad4l/o4082KVPpmuaqtzjEaDlSVE2zMeBILbykC17OJKBbi', 'USER');
 
-INSERT INTO
-  features (id, icon, name)
-VALUES
-  (UUID_TO_BIN('1c9f77b1-1be1-4b18-a43b-287b0989238e'), 'wifi.svg', 'Wi-fi'),
-  (UUID_TO_BIN('2dca07fc-7c1d-4069-9057-f5c55a1c0ab1'), 'aire-acondicionado.svg', 'Aire Acondicionado'),
-  (UUID_TO_BIN('9f8c1be1-6200-4533-a1fa-c23c12d0e0b4'), 'ducha.svg', 'Ducha'),
-  (UUID_TO_BIN('f8c2ab10-f70a-467e-92a1-f3ffeb1266e0'), 'cocina.svg', 'Cocina'),
-  (UUID_TO_BIN('61f63e53-5092-450b-b17c-0e340d1258d0'), 'baño.svg', 'Baño'),
-  (UUID_TO_BIN('5676c57b-d988-4044-b9ff-4674de90d1c7'), 'piscina.svg', 'Piscina'),
-  (UUID_TO_BIN('db98265e-d3b4-47cc-a35d-97b9ab3143ec'), 'gimnasio.svg', 'Gimnasio'),
-  (UUID_TO_BIN('b091d98c-465b-489a-9835-1e58be88ef52'), 'tv.svg', 'Televisión'),
-  (UUID_TO_BIN('1d18ac34-7b37-4e7d-a71f-10a7f6acb364'), 'estacionamiento.svg', 'Estacionamiento'),
-  (UUID_TO_BIN('a278d2c3-e45d-4f76-a6f6-440b7e7de1b0'), 'jacuzzi.svg', 'Jacuzzi'),
-  (UUID_TO_BIN('3b674d7c-7e78-437d-970d-c548d3b1b007'), 'terraza.svg', 'Terraza'),
-  (UUID_TO_BIN('fe9f0734-33c2-44d1-94a2-3fe1b76c35e9'), 'balcon.svg', 'Balcón'),
-  (UUID_TO_BIN('dda5c078-36c6-4601-8b49-13b289cf0e6f'), 'cocina-equipada.svg', 'Cocina equipada'),
-  (UUID_TO_BIN('8105d467-b09d-4631-b5c1-d2f8b5d8f110'), 'chimenea.svg', 'Chimenea'),
-  (UUID_TO_BIN('4f21d2f0-63c3-41e9-b91d-8c81f83a9688'), 'lavadora.svg', 'Lavadora');
+INSERT INTO features (id, icon, name)
+VALUES (UUID_TO_BIN('1c9f77b1-1be1-4b18-a43b-287b0989238e'), 'wifi.svg', 'Wi-fi'),
+       (UUID_TO_BIN('2dca07fc-7c1d-4069-9057-f5c55a1c0ab1'), 'aire-acondicionado.svg', 'Aire Acondicionado'),
+       (UUID_TO_BIN('9f8c1be1-6200-4533-a1fa-c23c12d0e0b4'), 'ducha.svg', 'Ducha'),
+       (UUID_TO_BIN('f8c2ab10-f70a-467e-92a1-f3ffeb1266e0'), 'cocina.svg', 'Cocina'),
+       (UUID_TO_BIN('61f63e53-5092-450b-b17c-0e340d1258d0'), 'baño.svg', 'Baño'),
+       (UUID_TO_BIN('5676c57b-d988-4044-b9ff-4674de90d1c7'), 'piscina.svg', 'Piscina'),
+       (UUID_TO_BIN('db98265e-d3b4-47cc-a35d-97b9ab3143ec'), 'gimnasio.svg', 'Gimnasio'),
+       (UUID_TO_BIN('b091d98c-465b-489a-9835-1e58be88ef52'), 'tv.svg', 'Televisión'),
+       (UUID_TO_BIN('1d18ac34-7b37-4e7d-a71f-10a7f6acb364'), 'estacionamiento.svg', 'Estacionamiento'),
+       (UUID_TO_BIN('a278d2c3-e45d-4f76-a6f6-440b7e7de1b0'), 'jacuzzi.svg', 'Jacuzzi'),
+       (UUID_TO_BIN('3b674d7c-7e78-437d-970d-c548d3b1b007'), 'terraza.svg', 'Terraza'),
+       (UUID_TO_BIN('fe9f0734-33c2-44d1-94a2-3fe1b76c35e9'), 'balcon.svg', 'Balcón'),
+       (UUID_TO_BIN('dda5c078-36c6-4601-8b49-13b289cf0e6f'), 'cocina-equipada.svg', 'Cocina equipada'),
+       (UUID_TO_BIN('8105d467-b09d-4631-b5c1-d2f8b5d8f110'), 'chimenea.svg', 'Chimenea'),
+       (UUID_TO_BIN('4f21d2f0-63c3-41e9-b91d-8c81f83a9688'), 'lavadora.svg', 'Lavadora');
 
-INSERT INTO
-  categories (id, description, image, name)
-VALUES
-  (UUID_TO_BIN('be39b7dd-fe38-44f4-8ada-451681d01c7f'), 'Alojamientos en hoteles con servicios completos', 'hotel.jpg', 'Hotel'),
-  (UUID_TO_BIN('be39b7dd-fe38-44f4-8ada-451681d01c8f'), 'Alquileres de apartamentos para estancias largas', 'apartamento.jpg', 'Departamento'),
-  (UUID_TO_BIN('be39b7dd-fe38-44f4-8ada-451681d01c6f'), 'Casas independientes para grupos o familias', 'casa.jpg', 'Casa'),
-  (UUID_TO_BIN('be39b7dd-fe38-44f4-8ada-451681d01c5f'), 'Hoteles boutique con una experiencia más personalizada', 'boutique-hotel.jpg', 'Hotel Boutique'),
-  (UUID_TO_BIN('be39b7dd-fe38-44f4-8ada-451681d01c4f'), 'Alojamientos rurales y tranquilos en el campo', 'cabana.jpg', 'Cabaña');
+INSERT INTO categories (id, description, image, name)
+VALUES (UUID_TO_BIN('be39b7dd-fe38-44f4-8ada-451681d01c7f'), 'Alojamientos en hoteles con servicios completos',
+        'hotel.jpg', 'Hotel'),
+       (UUID_TO_BIN('be39b7dd-fe38-44f4-8ada-451681d01c8f'), 'Alquileres de apartamentos para estancias largas',
+        'apartamento.jpg', 'Departamento'),
+       (UUID_TO_BIN('be39b7dd-fe38-44f4-8ada-451681d01c6f'), 'Casas independientes para grupos o familias', 'casa.jpg',
+        'Casa'),
+       (UUID_TO_BIN('be39b7dd-fe38-44f4-8ada-451681d01c5f'), 'Hoteles boutique con una experiencia más personalizada',
+        'boutique-hotel.jpg', 'Hotel Boutique'),
+       (UUID_TO_BIN('be39b7dd-fe38-44f4-8ada-451681d01c4f'), 'Alojamientos rurales y tranquilos en el campo',
+        'cabana.jpg', 'Cabaña');
 
-INSERT INTO
-    addresses (id, city, country, street)
-VALUES
-    (UUID_TO_BIN('fccf90c9-288e-451c-9543-d03375c9efab'), 'Buenos Aires', 'Argentina', 'Av. Playa 123'),
-    (UUID_TO_BIN('b1b1b1b1-288e-451c-9543-d03375c9efab'), 'Buenos Aires', 'Argentina', 'Calle del Sol 456'),
-    (UUID_TO_BIN('c2c2c2c2-288e-451c-9543-d03375c9efab'), 'Mendoza', 'Argentina', 'Calle Libertad 789'),
-    (UUID_TO_BIN('d3d3d3d3-288e-451c-9543-d03375c9efab'), 'Santa Fe', 'Argentina', 'Calle del Lago 555'),
-    (UUID_TO_BIN('e4e4e4e4-288e-451c-9543-d03375c9efab'), 'Neuquén', 'Argentina', 'Ruta 40 Km 900'),
-    (UUID_TO_BIN('f5f5f5f5-288e-451c-9543-d03375c9efab'), 'Buenos Aires', 'Argentina', 'Av. Costa 123');
+INSERT INTO addresses (id, city, country, street)
+VALUES (UUID_TO_BIN('fccf90c9-288e-451c-9543-d03375c9efab'), 'Buenos Aires', 'Argentina', 'Av. Playa 123'),
+       (UUID_TO_BIN('b1b1b1b1-288e-451c-9543-d03375c9efab'), 'Buenos Aires', 'Argentina', 'Calle del Sol 456'),
+       (UUID_TO_BIN('c2c2c2c2-288e-451c-9543-d03375c9efab'), 'Mendoza', 'Argentina', 'Calle Libertad 789'),
+       (UUID_TO_BIN('d3d3d3d3-288e-451c-9543-d03375c9efab'), 'Santa Fe', 'Argentina', 'Calle del Lago 555'),
+       (UUID_TO_BIN('e4e4e4e4-288e-451c-9543-d03375c9efab'), 'Neuquén', 'Argentina', 'Ruta 40 Km 900'),
+       (UUID_TO_BIN('f5f5f5f5-288e-451c-9543-d03375c9efab'), 'Buenos Aires', 'Argentina', 'Av. Costa 123');
 
-INSERT INTO
-    stays (id, appreciation, description, name, price, id_address, id_category)
+INSERT INTO stay_policies (id, policy, description)
+VALUES (UUID_TO_BIN('fccf90c9-288e-451c-9543-d03375c9efab'), 'Prohibido la entrada de animales',
+        'Está completamente prohibido la entrada de cualquier tipo de animal a las instalaciones'),
+       (UUID_TO_BIN('b1b1b1b1-288e-451c-9543-d03375c9efab'), 'Prohibido fumar',
+        'Está prohibido fumar en cualquier lugar de las instalaciones'),
+       (UUID_TO_BIN('c2c2c2c2-288e-451c-9543-d03375c9efab'), 'Check-in a partir de las 15hs',
+        'El check-in se realiza a partir de las 15hs'),
+       (UUID_TO_BIN('d3d3d3d3-288e-451c-9543-d03375c9efab'), 'Check-out antes de las 10hs',
+        'El check-out se realiza antes de las 10hs'),
+       (UUID_TO_BIN('be39b7dd-fe38-44f4-8ada-451681d01c7f'), 'Prohibido la entrada de animales',
+        'Está completamente prohibido la entrada de cualquier tipo de animal a las instalaciones'),
+       (UUID_TO_BIN('be39b7dd-fe38-44f4-8ada-451681d01c8f'), 'Prohibido fumar',
+        'Está prohibido fumar en cualquier lugar de las instalaciones'),
+       (UUID_TO_BIN('be39b7dd-fe38-44f4-8ada-451681d01c6f'), 'Check-in a partir de las 15hs',
+        'El check-in se realiza a partir de las 15hs'),
+       (UUID_TO_BIN('be39b7dd-fe38-44f4-8ada-451681d01c5f'), 'Check-out antes de las 10hs',
+        'El check-out se realiza antes de las 10hs'),
+       (UUID_TO_BIN('be39b7dd-fe38-44f4-8ada-451681d01c4f'), 'Está prohibido invitar gente a dormir',
+        'Está prohibido fumar invitar a cualquier persona ajenas a los huéspedes a dormir en las instalaciones'),
+       (UUID_TO_BIN('fe9f0734-33c2-44d1-94a2-3fe1b76c35e9'), 'Check-in a partir de las 14hs',
+        'El check-in se realiza a partir de las 14hs'),
+       (UUID_TO_BIN('4f21d2f0-63c3-41e9-b91d-8c81f83a9688'), 'Check-out antes de las 12hs',
+        'El check-out se realiza antes de las 12hs'),
+       (UUID_TO_BIN('5676c57b-d988-4044-b9ff-4674de90d1c7'), 'Check-in a partir de las 14hs',
+        'El check-in se realiza a partir de las 14hs'),
+       (UUID_TO_BIN('4f21d2f0-63c3-41e9-b91d-8c81f83a9668'), 'Check-out antes de las 12hs',
+        'El check-out se realiza antes de las 12hs'),
+       (UUID_TO_BIN('fe9f0734-33c2-44d1-94a2-3fe1b76c45e9'), 'Check-in a partir de las 14hs',
+        'El check-in se realiza a partir de las 14hs'),
+       (UUID_TO_BIN('4f21d2f0-63c3-41e9-b91d-8c81f83a9678'), 'Check-out antes de las 12hs',
+        'El check-out se realiza antes de las 12hs');
+
+INSERT INTO stays_policies
+    (stays_id, policies_id)
 VALUES
-    (UUID_TO_BIN('8a9b6e3d-27b2-4a0d-9992-d35031e5c7a8'), 0, 'Hotel frente al mar, con todas las comodidades', 'Hotel Duna', 50000, UUID_TO_BIN('fccf90c9-288e-451c-9543-d03375c9efab'), UUID_TO_BIN('be39b7dd-fe38-44f4-8ada-451681d01c7f')),
-    (UUID_TO_BIN('a3b2e1f4-9e02-49ea-b0d1-b6f5d9536891'), 0, 'Departamento con vista panorámica', 'Departamento Sol', 35000, UUID_TO_BIN('b1b1b1b1-288e-451c-9543-d03375c9efab'), UUID_TO_BIN('be39b7dd-fe38-44f4-8ada-451681d01c8f')),
-    (UUID_TO_BIN('d5f8f0f4-ec7e-406d-8d96-5d5053b4f1f0'), 0, 'Casa amplia con jardín para familias', 'Casa Libertad', 30000, UUID_TO_BIN('c2c2c2c2-288e-451c-9543-d03375c9efab'), UUID_TO_BIN('be39b7dd-fe38-44f4-8ada-451681d01c6f')),
-    (UUID_TO_BIN('c3e2d8f5-2731-4e12-91d5-c8f5ff01392c'), 0, 'Hotel boutique con encanto', 'Hotel Boutique Lago', 40000, UUID_TO_BIN('d3d3d3d3-288e-451c-9543-d03375c9efab'), UUID_TO_BIN('be39b7dd-fe38-44f4-8ada-451681d01c5f')),
-    (UUID_TO_BIN('f8a83214-182b-4204-b44a-31e82f9c5ca4'), 0, 'Cabaña en el campo, rodeada de naturaleza', 'Cabaña del Valle', 25000, UUID_TO_BIN('e4e4e4e4-288e-451c-9543-d03375c9efab'), UUID_TO_BIN('be39b7dd-fe38-44f4-8ada-451681d01c4f'));
+--     DUNA
+(UUID_TO_BIN('8a9b6e3d-27b2-4a0d-9992-d35031e5c7a8'), UUID_TO_BIN('fccf90c9-288e-451c-9543-d03375c9efab')),
+(UUID_TO_BIN('8a9b6e3d-27b2-4a0d-9992-d35031e5c7a8'), UUID_TO_BIN('b1b1b1b1-288e-451c-9543-d03375c9efab')),
+(UUID_TO_BIN('8a9b6e3d-27b2-4a0d-9992-d35031e5c7a8'), UUID_TO_BIN('c2c2c2c2-288e-451c-9543-d03375c9efab')),
+(UUID_TO_BIN('8a9b6e3d-27b2-4a0d-9992-d35031e5c7a8'), UUID_TO_BIN('d3d3d3d3-288e-451c-9543-d03375c9efab')),
+--     SOL
+(UUID_TO_BIN('a3b2e1f4-9e02-49ea-b0d1-b6f5d9536891'), UUID_TO_BIN('be39b7dd-fe38-44f4-8ada-451681d01c7f')),
+(UUID_TO_BIN('a3b2e1f4-9e02-49ea-b0d1-b6f5d9536891'), UUID_TO_BIN('be39b7dd-fe38-44f4-8ada-451681d01c8f')),
+(UUID_TO_BIN('a3b2e1f4-9e02-49ea-b0d1-b6f5d9536891'), UUID_TO_BIN('be39b7dd-fe38-44f4-8ada-451681d01c6f')),
+(UUID_TO_BIN('a3b2e1f4-9e02-49ea-b0d1-b6f5d9536891'), UUID_TO_BIN('be39b7dd-fe38-44f4-8ada-451681d01c5f')),
+--     LIBERTAD
+(UUID_TO_BIN('d5f8f0f4-ec7e-406d-8d96-5d5053b4f1f0'), UUID_TO_BIN('be39b7dd-fe38-44f4-8ada-451681d01c4f')),
+(UUID_TO_BIN('d5f8f0f4-ec7e-406d-8d96-5d5053b4f1f0'), UUID_TO_BIN('fe9f0734-33c2-44d1-94a2-3fe1b76c35e9')),
+(UUID_TO_BIN('d5f8f0f4-ec7e-406d-8d96-5d5053b4f1f0'), UUID_TO_BIN('4f21d2f0-63c3-41e9-b91d-8c81f83a9688')),
+--     LAGO
+(UUID_TO_BIN('c3e2d8f5-2731-4e12-91d5-c8f5ff01392c'), UUID_TO_BIN('5676c57b-d988-4044-b9ff-4674de90d1c7')),
+(UUID_TO_BIN('c3e2d8f5-2731-4e12-91d5-c8f5ff01392c'), UUID_TO_BIN('4f21d2f0-63c3-41e9-b91d-8c81f83a9668')),
+--     VALLE
+(UUID_TO_BIN('f8a83214-182b-4204-b44a-31e82f9c5ca4'), UUID_TO_BIN('fe9f0734-33c2-44d1-94a2-3fe1b76c45e9')),
+(UUID_TO_BIN('f8a83214-182b-4204-b44a-31e82f9c5ca4'), UUID_TO_BIN('4f21d2f0-63c3-41e9-b91d-8c81f83a9678'));
+
+INSERT INTO stays (id, appreciation, description, name, price, id_address, id_category)
+VALUES (UUID_TO_BIN('8a9b6e3d-27b2-4a0d-9992-d35031e5c7a8'), 0, 'Hotel frente al mar, con todas las comodidades',
+        'Hotel Duna', 50000, UUID_TO_BIN('fccf90c9-288e-451c-9543-d03375c9efab'),
+        UUID_TO_BIN('be39b7dd-fe38-44f4-8ada-451681d01c7f')),
+       (UUID_TO_BIN('a3b2e1f4-9e02-49ea-b0d1-b6f5d9536891'), 0, 'Departamento con vista panorámica', 'Departamento Sol',
+        35000, UUID_TO_BIN('b1b1b1b1-288e-451c-9543-d03375c9efab'),
+        UUID_TO_BIN('be39b7dd-fe38-44f4-8ada-451681d01c8f')),
+       (UUID_TO_BIN('d5f8f0f4-ec7e-406d-8d96-5d5053b4f1f0'), 0, 'Casa amplia con jardín para familias', 'Casa Libertad',
+        30000, UUID_TO_BIN('c2c2c2c2-288e-451c-9543-d03375c9efab'),
+        UUID_TO_BIN('be39b7dd-fe38-44f4-8ada-451681d01c6f')),
+       (UUID_TO_BIN('c3e2d8f5-2731-4e12-91d5-c8f5ff01392c'), 0, 'Hotel boutique con encanto', 'Hotel Boutique Lago',
+        40000, UUID_TO_BIN('d3d3d3d3-288e-451c-9543-d03375c9efab'),
+        UUID_TO_BIN('be39b7dd-fe38-44f4-8ada-451681d01c5f')),
+       (UUID_TO_BIN('f8a83214-182b-4204-b44a-31e82f9c5ca4'), 0, 'Cabaña en el campo, rodeada de naturaleza',
+        'Cabaña del Valle', 25000, UUID_TO_BIN('e4e4e4e4-288e-451c-9543-d03375c9efab'),
+        UUID_TO_BIN('be39b7dd-fe38-44f4-8ada-451681d01c4f'));
 -- Falta agregar las estancias de abajo
 
 -- INSERT INTO
@@ -74,39 +141,38 @@ VALUES
 --   (35000, UUID_TO_BIN('fbcfb736-d3eb-40ff-bb63-cd4054de2297'), UUID_TO_BIN('be39b7dd-fe38-44f4-8ada-451681d01c7f'), 'Avenida del Sol 901, Mar del Plata', 'Hotel moderno con excelente servicio', 'Hotel Roma'),
 --   (32000, UUID_TO_BIN('bcf324b5-38da-4b45-9b99-2d2c3be48c78'), UUID_TO_BIN('be39b7dd-fe38-44f4-8ada-451681d01c8f'), 'Calle Luna 123, Rosario', 'Departamento amueblado, ideal para familias', 'Departamento Luna');
 --
-INSERT INTO
-  stay_feature (feature_id, stay_id)
+INSERT INTO stay_feature (feature_id, stay_id)
 VALUES
-  -- Hotel Duna
-  (UUID_TO_BIN('1c9f77b1-1be1-4b18-a43b-287b0989238e'), UUID_TO_BIN('8a9b6e3d-27b2-4a0d-9992-d35031e5c7a8')),
-  (UUID_TO_BIN('2dca07fc-7c1d-4069-9057-f5c55a1c0ab1'), UUID_TO_BIN('8a9b6e3d-27b2-4a0d-9992-d35031e5c7a8')),
-  (UUID_TO_BIN('9f8c1be1-6200-4533-a1fa-c23c12d0e0b4'), UUID_TO_BIN('8a9b6e3d-27b2-4a0d-9992-d35031e5c7a8')),
-  (UUID_TO_BIN('f8c2ab10-f70a-467e-92a1-f3ffeb1266e0'), UUID_TO_BIN('8a9b6e3d-27b2-4a0d-9992-d35031e5c7a8')),
-  (UUID_TO_BIN('61f63e53-5092-450b-b17c-0e340d1258d0'), UUID_TO_BIN('8a9b6e3d-27b2-4a0d-9992-d35031e5c7a8')),
-  -- Departamento Sol
-  (UUID_TO_BIN('1c9f77b1-1be1-4b18-a43b-287b0989238e'), UUID_TO_BIN('a3b2e1f4-9e02-49ea-b0d1-b6f5d9536891')),
-  (UUID_TO_BIN('2dca07fc-7c1d-4069-9057-f5c55a1c0ab1'), UUID_TO_BIN('a3b2e1f4-9e02-49ea-b0d1-b6f5d9536891')),
-  (UUID_TO_BIN('9f8c1be1-6200-4533-a1fa-c23c12d0e0b4'), UUID_TO_BIN('a3b2e1f4-9e02-49ea-b0d1-b6f5d9536891')),
-  (UUID_TO_BIN('f8c2ab10-f70a-467e-92a1-f3ffeb1266e0'), UUID_TO_BIN('a3b2e1f4-9e02-49ea-b0d1-b6f5d9536891')),
-  (UUID_TO_BIN('61f63e53-5092-450b-b17c-0e340d1258d0'), UUID_TO_BIN('a3b2e1f4-9e02-49ea-b0d1-b6f5d9536891')),
-  -- Casa Libertad
-  (UUID_TO_BIN('1c9f77b1-1be1-4b18-a43b-287b0989238e'), UUID_TO_BIN('d5f8f0f4-ec7e-406d-8d96-5d5053b4f1f0')),
-  (UUID_TO_BIN('2dca07fc-7c1d-4069-9057-f5c55a1c0ab1'), UUID_TO_BIN('d5f8f0f4-ec7e-406d-8d96-5d5053b4f1f0')),
-  (UUID_TO_BIN('9f8c1be1-6200-4533-a1fa-c23c12d0e0b4'), UUID_TO_BIN('d5f8f0f4-ec7e-406d-8d96-5d5053b4f1f0')),
-  (UUID_TO_BIN('f8c2ab10-f70a-467e-92a1-f3ffeb1266e0'), UUID_TO_BIN('d5f8f0f4-ec7e-406d-8d96-5d5053b4f1f0')),
-  (UUID_TO_BIN('61f63e53-5092-450b-b17c-0e340d1258d0'), UUID_TO_BIN('d5f8f0f4-ec7e-406d-8d96-5d5053b4f1f0')),
-  -- Hotel Boutique Lago
-  (UUID_TO_BIN('1c9f77b1-1be1-4b18-a43b-287b0989238e'), UUID_TO_BIN('c3e2d8f5-2731-4e12-91d5-c8f5ff01392c')),
-  (UUID_TO_BIN('2dca07fc-7c1d-4069-9057-f5c55a1c0ab1'), UUID_TO_BIN('c3e2d8f5-2731-4e12-91d5-c8f5ff01392c')),
-  (UUID_TO_BIN('9f8c1be1-6200-4533-a1fa-c23c12d0e0b4'), UUID_TO_BIN('c3e2d8f5-2731-4e12-91d5-c8f5ff01392c')),
-  (UUID_TO_BIN('f8c2ab10-f70a-467e-92a1-f3ffeb1266e0'), UUID_TO_BIN('c3e2d8f5-2731-4e12-91d5-c8f5ff01392c')),
-  (UUID_TO_BIN('61f63e53-5092-450b-b17c-0e340d1258d0'), UUID_TO_BIN('c3e2d8f5-2731-4e12-91d5-c8f5ff01392c')),
-  -- Cabaña del Valle
-  (UUID_TO_BIN('1c9f77b1-1be1-4b18-a43b-287b0989238e'), UUID_TO_BIN('f8a83214-182b-4204-b44a-31e82f9c5ca4')),
-  (UUID_TO_BIN('2dca07fc-7c1d-4069-9057-f5c55a1c0ab1'), UUID_TO_BIN('f8a83214-182b-4204-b44a-31e82f9c5ca4')),
-  (UUID_TO_BIN('9f8c1be1-6200-4533-a1fa-c23c12d0e0b4'), UUID_TO_BIN('f8a83214-182b-4204-b44a-31e82f9c5ca4')),
-  (UUID_TO_BIN('f8c2ab10-f70a-467e-92a1-f3ffeb1266e0'), UUID_TO_BIN('f8a83214-182b-4204-b44a-31e82f9c5ca4')),
-  (UUID_TO_BIN('61f63e53-5092-450b-b17c-0e340d1258d0'), UUID_TO_BIN('f8a83214-182b-4204-b44a-31e82f9c5ca4'));
+    -- Hotel Duna
+    (UUID_TO_BIN('1c9f77b1-1be1-4b18-a43b-287b0989238e'), UUID_TO_BIN('8a9b6e3d-27b2-4a0d-9992-d35031e5c7a8')),
+    (UUID_TO_BIN('2dca07fc-7c1d-4069-9057-f5c55a1c0ab1'), UUID_TO_BIN('8a9b6e3d-27b2-4a0d-9992-d35031e5c7a8')),
+    (UUID_TO_BIN('9f8c1be1-6200-4533-a1fa-c23c12d0e0b4'), UUID_TO_BIN('8a9b6e3d-27b2-4a0d-9992-d35031e5c7a8')),
+    (UUID_TO_BIN('f8c2ab10-f70a-467e-92a1-f3ffeb1266e0'), UUID_TO_BIN('8a9b6e3d-27b2-4a0d-9992-d35031e5c7a8')),
+    (UUID_TO_BIN('61f63e53-5092-450b-b17c-0e340d1258d0'), UUID_TO_BIN('8a9b6e3d-27b2-4a0d-9992-d35031e5c7a8')),
+    -- Departamento Sol
+    (UUID_TO_BIN('1c9f77b1-1be1-4b18-a43b-287b0989238e'), UUID_TO_BIN('a3b2e1f4-9e02-49ea-b0d1-b6f5d9536891')),
+    (UUID_TO_BIN('2dca07fc-7c1d-4069-9057-f5c55a1c0ab1'), UUID_TO_BIN('a3b2e1f4-9e02-49ea-b0d1-b6f5d9536891')),
+    (UUID_TO_BIN('9f8c1be1-6200-4533-a1fa-c23c12d0e0b4'), UUID_TO_BIN('a3b2e1f4-9e02-49ea-b0d1-b6f5d9536891')),
+    (UUID_TO_BIN('f8c2ab10-f70a-467e-92a1-f3ffeb1266e0'), UUID_TO_BIN('a3b2e1f4-9e02-49ea-b0d1-b6f5d9536891')),
+    (UUID_TO_BIN('61f63e53-5092-450b-b17c-0e340d1258d0'), UUID_TO_BIN('a3b2e1f4-9e02-49ea-b0d1-b6f5d9536891')),
+    -- Casa Libertad
+    (UUID_TO_BIN('1c9f77b1-1be1-4b18-a43b-287b0989238e'), UUID_TO_BIN('d5f8f0f4-ec7e-406d-8d96-5d5053b4f1f0')),
+    (UUID_TO_BIN('2dca07fc-7c1d-4069-9057-f5c55a1c0ab1'), UUID_TO_BIN('d5f8f0f4-ec7e-406d-8d96-5d5053b4f1f0')),
+    (UUID_TO_BIN('9f8c1be1-6200-4533-a1fa-c23c12d0e0b4'), UUID_TO_BIN('d5f8f0f4-ec7e-406d-8d96-5d5053b4f1f0')),
+    (UUID_TO_BIN('f8c2ab10-f70a-467e-92a1-f3ffeb1266e0'), UUID_TO_BIN('d5f8f0f4-ec7e-406d-8d96-5d5053b4f1f0')),
+    (UUID_TO_BIN('61f63e53-5092-450b-b17c-0e340d1258d0'), UUID_TO_BIN('d5f8f0f4-ec7e-406d-8d96-5d5053b4f1f0')),
+    -- Hotel Boutique Lago
+    (UUID_TO_BIN('1c9f77b1-1be1-4b18-a43b-287b0989238e'), UUID_TO_BIN('c3e2d8f5-2731-4e12-91d5-c8f5ff01392c')),
+    (UUID_TO_BIN('2dca07fc-7c1d-4069-9057-f5c55a1c0ab1'), UUID_TO_BIN('c3e2d8f5-2731-4e12-91d5-c8f5ff01392c')),
+    (UUID_TO_BIN('9f8c1be1-6200-4533-a1fa-c23c12d0e0b4'), UUID_TO_BIN('c3e2d8f5-2731-4e12-91d5-c8f5ff01392c')),
+    (UUID_TO_BIN('f8c2ab10-f70a-467e-92a1-f3ffeb1266e0'), UUID_TO_BIN('c3e2d8f5-2731-4e12-91d5-c8f5ff01392c')),
+    (UUID_TO_BIN('61f63e53-5092-450b-b17c-0e340d1258d0'), UUID_TO_BIN('c3e2d8f5-2731-4e12-91d5-c8f5ff01392c')),
+    -- Cabaña del Valle
+    (UUID_TO_BIN('1c9f77b1-1be1-4b18-a43b-287b0989238e'), UUID_TO_BIN('f8a83214-182b-4204-b44a-31e82f9c5ca4')),
+    (UUID_TO_BIN('2dca07fc-7c1d-4069-9057-f5c55a1c0ab1'), UUID_TO_BIN('f8a83214-182b-4204-b44a-31e82f9c5ca4')),
+    (UUID_TO_BIN('9f8c1be1-6200-4533-a1fa-c23c12d0e0b4'), UUID_TO_BIN('f8a83214-182b-4204-b44a-31e82f9c5ca4')),
+    (UUID_TO_BIN('f8c2ab10-f70a-467e-92a1-f3ffeb1266e0'), UUID_TO_BIN('f8a83214-182b-4204-b44a-31e82f9c5ca4')),
+    (UUID_TO_BIN('61f63e53-5092-450b-b17c-0e340d1258d0'), UUID_TO_BIN('f8a83214-182b-4204-b44a-31e82f9c5ca4'));
 --   -- Hotel Costa Azul
 --   (UUID_TO_BIN('1c9f77b1-1be1-4b18-a43b-287b0989238e'), UUID_TO_BIN('2d7a23fe-b512-408d-a4d9-13e7d992c9a6')),
 --   (UUID_TO_BIN('2dca07fc-7c1d-4069-9057-f5c55a1c0ab1'), UUID_TO_BIN('2d7a23fe-b512-408d-a4d9-13e7d992c9a6')),
@@ -192,39 +258,38 @@ VALUES
 --   (UUID_TO_BIN('f8c2ab10-f70a-467e-92a1-f3ffeb1266e0'), UUID_TO_BIN('bcf324b5-38da-4b45-9b99-2d2c3be48c78')),
 --   (UUID_TO_BIN('61f63e53-5092-450b-b17c-0e340d1258d0'), UUID_TO_BIN('bcf324b5-38da-4b45-9b99-2d2c3be48c78'));
 --
-INSERT INTO
-  stay_images (id, url)
+INSERT INTO stay_images (id, url)
 VALUES
-  -- Hotel Duna
-  (UUID_TO_BIN('e1338d35-9944-4861-842b-4fce19759cae'), 'hotel-duna-1.jpg'),
-  (UUID_TO_BIN('6b2baec8-386c-45ca-a201-39d63310b938'), 'hotel-duna-2.jpg'),
-  (UUID_TO_BIN('2b026a26-bcb2-4ec2-b4d5-500106a52fbf'), 'hotel-duna-3.jpg'),
-  (UUID_TO_BIN('0b30d2ed-d200-44b4-8be6-0e26f86bf017'), 'hotel-duna-4.jpg'),
-  (UUID_TO_BIN('4e8381fc-d5e4-4063-95ef-b246904ee7c0'), 'hotel-duna-5.jpg'),
-  -- Departamento Sol
-  (UUID_TO_BIN('c1a5f4e1-5367-4e99-9c11-6571a4e2ad76'), 'departamento-sol-1.jpg'),
-  (UUID_TO_BIN('d2b6789f-b673-40b8-91a1-7f18d91e2b72'), 'departamento-sol-2.jpg'),
-  (UUID_TO_BIN('e5b82d4a-9231-4d97-845b-3d8175c77d49'), 'departamento-sol-3.jpg'),
-  (UUID_TO_BIN('f6c92e3a-11bc-47b1-b7c6-89f71996c1a3'), 'departamento-sol-4.jpg'),
-  (UUID_TO_BIN('a8d83f1b-21cd-4e03-a3a5-5f219bcd1a81'), 'departamento-sol-5.jpg'),
-  -- Casa Libertad
-  (UUID_TO_BIN('b7e94f2c-31de-44e2-a51c-63d92e3d7b49'), 'casa-libertad-1.jpg'),
-  (UUID_TO_BIN('c8f0514d-41ef-48f3-b62d-72e92d4e8c5a'), 'casa-libertad-2.jpg'),
-  (UUID_TO_BIN('d9f1625e-5201-4994-c73e-81fa91e4b1d6'), 'casa-libertad-3.jpg'),
-  (UUID_TO_BIN('eaf2736f-6312-4a05-d84f-92fb92f5b2e7'), 'casa-libertad-4.jpg'),
-  (UUID_TO_BIN('2c4ee99c-284b-43b5-bad9-57a0304a9942'), 'casa-libertad-5.jpg'),
-  -- Hotel Boutique Lago
-  (UUID_TO_BIN('a1a5d4e2-5217-4c99-8c22-9572b4e3cd87'), 'hotel-boutique-lago-1.jpg'),
-  (UUID_TO_BIN('b2b6789d-a673-41b8-91b1-6f19e81f3b73'), 'hotel-boutique-lago-2.jpg'),
-  (UUID_TO_BIN('c5c82d4e-b231-4d97-854b-2d8185d88d59'), 'hotel-boutique-lago-3.jpg'),
-  (UUID_TO_BIN('d6d92e3a-c1bc-47b1-b7d7-78f71996d2b4'), 'hotel-boutique-lago-4.jpg'),
-  (UUID_TO_BIN('e8e83f2b-d1cd-4e03-a3a6-4f219acd1a82'), 'hotel-boutique-lago-5.jpg'),
-  -- Cabaña del Valle
-  (UUID_TO_BIN('a2b5e4c3-e117-4d99-9c33-6581b4e4ad77'), 'cabana-del-valle-1.jpg'),
-  (UUID_TO_BIN('b3c678af-f773-41b8-92b2-5f19d82f4c84'), 'cabana-del-valle-2.jpg'),
-  (UUID_TO_BIN('c6d82d5f-a341-4c97-865b-3d8195c89d60'), 'cabana-del-valle-3.jpg'),
-  (UUID_TO_BIN('d7e92f4a-d2cd-48b2-c8d7-67f71997d3b5'), 'cabana-del-valle-4.jpg'),
-  (UUID_TO_BIN('e9f83f3b-e3dc-4e14-d3a7-3f319bde2b92'), 'cabana-del-valle-5.jpg');
+    -- Hotel Duna
+    (UUID_TO_BIN('e1338d35-9944-4861-842b-4fce19759cae'), 'hotel-duna-1.jpg'),
+    (UUID_TO_BIN('6b2baec8-386c-45ca-a201-39d63310b938'), 'hotel-duna-2.jpg'),
+    (UUID_TO_BIN('2b026a26-bcb2-4ec2-b4d5-500106a52fbf'), 'hotel-duna-3.jpg'),
+    (UUID_TO_BIN('0b30d2ed-d200-44b4-8be6-0e26f86bf017'), 'hotel-duna-4.jpg'),
+    (UUID_TO_BIN('4e8381fc-d5e4-4063-95ef-b246904ee7c0'), 'hotel-duna-5.jpg'),
+    -- Departamento Sol
+    (UUID_TO_BIN('c1a5f4e1-5367-4e99-9c11-6571a4e2ad76'), 'departamento-sol-1.jpg'),
+    (UUID_TO_BIN('d2b6789f-b673-40b8-91a1-7f18d91e2b72'), 'departamento-sol-2.jpg'),
+    (UUID_TO_BIN('e5b82d4a-9231-4d97-845b-3d8175c77d49'), 'departamento-sol-3.jpg'),
+    (UUID_TO_BIN('f6c92e3a-11bc-47b1-b7c6-89f71996c1a3'), 'departamento-sol-4.jpg'),
+    (UUID_TO_BIN('a8d83f1b-21cd-4e03-a3a5-5f219bcd1a81'), 'departamento-sol-5.jpg'),
+    -- Casa Libertad
+    (UUID_TO_BIN('b7e94f2c-31de-44e2-a51c-63d92e3d7b49'), 'casa-libertad-1.jpg'),
+    (UUID_TO_BIN('c8f0514d-41ef-48f3-b62d-72e92d4e8c5a'), 'casa-libertad-2.jpg'),
+    (UUID_TO_BIN('d9f1625e-5201-4994-c73e-81fa91e4b1d6'), 'casa-libertad-3.jpg'),
+    (UUID_TO_BIN('eaf2736f-6312-4a05-d84f-92fb92f5b2e7'), 'casa-libertad-4.jpg'),
+    (UUID_TO_BIN('2c4ee99c-284b-43b5-bad9-57a0304a9942'), 'casa-libertad-5.jpg'),
+    -- Hotel Boutique Lago
+    (UUID_TO_BIN('a1a5d4e2-5217-4c99-8c22-9572b4e3cd87'), 'hotel-boutique-lago-1.jpg'),
+    (UUID_TO_BIN('b2b6789d-a673-41b8-91b1-6f19e81f3b73'), 'hotel-boutique-lago-2.jpg'),
+    (UUID_TO_BIN('c5c82d4e-b231-4d97-854b-2d8185d88d59'), 'hotel-boutique-lago-3.jpg'),
+    (UUID_TO_BIN('d6d92e3a-c1bc-47b1-b7d7-78f71996d2b4'), 'hotel-boutique-lago-4.jpg'),
+    (UUID_TO_BIN('e8e83f2b-d1cd-4e03-a3a6-4f219acd1a82'), 'hotel-boutique-lago-5.jpg'),
+    -- Cabaña del Valle
+    (UUID_TO_BIN('a2b5e4c3-e117-4d99-9c33-6581b4e4ad77'), 'cabana-del-valle-1.jpg'),
+    (UUID_TO_BIN('b3c678af-f773-41b8-92b2-5f19d82f4c84'), 'cabana-del-valle-2.jpg'),
+    (UUID_TO_BIN('c6d82d5f-a341-4c97-865b-3d8195c89d60'), 'cabana-del-valle-3.jpg'),
+    (UUID_TO_BIN('d7e92f4a-d2cd-48b2-c8d7-67f71997d3b5'), 'cabana-del-valle-4.jpg'),
+    (UUID_TO_BIN('e9f83f3b-e3dc-4e14-d3a7-3f319bde2b92'), 'cabana-del-valle-5.jpg');
 --   -- Hotel Costa Azul
 --   (UUID_TO_BIN('a3c5f4e4-f217-4e99-9d44-7591c4f4be88'), 'hotel-costa-azul-1.jpg'),
 --   (UUID_TO_BIN('795f705b-f41e-4bd8-8151-04b0818b0543'), 'hotel-costa-azul-2.jpg'),
@@ -310,39 +375,38 @@ VALUES
 --   (UUID_TO_BIN('f6e92e2b-12bc-47a1-c7c6-90f81997d2b3'), 'departamento-luna-4.jpg'),
 --   (UUID_TO_BIN('a8f83f4b-23cd-4f03-d3a5-6f319bde2c91'), 'departamento-luna-5.jpg');
 --
-INSERT INTO
-  stays_images (stays_id, images_id)
+INSERT INTO stays_images (stays_id, images_id)
 VALUES
-  -- Hotel Duna
-  (UUID_TO_BIN('8a9b6e3d-27b2-4a0d-9992-d35031e5c7a8'), UUID_TO_BIN('e1338d35-9944-4861-842b-4fce19759cae')),
-  (UUID_TO_BIN('8a9b6e3d-27b2-4a0d-9992-d35031e5c7a8'), UUID_TO_BIN('6b2baec8-386c-45ca-a201-39d63310b938')),
-  (UUID_TO_BIN('8a9b6e3d-27b2-4a0d-9992-d35031e5c7a8'), UUID_TO_BIN('2b026a26-bcb2-4ec2-b4d5-500106a52fbf')),
-  (UUID_TO_BIN('8a9b6e3d-27b2-4a0d-9992-d35031e5c7a8'), UUID_TO_BIN('0b30d2ed-d200-44b4-8be6-0e26f86bf017')),
-  (UUID_TO_BIN('8a9b6e3d-27b2-4a0d-9992-d35031e5c7a8'), UUID_TO_BIN('4e8381fc-d5e4-4063-95ef-b246904ee7c0')),
-  -- Departamento Sol
-  (UUID_TO_BIN('a3b2e1f4-9e02-49ea-b0d1-b6f5d9536891'), UUID_TO_BIN('c1a5f4e1-5367-4e99-9c11-6571a4e2ad76')),
-  (UUID_TO_BIN('a3b2e1f4-9e02-49ea-b0d1-b6f5d9536891'), UUID_TO_BIN('d2b6789f-b673-40b8-91a1-7f18d91e2b72')),
-  (UUID_TO_BIN('a3b2e1f4-9e02-49ea-b0d1-b6f5d9536891'), UUID_TO_BIN('e5b82d4a-9231-4d97-845b-3d8175c77d49')),
-  (UUID_TO_BIN('a3b2e1f4-9e02-49ea-b0d1-b6f5d9536891'), UUID_TO_BIN('f6c92e3a-11bc-47b1-b7c6-89f71996c1a3')),
-  (UUID_TO_BIN('a3b2e1f4-9e02-49ea-b0d1-b6f5d9536891'), UUID_TO_BIN('a8d83f1b-21cd-4e03-a3a5-5f219bcd1a81')),
-  -- Casa Libertad
-  (UUID_TO_BIN('d5f8f0f4-ec7e-406d-8d96-5d5053b4f1f0'), UUID_TO_BIN('b7e94f2c-31de-44e2-a51c-63d92e3d7b49')),
-  (UUID_TO_BIN('d5f8f0f4-ec7e-406d-8d96-5d5053b4f1f0'), UUID_TO_BIN('c8f0514d-41ef-48f3-b62d-72e92d4e8c5a')),
-  (UUID_TO_BIN('d5f8f0f4-ec7e-406d-8d96-5d5053b4f1f0'), UUID_TO_BIN('d9f1625e-5201-4994-c73e-81fa91e4b1d6')),
-  (UUID_TO_BIN('d5f8f0f4-ec7e-406d-8d96-5d5053b4f1f0'), UUID_TO_BIN('eaf2736f-6312-4a05-d84f-92fb92f5b2e7')),
-  (UUID_TO_BIN('d5f8f0f4-ec7e-406d-8d96-5d5053b4f1f0'), UUID_TO_BIN('2c4ee99c-284b-43b5-bad9-57a0304a9942')),
-  -- Hotel Boutique Lago
-  (UUID_TO_BIN('c3e2d8f5-2731-4e12-91d5-c8f5ff01392c'), UUID_TO_BIN('a1a5d4e2-5217-4c99-8c22-9572b4e3cd87')),
-  (UUID_TO_BIN('c3e2d8f5-2731-4e12-91d5-c8f5ff01392c'), UUID_TO_BIN('b2b6789d-a673-41b8-91b1-6f19e81f3b73')),
-  (UUID_TO_BIN('c3e2d8f5-2731-4e12-91d5-c8f5ff01392c'), UUID_TO_BIN('c5c82d4e-b231-4d97-854b-2d8185d88d59')),
-  (UUID_TO_BIN('c3e2d8f5-2731-4e12-91d5-c8f5ff01392c'), UUID_TO_BIN('d6d92e3a-c1bc-47b1-b7d7-78f71996d2b4')),
-  (UUID_TO_BIN('c3e2d8f5-2731-4e12-91d5-c8f5ff01392c'), UUID_TO_BIN('e8e83f2b-d1cd-4e03-a3a6-4f219acd1a82')),
-  -- Cabaña del Valle
-  (UUID_TO_BIN('f8a83214-182b-4204-b44a-31e82f9c5ca4'), UUID_TO_BIN('a2b5e4c3-e117-4d99-9c33-6581b4e4ad77')),
-  (UUID_TO_BIN('f8a83214-182b-4204-b44a-31e82f9c5ca4'), UUID_TO_BIN('b3c678af-f773-41b8-92b2-5f19d82f4c84')),
-  (UUID_TO_BIN('f8a83214-182b-4204-b44a-31e82f9c5ca4'), UUID_TO_BIN('c6d82d5f-a341-4c97-865b-3d8195c89d60')),
-  (UUID_TO_BIN('f8a83214-182b-4204-b44a-31e82f9c5ca4'), UUID_TO_BIN('d7e92f4a-d2cd-48b2-c8d7-67f71997d3b5')),
-  (UUID_TO_BIN('f8a83214-182b-4204-b44a-31e82f9c5ca4'), UUID_TO_BIN('e9f83f3b-e3dc-4e14-d3a7-3f319bde2b92'));
+    -- Hotel Duna
+    (UUID_TO_BIN('8a9b6e3d-27b2-4a0d-9992-d35031e5c7a8'), UUID_TO_BIN('e1338d35-9944-4861-842b-4fce19759cae')),
+    (UUID_TO_BIN('8a9b6e3d-27b2-4a0d-9992-d35031e5c7a8'), UUID_TO_BIN('6b2baec8-386c-45ca-a201-39d63310b938')),
+    (UUID_TO_BIN('8a9b6e3d-27b2-4a0d-9992-d35031e5c7a8'), UUID_TO_BIN('2b026a26-bcb2-4ec2-b4d5-500106a52fbf')),
+    (UUID_TO_BIN('8a9b6e3d-27b2-4a0d-9992-d35031e5c7a8'), UUID_TO_BIN('0b30d2ed-d200-44b4-8be6-0e26f86bf017')),
+    (UUID_TO_BIN('8a9b6e3d-27b2-4a0d-9992-d35031e5c7a8'), UUID_TO_BIN('4e8381fc-d5e4-4063-95ef-b246904ee7c0')),
+    -- Departamento Sol
+    (UUID_TO_BIN('a3b2e1f4-9e02-49ea-b0d1-b6f5d9536891'), UUID_TO_BIN('c1a5f4e1-5367-4e99-9c11-6571a4e2ad76')),
+    (UUID_TO_BIN('a3b2e1f4-9e02-49ea-b0d1-b6f5d9536891'), UUID_TO_BIN('d2b6789f-b673-40b8-91a1-7f18d91e2b72')),
+    (UUID_TO_BIN('a3b2e1f4-9e02-49ea-b0d1-b6f5d9536891'), UUID_TO_BIN('e5b82d4a-9231-4d97-845b-3d8175c77d49')),
+    (UUID_TO_BIN('a3b2e1f4-9e02-49ea-b0d1-b6f5d9536891'), UUID_TO_BIN('f6c92e3a-11bc-47b1-b7c6-89f71996c1a3')),
+    (UUID_TO_BIN('a3b2e1f4-9e02-49ea-b0d1-b6f5d9536891'), UUID_TO_BIN('a8d83f1b-21cd-4e03-a3a5-5f219bcd1a81')),
+    -- Casa Libertad
+    (UUID_TO_BIN('d5f8f0f4-ec7e-406d-8d96-5d5053b4f1f0'), UUID_TO_BIN('b7e94f2c-31de-44e2-a51c-63d92e3d7b49')),
+    (UUID_TO_BIN('d5f8f0f4-ec7e-406d-8d96-5d5053b4f1f0'), UUID_TO_BIN('c8f0514d-41ef-48f3-b62d-72e92d4e8c5a')),
+    (UUID_TO_BIN('d5f8f0f4-ec7e-406d-8d96-5d5053b4f1f0'), UUID_TO_BIN('d9f1625e-5201-4994-c73e-81fa91e4b1d6')),
+    (UUID_TO_BIN('d5f8f0f4-ec7e-406d-8d96-5d5053b4f1f0'), UUID_TO_BIN('eaf2736f-6312-4a05-d84f-92fb92f5b2e7')),
+    (UUID_TO_BIN('d5f8f0f4-ec7e-406d-8d96-5d5053b4f1f0'), UUID_TO_BIN('2c4ee99c-284b-43b5-bad9-57a0304a9942')),
+    -- Hotel Boutique Lago
+    (UUID_TO_BIN('c3e2d8f5-2731-4e12-91d5-c8f5ff01392c'), UUID_TO_BIN('a1a5d4e2-5217-4c99-8c22-9572b4e3cd87')),
+    (UUID_TO_BIN('c3e2d8f5-2731-4e12-91d5-c8f5ff01392c'), UUID_TO_BIN('b2b6789d-a673-41b8-91b1-6f19e81f3b73')),
+    (UUID_TO_BIN('c3e2d8f5-2731-4e12-91d5-c8f5ff01392c'), UUID_TO_BIN('c5c82d4e-b231-4d97-854b-2d8185d88d59')),
+    (UUID_TO_BIN('c3e2d8f5-2731-4e12-91d5-c8f5ff01392c'), UUID_TO_BIN('d6d92e3a-c1bc-47b1-b7d7-78f71996d2b4')),
+    (UUID_TO_BIN('c3e2d8f5-2731-4e12-91d5-c8f5ff01392c'), UUID_TO_BIN('e8e83f2b-d1cd-4e03-a3a6-4f219acd1a82')),
+    -- Cabaña del Valle
+    (UUID_TO_BIN('f8a83214-182b-4204-b44a-31e82f9c5ca4'), UUID_TO_BIN('a2b5e4c3-e117-4d99-9c33-6581b4e4ad77')),
+    (UUID_TO_BIN('f8a83214-182b-4204-b44a-31e82f9c5ca4'), UUID_TO_BIN('b3c678af-f773-41b8-92b2-5f19d82f4c84')),
+    (UUID_TO_BIN('f8a83214-182b-4204-b44a-31e82f9c5ca4'), UUID_TO_BIN('c6d82d5f-a341-4c97-865b-3d8195c89d60')),
+    (UUID_TO_BIN('f8a83214-182b-4204-b44a-31e82f9c5ca4'), UUID_TO_BIN('d7e92f4a-d2cd-48b2-c8d7-67f71997d3b5')),
+    (UUID_TO_BIN('f8a83214-182b-4204-b44a-31e82f9c5ca4'), UUID_TO_BIN('e9f83f3b-e3dc-4e14-d3a7-3f319bde2b92'));
 --   -- Hotel Costa Azul
 --   (UUID_TO_BIN('2d7a23fe-b512-408d-a4d9-13e7d992c9a6'), UUID_TO_BIN('a3c5f4e4-f217-4e99-9d44-7591c4f4be88')),
 --   (UUID_TO_BIN('2d7a23fe-b512-408d-a4d9-13e7d992c9a6'), UUID_TO_BIN('795f705b-f41e-4bd8-8151-04b0818b0543')),
