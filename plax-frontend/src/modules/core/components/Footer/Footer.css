@@ -1,4 +1,4 @@
-.footer{
+.footer {
     margin-top: 2rem;
     padding-inline: 20px;
     padding-block: 10px;
@@ -8,19 +8,33 @@
     justify-content: space-between;
     align-items: center;
 
-    & a{
+    & a {
         text-decoration: none;
     }
 
-    & .footer__isologo{
+    & .footer__isologo {
         display: flex;
         align-items: center;
         gap: 10px;
         color: var(--color-base-900);
         font-weight: 600;
 
-        & > img{
+        &>img {
             aspect-ratio: 1/1;
+        }
+    }
+
+    & .footer__social {
+        display: flex;
+        gap: 8px;
+        align-items: center;
+
+        & svg {
+            transition: transform 120ms ease-in-out;
+        }
+
+        & svg:hover{
+            transform: translateY(-2px);
         }
     }
 }

@@ -1,20 +1,23 @@
-import { DatePicker, Select } from 'antd';
+import { AutoComplete, DatePicker, Select } from 'antd';
 import locale from 'antd/es/date-picker/locale/es_ES';
+import moment from 'moment';
 import { useEffect, useState } from 'react';
-import { ArrayParam, DateParam, StringParam, useQueryParams } from 'use-query-params';
+import { ArrayParam, StringParam, useQueryParams } from 'use-query-params';
 import { useCategory } from '../../../categories/hooks/useCategory';
 import { Popover } from '../../../core/components/Popover/Popover';
 import { StayCard } from '../../components';
 import { useStay } from '../../hooks/useStay';
+import placesOptions from './options';
 import './StaysSearch.css';
-import moment from 'moment';
+import { Helmet } from 'react-helmet-async';
 
 export const StaysSearch = () => {
     const { RangePicker } = DatePicker;
-    const [query, setQuery] = useQueryParams({ checkIn: StringParam, checkOut: StringParam, place: ArrayParam, categories: ArrayParam });
+    const [query, setQuery] = useQueryParams({ checkIn: StringParam, checkOut: StringParam, place: StringParam, categories: ArrayParam });
     const { categories, getAllCategories, loading: loadingCategories, error: errorCaterogies } = useCategory();
     const { stays, searchStays, loading: loadingStays, totalPages, error } = useStay();
     const [options, setOptions] = useState([]);
+    const [optionsPlace, setOptionsPlace] = useState(placesOptions);
 
     useEffect(() => {
         setQuery((prev) => {
@@ -41,6 +44,19 @@ export const StaysSearch = () => {
         })
     }
 
+    // TODO: Implementar DeBounce
+    const handlePlaceChange = (value) => {
+        if (!value) {
+            setQuery((prev) => {
+                return { ...prev, place: undefined }
+            });
+            return;
+        }
+        setQuery((prev) => {
+            return { ...prev, place: value }
+        })
+    }
+
     const handleDateRangeOnChange = (dateRange) => {
         if (!dateRange) {
             setQuery((prev) => {
@@ -50,8 +66,6 @@ export const StaysSearch = () => {
         }
 
         const [start, end] = dateRange;
-        console.log(end);
-
 
         setQuery((prev) => ({
             ...prev,
@@ -65,18 +79,35 @@ export const StaysSearch = () => {
         : null;
 
     useEffect(() => {
-        console.log(query)
-        searchStays(query.categories);
+        searchStays(query.categories, query.place);
     }, [query])
 
     return (
         <main className='StaySearch__container'>
+            <Helmet>
+                <title>Buscar alojamiento | Plax</title>
+                <meta name='description' content='Busca tu alojamiento ideal' />
+            </Helmet>
             <section className='StaySearch__filters'>
                 <p>Filtrar por:</p>
                 <form>
                     <div className='StaySearch__form-container'>
                         <div>
-                            <label htmlFor='categorias'>Categorias:</label>
+                            <label htmlFor="place">Lugar</label>
+                            <AutoComplete
+                                id='place'
+                                allowClear
+                                className='form__element'
+                                onChange={handlePlaceChange}
+                                options={optionsPlace}
+                                filterOption={(inputValue, option) => option.value.toUpperCase().indexOf(inputValue.toUpperCase()) !== -1}
+                                placeholder='Por favor seleccione un lugar'
+                                listHeight={128}
+                                value={query.place}
+                            />
+                        </div>
+                        <div>
+                            <label htmlFor='categorias'>Categorias</label>
                             <Select
                                 placeholder='Tipo de alojamiento'
                                 id='categorias'
@@ -90,7 +121,7 @@ export const StaysSearch = () => {
                             />
                         </div>
                         <div>
-                            <label htmlFor='date'>Fechas disponibles:</label>
+                            <label htmlFor='date'>Fechas disponibles</label>
                             <RangePicker
                                 id="date"
                                 className='form__date-rage-picker form__element'

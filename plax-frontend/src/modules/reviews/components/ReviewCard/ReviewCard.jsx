@@ -6,9 +6,8 @@ import { format } from 'date-fns'
 const stars = (rating) => {
     const stars = [];
     for (let i = 0; i < rating; i++) {
-        stars.push(<StarFilled />);
+        stars.push(<StarFilled key={i} />);
     }
-    console.log(stars);
     return stars;
 }
 

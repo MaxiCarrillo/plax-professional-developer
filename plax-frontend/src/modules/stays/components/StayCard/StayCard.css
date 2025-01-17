@@ -1,5 +1,12 @@
 .stayCard {
     position: relative;
+
+    & .stayCard__favorite {
+        position: absolute;
+        z-index: 10;
+        top: 1rem;
+        right: 1rem;
+    }
 }
 
 a:has(.stayCard__container) {
@@ -8,10 +15,6 @@ a:has(.stayCard__container) {
 }
 
 .stayCard__favorite {
-    position: absolute;
-    z-index: 10;
-    top: 1rem;
-    right: 1rem;
     aspect-ratio: 1/1;
     width: 2rem;
     border-radius: 100%;
@@ -31,7 +34,7 @@ a:has(.stayCard__container) {
     }
 }
 
-.stayCard__favorite--active{
+.stayCard__favorite--active {
     background-color: var(--color-primary-100);
     color: var(--color-primary-500);
 

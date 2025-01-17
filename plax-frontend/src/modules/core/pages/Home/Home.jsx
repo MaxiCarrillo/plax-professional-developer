@@ -1,15 +1,16 @@
-import { DatePicker, Select } from 'antd';
+import { AutoComplete, DatePicker } from 'antd';
 import locale from 'antd/es/date-picker/locale/es_ES';
 import { format } from 'date-fns';
 import { useContext, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { CategoryCard } from '../../../categories/components/';
 import { StayCard } from '../../../stays/components/';
+import placesOptions from '../../../stays/pages/StaysSearch/options';
 import { NotificationContext } from '../../context/notificationContext';
 import './Home.css';
 
 export const Home = () => {
-
+    const [options, setOptions] = useState(placesOptions);
     const { toaster } = useContext(NotificationContext);
     const [categories, setCategories] = useState([]);
     const [stays, setStays] = useState([]);
@@ -19,29 +20,29 @@ export const Home = () => {
 
     const { RangePicker } = DatePicker;
 
-    const handleSelectOnChange = (value) => {
-        setPlace(value);
-    }
-
     const handleDateRangeOnChange = (dateString) => {
         setDateRange(dateString);
     }
 
     const handleSearch = (newValue) => {
-        console.log(newValue);
+        setPlace(newValue);
     };
 
     const handleOnSubmit = (e) => {
         e.preventDefault();
-        if (!place || dateRange === null || !dateRange[0] || !dateRange[1]) return toaster['error']({
-            message: 'Debe completar todos los campos',
-            description:
-                'Por favor, seleccione un lugar y un rango de fechas.',
-            duration: 3
-        });
-        const checkIn = format(dateRange[0].$d, 'dd-MM-yyyy');
-        const checkOn = format(dateRange[1].$d, 'dd-MM-yyyy');
-        navigate(`/search?place=${place}&checkIn=${checkIn}&checkOut=${checkOn}`);
+        if (place === '' && (dateRange === null || dateRange.length === 0)) {
+            toaster['error']({
+                message: 'Debe elegir al menos un lugar.',
+                description:
+                    'Por favor, seleccione un lugar.',
+                duration: 3
+            });
+            return;
+        }
+        let url = '/search?';
+        place && (url += `place=${place}&`);
+        (dateRange && dateRange.length > 0) && (url += `checkIn=${format(dateRange[0].$d, 'dd-MM-yyyy')}&checkOut=${format(dateRange[1].$d, 'dd-MM-yyyy')}`);
+        navigate(url);
     }
 
     useEffect(() => {
@@ -64,28 +65,15 @@ export const Home = () => {
                     <h1>Encontrá tu próxima estancia</h1>
                     <form className='mainSection__form' onSubmit={handleOnSubmit}>
                         <label htmlFor="place">
-                            <Select
+                            <AutoComplete
                                 id='place'
+                                allowClear
                                 className='form__multiple-select'
-                                showSearch
-                                placeholder="Select a person"
-                                optionFilterProp="label"
-                                onSearch={handleSearch}
-                                onChange={handleSelectOnChange}
-                                options={[
-                                    {
-                                        value: 'jack',
-                                        label: 'Jack',
-                                    },
-                                    {
-                                        value: 'lucy',
-                                        label: 'Lucy',
-                                    },
-                                    {
-                                        value: 'tom',
-                                        label: 'Tom',
-                                    },
-                                ]}
+                                onChange={handleSearch}
+                                options={options}
+                                filterOption={(inputValue, option) => option.value.toUpperCase().indexOf(inputValue.toUpperCase()) !== -1}
+                                placeholder='Por favor seleccione un lugar'
+                                listHeight={128}
                             />
                         </label>
                         <label htmlFor="date">
@@ -123,6 +111,6 @@ export const Home = () => {
                     }
                 </div>
             </section>
-        </main>
+        </main >
     )
 }

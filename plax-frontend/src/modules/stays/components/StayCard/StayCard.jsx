@@ -86,7 +86,7 @@ export const StayCard = ({ stay }) => {
                         <h3 className='stayCard__titulo'>{name}</h3>
                         <p>{address.street}</p>
                         {
-                            totalReviews === 0 ? <p className='stayCard___score'>Sin calificaciones</p>
+                            totalReviews === 0 || !totalReviews ? <p className='stayCard___score'>Sin calificaciones</p>
                                 :
                                 <p className='stayCard___score'><span>{numeral(appreciation).format('0.0')}</span>{totalReviews} calificaciones</p>
                         }

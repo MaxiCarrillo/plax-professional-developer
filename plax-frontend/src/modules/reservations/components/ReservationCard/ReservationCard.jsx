@@ -13,7 +13,7 @@ export const ReservationCard = ({ reservation, onRefetch }) => {
 
     const { toaster } = useContext(NotificationContext);
     const { handleShowModal, handleContentModal } = useContext(FormModalContext);
-    const { confirmReservation } = useReservation();
+    const { confirmReservation, isLoading } = useReservation();
 
     const handleConfirm = async () => {
         try {
@@ -35,7 +35,7 @@ export const ReservationCard = ({ reservation, onRefetch }) => {
 
     const handleShowReviewModal = () => {
         handleContentModal(
-            <ReviewForm reservation={reservation} onRefetch={onRefetch}/>
+            <ReviewForm reservation={reservation} onRefetch={onRefetch} />
         )
         handleShowModal();
     }
@@ -69,7 +69,7 @@ export const ReservationCard = ({ reservation, onRefetch }) => {
                     reservation.confirmed ?
                         <p className='ReservationCard__confirm' ><CheckCircleOutlined className='icon' /> Confirmada</p>
                         :
-                        <button className='button button--primary' onClick={handleConfirm}>Confirmar reserva</button>
+                        <button className='button button--primary' onClick={handleConfirm} disabled={isLoading}>Confirmar reserva</button>
                 }
             </section>
 

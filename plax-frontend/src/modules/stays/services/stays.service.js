@@ -9,8 +9,9 @@ const stayService = {
                 throw new Error('No se pudieron obtener los alojamientos. Por favor, intente nuevamente más tarde.');
             });
     },
-    searchStays: (categoryIds) => {
+    searchStays: (categoryIds, searchTerm) => {
         categoryIds = categoryIds.map(id => `categoryIds=${id}`).join('&');
+        searchTerm && (categoryIds += `&searchTerm=${searchTerm}`);
         return api.get(`/stays/search?${categoryIds}`)
             .then(response => {
                 return response.data;

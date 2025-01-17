@@ -1,26 +1,31 @@
-import { StarFilled } from '@ant-design/icons';
+import { ArrowLeftOutlined, HeartFilled, HeartOutlined, ShareAltOutlined, StarFilled } from '@ant-design/icons';
 import { DatePicker } from 'antd';
 import locale from 'antd/es/date-picker/locale/es_ES';
 import { differenceInDays } from 'date-fns';
 import numeral from 'numeral';
 import { useContext, useEffect, useRef, useState } from 'react';
+import { Helmet } from 'react-helmet-async';
 import { Carousel } from 'react-responsive-carousel';
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 import { useNavigate, useParams } from 'react-router-dom';
 import { ReactSVG } from 'react-svg';
 import ImageFallback from '../../../../assets/images/image-fallback.jpg';
 import { useAuth } from '../../../auth/context/AuthContext';
+import { Modal } from '../../../core/components/Modal/Modal';
+import { FormModalContext } from '../../../core/context';
 import { NotificationContext } from '../../../core/context/notificationContext';
 import { useReservation } from '../../../reservations/hook/useReservation';
 import { ReviewCard } from '../../../reviews/components/ReviewCard/ReviewCard';
 import { useReview } from '../../../reviews/hooks/useReview';
+import userService from '../../../users/services/user.service';
+import { StayShare } from '../../components/StayShare/StayShare';
 import { useStay } from '../../hooks/useStay';
 import './StayDetail.css';
 
 export const StayDetail = () => {
 
     const { toaster } = useContext(NotificationContext);
-    const { user } = useAuth();
+    const { user, token, updateUser } = useAuth();
     const [reservation, setReservation] = useState({
         total: 0,
         dateRange: []
@@ -29,6 +34,8 @@ export const StayDetail = () => {
     const { stay, getStay, loading } = useStay();
     const { createReservation, isLoading } = useReservation();
     const { getReviewsByStay, isLoading: isLoadingReview, error: errorReview, reviews } = useReview();
+    const { handleShowModal, handleContentModal } = useContext(FormModalContext);
+
     const { id } = useParams();
 
     const dialogRef = useRef(null);
@@ -50,6 +57,54 @@ export const StayDetail = () => {
 
     const handleClickCloseDialog = () => {
         dialogRef.current.close();
+    }
+
+    const handleAddFavorite = async () => {
+
+        const body = {
+            id: user.id,
+            favorite: stay.id
+        }
+
+        try {
+            const response = await userService.addFavoriteStay(body, token);
+            updateUser(response.data);
+            toaster['success']({
+                message: 'Estancia añadida a favoritos.',
+                description: '¡Listo!',
+                duration: 3
+            })
+        } catch (error) {
+            toaster['error']({
+                message: 'Error al añadir a favoritos.',
+                description: error.message,
+                duration: 3
+            })
+        }
+    }
+
+    const handleRemoveFavorite = async () => {
+        const body = {
+            id: user.id,
+            favorite: stay.id
+        }
+
+        try {
+            const response = await userService.removeFavoriteStay(body, token);
+            updateUser(response.data);
+            toaster['success']({
+                message: 'Estancia eliminada de favoritos.',
+                description: '¡Listo!',
+                duration: 3
+            })
+
+        } catch (error) {
+            toaster['error']({
+                message: 'Error al eliminar de favoritos.',
+                description: error.message,
+                duration: 3
+            })
+        }
     }
 
     const handleDateRangeOnChange = (date) => {
@@ -110,6 +165,11 @@ export const StayDetail = () => {
 
     }
 
+    const handleShare = () => {
+        handleShowModal();
+        handleContentModal(<StayShare stay={stay} />);
+    }
+
     const images = (images) => {
         const displayedImages = images.slice(0, 5);
         while (displayedImages.length < 5) {
@@ -131,14 +191,49 @@ export const StayDetail = () => {
                 ) : (
                     !stay ? <p>Estancia no encontrada</p> :
                         <>
+                            <Helmet>
+                                <title>{stay.name} | Plax</title>
+                                <meta name="description" content={stay.description} />
+                                <meta property="og:title" content={stay.name} />
+                                <meta property="og:description" content={stay.description} />
+                                <meta property="og:image" content={stay.images[0]} />
+                                <meta property="og:url" content={window.location.href} />
+                                <meta property="og:type" content="website" />
+                                <meta property="og:site_name" content="Plax" />
+                                <meta name="twitter:title" content={stay.name} />
+                                <meta name="twitter:description" content={stay.description} />
+                                <meta name="twitter:site" content="@carrillomaxj" />
+                                <meta name="twitter:creator" content="@carrillomaxj" />
+                                <meta name="twitter:image" content={stay.images[0]} />
+                            </Helmet>
                             <header className='StayDetail__header'>
                                 <button className='StayDetail__back' onClick={handleBackClick}>
-                                    <svg width="11" height="11" viewBox="0 0 11 11" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                        <path d="M2.62969 6.1875L6.47969 10.0375L5.5 11L0 5.5L5.5 0L6.47969 0.9625L2.62969 4.8125H11V6.1875H2.62969Z" fill="#FF8E3C" />
-                                    </svg>
+                                    <ArrowLeftOutlined />
                                     Volver atrás
                                 </button>
-                                <h1>{stay.name}</h1>
+                                <div className='StayDetail__header-info'>
+                                    <h1>{stay.name}</h1>
+                                    <div className='StayDetail__header-actions'>
+                                        <button className='button--icon' onClick={handleShare}>
+                                            <ShareAltOutlined />
+                                        </button>
+                                        {
+                                            user && (
+                                                user.favorites.find(item => {
+                                                    return item.id === id
+                                                }) ? (
+                                                    <button className='stayCard__favorite stayCard__favorite--active' onClick={handleRemoveFavorite}>
+                                                        <HeartFilled />
+                                                    </button>
+                                                ) : (
+                                                    <button className='stayCard__favorite' onClick={handleAddFavorite}>
+                                                        <HeartOutlined />
+                                                    </button>
+                                                )
+                                            )
+                                        }
+                                    </div>
+                                </div>
                             </header>
                             <section className='StayDetail__galery'>
                                 {
@@ -153,7 +248,7 @@ export const StayDetail = () => {
                             </section>
                             <section className='StayDetail__info'>
                                 <div className='StayDetail__information-container'>
-                                    <div>
+                                    <section>
                                         <h2>Información del alojamiento</h2>
                                         <div className='StayDetail__description'>
                                             <p>Dirección</p>
@@ -165,12 +260,40 @@ export const StayDetail = () => {
                                             <p>Descripción</p>
                                             <p>{stay.description}</p>
                                         </div>
-                                    </div>
+                                    </section>
                                     <hr className='separator' />
-                                    <div>
+                                    <section className='stayDetail__features'>
+                                        <h2>Características</h2>
+                                        <ul>
+                                            {
+                                                stay?.features?.map((feature, index) =>
+                                                    <li key={index}>
+                                                        <ReactSVG
+                                                            src={feature.icon}
+                                                            beforeInjection={(svg) => {
+                                                                svg.setAttribute("fill", "#ff8e3d");
+                                                            }}
+                                                        />
+                                                        <span>{feature.name}</span>
+                                                    </li>
+                                                )
+                                            }
+                                        </ul>
+                                    </section>
+                                    <hr className='separator' />
+                                    <section>
                                         <h2>Políticas</h2>
-                                        <p>No se aceptan invitados de los huespedes para pasar la noche y esta prohibido el ingreso de animales.</p>
-                                    </div>
+                                        <div className='StayDetail__description__container'>
+                                            {
+                                                stay.policies.map((policy, index) =>
+                                                    <div key={index} className='StayDetail__description'>
+                                                        <p><strong>{policy.policy}</strong></p>
+                                                        <p>{policy.description}</p>
+                                                    </div>
+                                                )
+                                            }
+                                        </div>
+                                    </section>
                                 </div>
                                 <div className='StayDetail__booking'>
                                     <p className='StayDetail__pricePerNight'>
@@ -183,6 +306,7 @@ export const StayDetail = () => {
                                         format={'DD/MM/YYYY'}
                                         placeholder={['Check-in', 'Check-out']}
                                         locale={locale}
+                                        disabledDate={(current) => current && current < new Date()}
                                     />
                                     <button
                                         className='button button--primary'
@@ -196,25 +320,6 @@ export const StayDetail = () => {
                                         <p>${reservation.total}</p>
                                     </div>
                                 </div>
-                            </section>
-                            <hr className='separator' />
-                            <section className='stayDetail__features'>
-                                <h2>Características</h2>
-                                <ul>
-                                    {
-                                        stay?.features?.map((feature, index) =>
-                                            <li key={index}>
-                                                <ReactSVG
-                                                    src={feature.icon}
-                                                    beforeInjection={(svg) => {
-                                                        svg.setAttribute("fill", "#ff8e3d");
-                                                    }}
-                                                />
-                                                <span>{feature.name}</span>
-                                            </li>
-                                        )
-                                    }
-                                </ul>
                             </section>
                             <hr className='separator' />
                             {
@@ -257,6 +362,7 @@ export const StayDetail = () => {
                                     </Carousel>
                                 </div>
                             </dialog>
+                            <Modal />
                         </>
                 )
             }

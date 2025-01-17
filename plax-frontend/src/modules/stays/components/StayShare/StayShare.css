@@ -1,0 +1,33 @@
+.stayShare__container {
+
+    h1~figure {
+        margin-top: 1rem;
+    }
+
+    & .stayShare__figure {
+        display: flex;
+        align-items: center;
+        gap: .8rem;
+
+        & img {
+            border-radius: 8px;
+        }
+
+        & figcaption {
+            font-size: 1rem;
+            font-weight: 600;
+        }
+    }
+
+    & .stayShare__social-networks {
+        margin-top: 1rem;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: .5rem;
+    }
+
+    & .form__container{
+        margin-top: 1rem;
+    }
+
+}
