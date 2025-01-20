@@ -2,6 +2,8 @@ package com.maxdev.plaxbackend.modules.Reservation.Controller;
 
 import com.maxdev.plaxbackend.modules.Reservation.DTO.ReservationCreateDTO;
 import com.maxdev.plaxbackend.modules.Reservation.DTO.ReservationDTO;
+import com.maxdev.plaxbackend.modules.Reservation.Repository.ReservationRepository;
+import com.maxdev.plaxbackend.modules.Reservation.Reservation;
 import com.maxdev.plaxbackend.modules.Reservation.Service.ReservationService;
 import com.maxdev.plaxbackend.modules.Util.ApiPageResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -28,9 +30,11 @@ import java.util.UUID;
 public class ReservationController {
 
     private final ReservationService reservationService;
+    private final ReservationRepository reservationRepository;
 
-    public ReservationController(ReservationService reservationService) {
+    public ReservationController(ReservationService reservationService, ReservationRepository reservationRepository) {
         this.reservationService = reservationService;
+        this.reservationRepository = reservationRepository;
     }
 
     @PreAuthorize("isAuthenticated()")

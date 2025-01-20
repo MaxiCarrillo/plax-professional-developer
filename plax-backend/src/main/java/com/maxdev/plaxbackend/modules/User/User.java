@@ -25,20 +25,26 @@ public class User implements UserDetails {
     @Id
     @GeneratedValue(generator = "UUID")
     private UUID id;
+
     private String firstname;
+
     private String lastname;
+
     private String email;
+
     private String password;
+
     @Enumerated(EnumType.STRING)
     private Role role;
+
     @ManyToMany(cascade = CascadeType.DETACH) // No se puede eliminar un stay si esta en favoritos
     private Set<Stay> favorites;
-    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE, orphanRemoval = true)
-    // Si se elimina un usuario se eliminan sus reviews
+
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE, orphanRemoval = true) // Si se elimina un usuario se eliminan sus reviews
     private Set<Review> reviews;
 
     @Override
-
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of(new SimpleGrantedAuthority(role.name()));
     }

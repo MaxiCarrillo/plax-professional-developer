@@ -2,7 +2,12 @@ package com.maxdev.plaxbackend.modules.Stay.Service;
 
 import com.maxdev.plaxbackend.modules.Exception.ResourceAlreadyExistsException;
 import com.maxdev.plaxbackend.modules.Exception.ResourceNotFoundException;
+import com.maxdev.plaxbackend.modules.Reservation.Repository.ReservationRepository;
+import com.maxdev.plaxbackend.modules.Reservation.Reservation;
+import com.maxdev.plaxbackend.modules.Review.DTO.ReviewSummaryDTO;
+import com.maxdev.plaxbackend.modules.Review.Mapper.ReviewSummaryMapper;
 import com.maxdev.plaxbackend.modules.Review.Repository.ReviewRepository;
+import com.maxdev.plaxbackend.modules.Review.Review;
 import com.maxdev.plaxbackend.modules.Stay.DTO.StayDTO;
 import com.maxdev.plaxbackend.modules.Stay.DTO.StaySaveDTO;
 import com.maxdev.plaxbackend.modules.Stay.DTO.StaySummaryDTO;
@@ -29,6 +34,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -46,11 +52,13 @@ public class StayService implements IStayService, BaseUrl {
      */
     private final StayRepository stayRepository;
     private final StayImageRepository stayImageRepository;
+    private final ReservationRepository reservationRepository;
     private final ReviewRepository reviewRepository;
 
-    public StayService(StayRepository stayRepository, StayImageRepository stayImageRepository, ReviewRepository reviewRepository) {
+    public StayService(StayRepository stayRepository, StayImageRepository stayImageRepository, ReservationRepository reservationRepository, ReviewRepository reviewRepository) {
         this.stayRepository = stayRepository;
         this.stayImageRepository = stayImageRepository;
+        this.reservationRepository = reservationRepository;
         this.reviewRepository = reviewRepository;
     }
 
@@ -122,13 +130,18 @@ public class StayService implements IStayService, BaseUrl {
     @Override
     @Transactional
     public StayDTO findById(UUID id) throws ResourceNotFoundException {
+        log.debug("Finding stay by id: {}", id);
         Stay stay = stayRepository.findById(id)
                 .orElseThrow(() -> {
                     log.error("Stay with id: {} not found", id);
                     return new ResourceNotFoundException("Stay with id: " + id + " not found");
                 });
-        log.info("Stay found: {}", stay);
+        Set<LocalDate> unavailableDates = getUnavailableDates(id);
+        Set<Review> reviews = reviewRepository.findByStayId(id);
         StayDTO stayFound = StayMapper.INSTANCE.entityToDto(stay);
+        Set<ReviewSummaryDTO> reviewsDTO = reviews.stream().map(ReviewSummaryMapper.INSTANCE::entityToDto).collect(Collectors.toSet());
+        stayFound.setReviews(reviewsDTO);
+        stayFound.setUnavailableDates(unavailableDates);
         stayFound.setImages(stayFound.getImages().stream()
                 .map(image -> getBaseUrl() + "/api/stays/images/" + image)
                 .collect(Collectors.toSet()));
@@ -158,62 +171,61 @@ public class StayService implements IStayService, BaseUrl {
 
     @Override
     @Transactional
-    public Page<StayDTO> findAll(Pageable pageable) {
+    public Page<StaySummaryDTO> findAll(Pageable pageable) {
         log.debug("Finding all stays with pageable: {}", pageable);
-        Page<StayDTO> pageStays = stayRepository.findAll(pageable).map(StayMapper.INSTANCE::entityToDto);
+        Page<StaySummaryDTO> pageStays = stayRepository.findAll(pageable).map(StaySummaryMapper.INSTANCE::entityToDto);
         pageStays.forEach(stayDTO -> {
+            stayDTO.setTotalReviews(reviewRepository.findByStayId(stayDTO.getId()).size());
             stayDTO.setImages(stayDTO.getImages().stream()
                     .map(image -> getBaseUrl() + "/api/stays/images/" + image)
-                    .collect(Collectors.toSet()));
-            stayDTO.setFeatures(stayDTO.getFeatures().stream()
-                    .peek(feature -> feature.setIcon(getBaseUrl() + "/api/features/svg/" + feature.getIcon()))
                     .collect(Collectors.toSet()));
         });
         return pageStays;
     }
 
     @Override
-    public Set<StaySummaryDTO> findByCategoryIdsAndCountryOrCity(Set<UUID> categoryIds, String searchTerm) {
+    public Set<StaySummaryDTO> findByCategoryIdsAndCountryOrCity(Set<UUID> categoryIds, String searchTerm, LocalDate checkIn, LocalDate checkOut) {
         log.debug("Finding stays by category ids: {} and search term: {}", categoryIds, searchTerm);
         Set<StaySummaryDTO> stays;
-        if ((categoryIds == null || categoryIds.isEmpty()) && (searchTerm == null || searchTerm.isEmpty())) {
+
+        if ((categoryIds == null || categoryIds.isEmpty()) && (searchTerm == null || searchTerm.isEmpty()) && checkIn == null && checkOut == null) {
             stays = stayRepository.findAll().stream()
                     .map(StaySummaryMapper.INSTANCE::entityToDto)
                     .collect(Collectors.toSet());
         } else {
-            log.info("Buscando estancias por ids de categoría: {}", categoryIds);
-            log.info("Buscando estancias por término de búsqueda: {}", searchTerm);
-            stays = stayRepository.findByCategoryAndCountryOrCityContainingIgnoreCase(categoryIds, searchTerm).stream()
+            stays = stayRepository.findByCategoryAndCountryOrCityContainingIgnoreCase(categoryIds, searchTerm, checkIn, checkOut).stream()
                     .map(StaySummaryMapper.INSTANCE::entityToDto)
                     .collect(Collectors.toSet());
         }
-        log.info("Returning {} stays", stays.size());
+
+        log.debug("Returning {} stays", stays.size());
         stays.forEach(stay -> {
+            stay.setTotalReviews(reviewRepository.findByStayId(stay.getId()).size());
             stay.setImages(stay.getImages().stream()
                     .map(image -> getBaseUrl() + "/api/stays/images/" + image)
-                    .collect(Collectors.toSet()));
+                    .collect(Collectors.toSet())
+            );
         });
         return stays;
     }
 
     @Override
     @Transactional
-    public Set<StayDTO> getRandomStays(int size) {
+    public Set<StaySummaryDTO> getRandomStays(int size) {
         log.debug("Finding random stays with size: {}", size);
-        Set<StayDTO> randomStays = new HashSet<>();
+        Set<StaySummaryDTO> randomStays = new HashSet<>();
         List<Stay> stays = stayRepository.findAll();
+
         if (stays.size() < size)
             size = stays.size();
         Random random = new Random();
         while (randomStays.size() < size)
-            randomStays.add(StayMapper.INSTANCE.entityToDto(stays.get(random.nextInt(stays.size()))));
+            randomStays.add(StaySummaryMapper.INSTANCE.entityToDto(stays.get(random.nextInt(stays.size()))));
 
         randomStays.forEach(stay -> {
+            stay.setTotalReviews(reviewRepository.findByStayId(stay.getId()).size());
             stay.setImages(stay.getImages().stream()
                     .map(image -> getBaseUrl() + "/api/stays/images/" + image)
-                    .collect(Collectors.toSet()));
-            stay.setFeatures(stay.getFeatures().stream()
-                    .peek(feature -> feature.setIcon(getBaseUrl() + "/api/features/svg/" + feature.getIcon()))
                     .collect(Collectors.toSet()));
         });
         log.info("Returning {} random stays", randomStays.size());
@@ -247,6 +259,15 @@ public class StayService implements IStayService, BaseUrl {
             throw new ResourceNotFoundException("Image not found: " + imageName);
         }
         return resource;
+    }
+
+    public Set<LocalDate> getUnavailableDates(UUID id) {
+        log.debug("Getting unavailable dates for stay with id: {}", id);
+        List<Reservation> reservations = reservationRepository.findByStayId(id);
+
+        return reservations.stream()
+                .flatMap(reservation -> reservation.getCheckIn().datesUntil(reservation.getCheckOut().plusDays(1)))
+                .collect(Collectors.toSet());
     }
 
     private Set<String> saveImages(MultipartFile[] images) throws IOException {

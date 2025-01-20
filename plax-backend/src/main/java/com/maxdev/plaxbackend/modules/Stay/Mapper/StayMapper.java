@@ -25,6 +25,8 @@ public interface StayMapper {
     @Mapping(source = "category.id", target = "category_id")
     @Mapping(source = "address", target = "address", qualifiedByName = "addressToAddressDTO")
     @Mapping(source = "appreciation", target = "appreciation")
+    @Mapping(target = "unavailableDates", ignore = true)
+    @Mapping(target = "reviews", ignore = true)
     StayDTO entityToDto(Stay stay);
 
     @Mapping(source = "images", target = "images", qualifiedByName = "stringsToStayImages")

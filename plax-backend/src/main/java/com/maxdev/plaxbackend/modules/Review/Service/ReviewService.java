@@ -90,9 +90,7 @@ public class ReviewService implements IReviewService {
                 .orElse(0.0);
 
         log.info("Average qualification: {}", average);
-
         stay.setAppreciation(average);
-        stay.setTotalReviews(stay.getTotalReviews() + 1);
         stayRepository.save(stay);
 
         log.info("Stay updated: {}", stay);

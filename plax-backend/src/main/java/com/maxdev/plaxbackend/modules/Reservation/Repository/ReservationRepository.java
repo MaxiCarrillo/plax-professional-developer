@@ -19,4 +19,16 @@ public interface ReservationRepository extends JpaRepository<Reservation, UUID> 
     @Query("SELECT r FROM reservations r WHERE r.user.email = :email AND " +
             "(:date IS NULL OR (r.checkOut >= :date))")
     List<Reservation> findReservationByUserEmailAndDate(@Param("email") String userEmail, @Param("date") LocalDate date);
+
+    @Query("SELECT r FROM reservations r WHERE r.stay.id = :stayId")
+    List<Reservation> findByStayId(UUID stayId);
+
+    @Query("SELECT r FROM reservations r WHERE r.stay.id = :stayId AND " +
+            "((:checkIn BETWEEN r.checkIn AND r.checkOut) OR " +
+            "(:checkOut BETWEEN r.checkIn AND r.checkOut) OR " +
+            "(r.checkIn BETWEEN :checkIn AND :checkOut) OR " +
+            "(r.checkOut BETWEEN :checkIn AND :checkOut))")
+    List<Reservation> findOverlappingReservations(@Param("checkIn") LocalDate checkIn,
+                                                  @Param("checkOut") LocalDate checkOut,
+                                                  @Param("stayId") UUID stayId);
 }

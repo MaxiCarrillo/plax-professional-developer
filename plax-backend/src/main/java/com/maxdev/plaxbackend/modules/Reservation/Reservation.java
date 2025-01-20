@@ -22,20 +22,27 @@ public class Reservation {
     @Id
     @GeneratedValue(generator = "UUID")
     private UUID id;
+
     @NotNull(message = "CheckIn cannot be null")
     private LocalDate checkIn;
+
     @NotNull(message = "CheckOut cannot be null")
     private LocalDate checkOut;
+
     @NotNull(message = "Total cannot be null")
     private Double total;
+
     private Boolean reviewed = false;
     private Boolean confirmed = false;
+
     @OneToOne
     private Review review;
+
     @NotNull(message = "Stay cannot be null")
     @ManyToOne
     @JoinColumn(name = "id_stay")
     private Stay stay;
+
     @NotNull(message = "User cannot be null")
     @ManyToOne
     @JoinColumn(name = "id_user")

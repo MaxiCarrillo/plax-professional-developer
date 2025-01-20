@@ -36,6 +36,15 @@ public class ReservationService implements IReservationService, BaseUrl {
 
     @Override
     public ReservationCreateDTO save(ReservationCreateDTO reservationCreateDTO) {
+        List<Reservation> overlappingReservations = reservationRepository.findOverlappingReservations(
+                reservationCreateDTO.getCheckIn(),
+                reservationCreateDTO.getCheckOut(),
+                reservationCreateDTO.getId_stay()
+        );
+        if (!overlappingReservations.isEmpty()) {
+            log.error("Reservation overlaps with existing reservations");
+            throw new IllegalArgumentException("La estancia ya está reservada en las fechas seleccionadas.");
+        }
         Reservation reservation = ReservationCreateMapper.INSTANCE.dtoToEntity(reservationCreateDTO);
         Double price = stayRepository.findById(reservation.getStay().getId()).orElseThrow(
                 () -> {
@@ -105,11 +114,15 @@ public class ReservationService implements IReservationService, BaseUrl {
         log.debug("Confirming reservation with id: {}", id);
         Reservation reservation = reservationRepository.findById(id).orElseThrow(() -> {
             log.error("Reservation with id: {} not found", id);
-            return new ResourceNotFoundException("Reservation with id: " + id + " not found");
+            return new ResourceNotFoundException("La reserva con el id: " + id + " no se ha encontrado.");
         });
         if (!reservation.getUser().getEmail().equals(email)) {
             log.error("User with email: {} is not the owner of the reservation with id: {}", email, id);
-            throw new ResourceNotFoundException("User with email: " + email + " is not the owner of the reservation with id: " + id);
+            throw new ResourceNotFoundException("El usuario con el email: " + email + " no es propietario de la reserva con el id: " + id);
+        }
+        if (reservation.getConfirmed()) {
+            log.error("Reservation with id: {} is already confirmed", id);
+            throw new IllegalArgumentException("La reserva ya está confirmada.");
         }
         reservation.setConfirmed(true);
         reservationRepository.save(reservation);
@@ -117,7 +130,7 @@ public class ReservationService implements IReservationService, BaseUrl {
         try {
             emailService.sendConfirmReservation(reservation.getUser().getFirstname(), reservation.getUser().getLastname(), reservation.getUser().getEmail());
         } catch (Exception e) {
-            log.error("Error sending email: {}", e.getMessage());
+            log.error("Error enviando el mail: {}", e.getMessage());
         }
         return ReservationMapper.INSTANCE.entityToDto(reservation);
     }

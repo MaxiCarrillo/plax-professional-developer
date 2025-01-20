@@ -12,7 +12,7 @@ public interface ReviewCreateMapper {
     ReviewCreateMapper INSTANCE = Mappers.getMapper(ReviewCreateMapper.class);
 
     @Mapping(source = "id_stay", target = "stay.id")
-    @Mapping(source = "id_reservation", target = "reservation.id")
+//    @Mapping(source = "id_reservation", target = "reservation.id")
     Review dtoToEntity(ReviewCreateDTO reviewCreateDTO);
 
 }

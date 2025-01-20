@@ -6,10 +6,7 @@ import com.maxdev.plaxbackend.modules.User.User;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -23,18 +20,20 @@ public class Review {
     @Id
     @GeneratedValue(generator = "UUID")
     private UUID id;
+
     @NotNull
     @Positive
     private Integer qualification;
     private String comment;
+
     @NotNull
     private LocalDateTime createdAt = LocalDateTime.now();
+
     @ManyToOne
     @JoinColumn(name = "id_user", nullable = false)
     private User user;
-    @ManyToOne
+
+    @ManyToOne(cascade = CascadeType.REMOVE)
     @JoinColumn(name = "id_stay", nullable = false)
     private Stay stay;
-    @OneToOne
-    private Reservation reservation;
 }

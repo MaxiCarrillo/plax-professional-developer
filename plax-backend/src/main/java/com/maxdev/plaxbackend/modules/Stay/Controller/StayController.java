@@ -15,12 +15,12 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
@@ -38,13 +38,13 @@ public class StayController {
     }
 
     @GetMapping
-    public ResponseEntity<ApiPageResponse<List<StayDTO>>> getAllStays(
+    public ResponseEntity<ApiPageResponse<List<StaySummaryDTO>>> getAllStays(
             @RequestParam(value = "page", defaultValue = "0") int page,
             @RequestParam(value = "size", defaultValue = "10") int size) {
         log.debug("Received request to get all stays with page: {} and size: {}", page, size);
         Pageable pageable = PageRequest.of(page, size);
-        Page<StayDTO> pageStays = stayService.findAll(pageable);
-        List<StayDTO> stayDTOS = pageStays.getContent();
+        Page<StaySummaryDTO> pageStays = stayService.findAll(pageable);
+        List<StaySummaryDTO> stayDTOS = pageStays.getContent();
         log.info("Returning {} stays", stayDTOS.size());
         return ResponseEntity
                 .status(HttpStatus.OK)
@@ -59,9 +59,12 @@ public class StayController {
     @GetMapping("/search")
     public ResponseEntity<ApiPageResponse<Set<StaySummaryDTO>>> getStaysByCategoryAndCountryOrCity(
             @RequestParam(value = "categoryIds", required = false) Set<UUID> categoryIds,
-            @RequestParam(value = "searchTerm", required = false) String searchTerm) {
+            @RequestParam(value = "searchTerm", required = false) String searchTerm,
+            @RequestParam(value = "checkIn", required = false) LocalDate checkIn,
+            @RequestParam(value = "checkOut", required = false) LocalDate checkOut
+            ) {
         log.debug("Received request to get stays by category ids: {}", categoryIds);
-        Set<StaySummaryDTO> stays = stayService.findByCategoryIdsAndCountryOrCity(categoryIds, searchTerm);
+        Set<StaySummaryDTO> stays = stayService.findByCategoryIdsAndCountryOrCity(categoryIds, searchTerm, checkIn, checkOut);
         log.info("Returning {} stays", stays.size());
         return ResponseEntity.status(HttpStatus.OK)
                 .body(
@@ -103,9 +106,9 @@ public class StayController {
     }
 
     @GetMapping("/random")
-    public ResponseEntity<Set<StayDTO>> getRandomStays(@RequestParam(value = "size", defaultValue = "10") int size) {
+    public ResponseEntity<Set<StaySummaryDTO>> getRandomStays(@RequestParam(value = "size", defaultValue = "10") int size) {
         log.debug("Received request to get random stays with size: {}", size);
-        Set<StayDTO> randomStays = stayService.getRandomStays(size);
+        Set<StaySummaryDTO> randomStays = stayService.getRandomStays(size);
         log.info("Returning {} random stays", randomStays.size());
         return ResponseEntity.status(HttpStatus.OK).body(randomStays);
     }

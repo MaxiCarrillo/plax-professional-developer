@@ -38,7 +38,7 @@ public class FeatureController {
                                                     @RequestPart("icon") MultipartFile icon) throws IOException {
         log.debug("Received request to create feature: {}", featureDTO.getName());
         FeatureDTO savedFeature = featureService.save(featureDTO, icon);
-        log.info("Feature created: {}", savedFeature.getName());
+        log.debug("Feature created: {}", savedFeature.getName());
         return ResponseEntity.status(HttpStatus.CREATED).body(savedFeature);
     }
 
@@ -47,7 +47,7 @@ public class FeatureController {
                                                     @RequestPart(value = "icon", required = false) MultipartFile icon) throws IOException {
         log.debug("Received request to update feature: {}", featureDTO.getId());
         FeatureDTO updatedFeature = featureService.update(featureDTO, icon);
-        log.info("Feature updated: {}", updatedFeature.getName());
+        log.debug("Feature updated: {}", updatedFeature.getName());
         return ResponseEntity.status(HttpStatus.OK).body(updatedFeature);
     }
 
@@ -59,7 +59,7 @@ public class FeatureController {
         Pageable pageable = PageRequest.of(page, size);
         Page<FeatureDTO> pageFeatures = featureService.findAll(pageable);
         List<FeatureDTO> features = pageFeatures.getContent();
-        log.info("Returning {} features", features.size());
+        log.debug("Returning {} features", features.size());
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(new ApiPageResponse<>(
@@ -73,7 +73,7 @@ public class FeatureController {
     public ResponseEntity<FeatureDTO> getFeatureByName(@PathVariable String name) {
         log.debug("Received request to get feature by name: {}", name);
         FeatureDTO featureFound = featureService.findByName(name);
-        log.info("Feature retrieved: {}", featureFound.getName());
+        log.debug("Feature retrieved: {}", featureFound.getName());
         return ResponseEntity.status(HttpStatus.OK).body(featureFound);
     }
 
@@ -81,7 +81,7 @@ public class FeatureController {
     public ResponseEntity<Resource> getFeatureIcon(@PathVariable String iconName) throws MalformedURLException {
         log.debug("Received request to get feature icon by name: {}", iconName);
         Resource resource = featureService.getIcon(iconName);
-        log.info("Feature icon retrieved: {}", iconName);
+        log.debug("Feature icon retrieved: {}", iconName);
         return ResponseEntity.ok()
                 .contentType(MediaType.parseMediaType("image/svg+xml"))
                 .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"" + resource.getFilename() + "\"")
@@ -92,7 +92,7 @@ public class FeatureController {
     public ResponseEntity<Void> deleteFeature(@PathVariable UUID id) throws IOException {
         log.debug("Received request to delete feature by id: {}", id);
         featureService.delete(id);
-        log.info("Feature deleted: {}", id);
+        log.debug("Feature deleted: {}", id);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 }

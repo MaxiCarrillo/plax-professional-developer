@@ -4,7 +4,6 @@ import com.maxdev.plaxbackend.modules.Address.Address;
 import com.maxdev.plaxbackend.modules.Category.Category;
 import com.maxdev.plaxbackend.modules.Feature.Feature;
 import com.maxdev.plaxbackend.modules.Review.Review;
-import com.maxdev.plaxbackend.modules.Stay.Service.StayPolicy;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PositiveOrZero;
@@ -57,13 +56,6 @@ public class Stay {
     @Column(columnDefinition = "DOUBLE DEFAULT 0.0")
     @PositiveOrZero(message = "Appreciation must be zero or positive")
     private Double appreciation = 0.0;
-
-    @Column(columnDefinition = "INT DEFAULT 0")
-    private Integer totalReviews = 0;
-
-    @EqualsAndHashCode.Exclude // Excluye esta relación del hashCode para evitar ciclos
-    @OneToMany(mappedBy = "stay", cascade = CascadeType.REMOVE, orphanRemoval = true)
-    private Set<Review> reviews;
 
     @NotNull(message = "Policies cannot be null")
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)

@@ -9,6 +9,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.Set;
 import java.util.UUID;
 
@@ -19,13 +20,13 @@ public interface IStayService {
 
     StayDTO findByName(String name);
 
-    Page<StayDTO> findAll(Pageable pageable);
+    Page<StaySummaryDTO> findAll(Pageable pageable);
 
-    Set<StayDTO> getRandomStays(int size);
+    Set<StaySummaryDTO> getRandomStays(int size);
 
     StaySaveDTO update(StaySaveDTO stayDTO, MultipartFile[] images, Set<String> imagesToDelete) throws IOException;
 
     StayDTO delete(UUID id) throws ResourceNotFoundException, IOException;
 
-    Set<StaySummaryDTO> findByCategoryIdsAndCountryOrCity(Set<UUID> categoryIds, String searchTerm);
+    Set<StaySummaryDTO> findByCategoryIdsAndCountryOrCity(Set<UUID> categoryIds, String searchTerm, LocalDate checkIn, LocalDate checkOut);
 }

@@ -1,7 +1,7 @@
 package com.maxdev.plaxbackend.modules.Stay.DTO;
 
 import com.maxdev.plaxbackend.modules.Address.DTO.AddressDTO;
-import com.maxdev.plaxbackend.modules.Stay.Service.StayPolicy;
+import com.maxdev.plaxbackend.modules.Stay.StayPolicy;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

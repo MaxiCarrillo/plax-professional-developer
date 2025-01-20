@@ -2,7 +2,6 @@ package com.maxdev.plaxbackend.modules.Stay.Mapper;
 
 import com.maxdev.plaxbackend.modules.Feature.Feature;
 import com.maxdev.plaxbackend.modules.Stay.DTO.StaySaveDTO;
-import com.maxdev.plaxbackend.modules.Stay.Service.StayPolicy;
 import com.maxdev.plaxbackend.modules.Stay.Stay;
 import com.maxdev.plaxbackend.modules.Stay.StayImage;
 import org.mapstruct.Mapper;

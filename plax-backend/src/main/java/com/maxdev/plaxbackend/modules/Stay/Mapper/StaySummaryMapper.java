@@ -17,7 +17,7 @@ public interface StaySummaryMapper {
 
     @Mapping(source = "appreciation", target = "appreciation")
     @Mapping(source = "price", target = "price")
-    @Mapping(source = "totalReviews", target = "totalReviews")
+    @Mapping(target = "totalReviews", ignore = true)
     @Mapping(source = "images", target = "images", qualifiedByName = "stayImagesToStrings")
     StaySummaryDTO entityToDto(Stay stay);
 

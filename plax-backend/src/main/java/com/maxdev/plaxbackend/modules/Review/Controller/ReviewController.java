@@ -69,15 +69,17 @@ public class ReviewController {
                 ));
     }
 
-
     @PreAuthorize("isAuthenticated()")
     @PostMapping
-    public void createReview(@RequestBody ReviewCreateDTO reviewCreateDTO) {
+    public ResponseEntity<String> createReview(@RequestBody ReviewCreateDTO reviewCreateDTO) {
         log.debug("Received request to create review");
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         UserDetails userDetails = (UserDetails) authentication.getPrincipal();
         reviewService.save(reviewCreateDTO, userDetails.getUsername());
         log.info("Review created");
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .body("La reseña ha sido creada exitosamente");
     }
 
 }
