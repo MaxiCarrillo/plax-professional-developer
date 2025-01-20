@@ -1,6 +1,5 @@
 import { AutoComplete, DatePicker } from 'antd';
 import locale from 'antd/es/date-picker/locale/es_ES';
-import { format } from 'date-fns';
 import { useContext, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { CategoryCard } from '../../../categories/components/';
@@ -41,7 +40,7 @@ export const Home = () => {
         }
         let url = '/search?';
         place && (url += `place=${place}&`);
-        (dateRange && dateRange.length > 0) && (url += `checkIn=${format(dateRange[0].$d, 'dd-MM-yyyy')}&checkOut=${format(dateRange[1].$d, 'dd-MM-yyyy')}`);
+        (dateRange && dateRange.length > 0) && (url += `checkIn=${dateRange[0].format('YYYY-MM-DD')}&checkOut=${dateRange[1].format('YYYY-MM-DD')}`);
         navigate(url);
     }
 
@@ -84,6 +83,7 @@ export const Home = () => {
                                 format={'DD/MM/YYYY'}
                                 placeholder={['Fecha de Entrada', 'Fecha de Salida']}
                                 locale={locale}
+                                disabledDate={(current) => current && current < new Date()}
                             />
                         </label>
                         <button className='button button--base'>

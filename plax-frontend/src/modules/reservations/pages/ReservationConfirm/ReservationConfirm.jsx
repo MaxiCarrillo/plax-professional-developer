@@ -1,13 +1,33 @@
-import { Link, useParams } from 'react-router-dom'
-import './ReservationConfirm.css'
-import { SmileOutlined } from '@ant-design/icons'
+import { SmileOutlined } from '@ant-design/icons';
+import { useContext } from 'react';
+import { Link, Navigate, useParams } from 'react-router-dom';
+import { NotificationContext } from '../../../core/context/notificationContext';
+import { useReservation } from '../../hook/useReservation';
+import './ReservationConfirm.css';
 
 export const ReservationConfirm = () => {
 
+    const { toaster } = useContext(NotificationContext);
     const { id } = useParams();
+    const { confirmReservation, isLoading } = useReservation();
 
-    const handleConfirm = () => {
+    const handleConfirm = async () => {
         console.log('Confirmar reserva', id);
+        try {
+            await confirmReservation(id);
+            toaster['success']({
+                message: 'Reserva confirmada.',
+                description: `Su reserva con el código ${id} ha sido confirmada.`,
+                duration: 3
+            });
+            Navigate('/mis-reservas');
+        } catch (error) {
+            toaster['error']({
+                message: 'Error al confirmar reserva.',
+                description: error.message,
+                duration: 3
+            });
+        }
     }
 
     return (
@@ -18,7 +38,12 @@ export const ReservationConfirm = () => {
                 <p>No te olvides confirmar tu reserva, podes hacerlo ahora mismo o más adelante.</p>
             </section>
             <section className='ReservationConfirm__actions'>
-                <button className='button button--primary' onClick={handleConfirm}>Confirmar reserva</button>
+                <button
+                    className='button button--primary'
+                    onClick={handleConfirm}
+                    disabled={isLoading}
+                >Confirmar reserva
+                </button>
                 <Link to='/mis-reservas' className='button button--secondary'>Ir a reservas</Link>
             </section>
         </main>

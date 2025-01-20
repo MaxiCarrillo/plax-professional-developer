@@ -38,10 +38,10 @@ export const useStay = () => {
         }
     };
 
-    const searchStays = async (categoryIds = [], searchTerm = '') => {
+    const searchStays = async (categoryIds = [], searchTerm = '', checkIn = null, checkOut = null) => {
         try {
             setLoading(true);
-            const response = await stayService.searchStays(categoryIds, searchTerm);
+            const response = await stayService.searchStays(categoryIds, searchTerm, checkIn, checkOut);
             setStays(response);
             setError(false);
         } catch {

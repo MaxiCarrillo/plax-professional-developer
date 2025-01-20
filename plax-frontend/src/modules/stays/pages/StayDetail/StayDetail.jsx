@@ -1,13 +1,14 @@
-import { ArrowLeftOutlined, HeartFilled, HeartOutlined, ShareAltOutlined, StarFilled } from '@ant-design/icons';
+import { ArrowLeftOutlined, HeartFilled, HeartOutlined, ShareAltOutlined, StarFilled, UserOutlined } from '@ant-design/icons';
 import { DatePicker } from 'antd';
 import locale from 'antd/es/date-picker/locale/es_ES';
 import { differenceInDays } from 'date-fns';
+import dayjs from 'dayjs';
 import numeral from 'numeral';
 import { useContext, useEffect, useRef, useState } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { Carousel } from 'react-responsive-carousel';
 import "react-responsive-carousel/lib/styles/carousel.min.css";
-import { useNavigate, useParams } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import { ReactSVG } from 'react-svg';
 import ImageFallback from '../../../../assets/images/image-fallback.jpg';
 import { useAuth } from '../../../auth/context/AuthContext';
@@ -16,7 +17,6 @@ import { FormModalContext } from '../../../core/context';
 import { NotificationContext } from '../../../core/context/notificationContext';
 import { useReservation } from '../../../reservations/hook/useReservation';
 import { ReviewCard } from '../../../reviews/components/ReviewCard/ReviewCard';
-import { useReview } from '../../../reviews/hooks/useReview';
 import userService from '../../../users/services/user.service';
 import { StayShare } from '../../components/StayShare/StayShare';
 import { useStay } from '../../hooks/useStay';
@@ -31,9 +31,8 @@ export const StayDetail = () => {
         dateRange: []
     });
     const { RangePicker } = DatePicker;
-    const { stay, getStay, loading } = useStay();
+    const { stay, getStay, loading, error } = useStay();
     const { createReservation, isLoading } = useReservation();
-    const { getReviewsByStay, isLoading: isLoadingReview, error: errorReview, reviews } = useReview();
     const { handleShowModal, handleContentModal } = useContext(FormModalContext);
 
     const { id } = useParams();
@@ -48,7 +47,6 @@ export const StayDetail = () => {
 
     useEffect(() => {
         getStay(id);
-        getReviewsByStay(id);
     }, [])
 
     const handleClickShowImages = () => {
@@ -183,6 +181,21 @@ export const StayDetail = () => {
         ));
     }
 
+    const disabledDate = (current) => {
+        const unavailableDates = stay?.unavailableDates?.map((date) => dayjs(date));
+        // Deshabilita fechas anteriores a hoy
+        if (current && current < dayjs().startOf('day')) {
+            return true;
+        }
+
+        // Deshabilita fechas no disponibles
+        if (unavailableDates) {
+            return unavailableDates.some((date) => date.isSame(current, 'day'));
+        }
+
+        return false;
+    };
+
     return (
         <main className='StayDetail__container'>
             {
@@ -306,15 +319,25 @@ export const StayDetail = () => {
                                         format={'DD/MM/YYYY'}
                                         placeholder={['Check-in', 'Check-out']}
                                         locale={locale}
-                                        disabledDate={(current) => current && current < new Date()}
-                                    />
-                                    <button
-                                        className='button button--primary'
-                                        onClick={handleReservation}
+                                        disabledDate={disabledDate}
                                         disabled={isLoading}
-                                    >
-                                        Reservar
-                                    </button>
+                                    />
+                                    {
+                                        user ?
+                                            <button
+                                                className='button button--primary'
+                                                onClick={handleReservation}
+                                                disabled={isLoading}
+                                            >
+                                                Reservar
+                                            </button> :
+                                            <Link
+                                                className='button button--base'
+                                                to='/iniciar-sesion'
+                                            >
+                                                <UserOutlined />Iniciar sesión
+                                            </Link>
+                                    }
                                     <div className='StayDetail__price'>
                                         <p>Total</p>
                                         <p>${reservation.total}</p>
@@ -331,13 +354,13 @@ export const StayDetail = () => {
                                         <h2><StarFilled /> {numeral(stay.appreciation).format('0.0')} • {stay.totalReviews} Calificaciones</h2>
                                         <div className='stayDetail__reviews-comments'>
                                             {
-                                                isLoadingReview ?
+                                                loading ?
                                                     <p>Cargando...</p>
                                                     :
-                                                    errorReview ?
-                                                        <p>{errorReview}</p>
+                                                    error ?
+                                                        <p>Error</p>
                                                         :
-                                                        reviews.map((review, index) =>
+                                                        stay.reviews.map((review, index) =>
                                                             <ReviewCard key={index} review={review} />
                                                         )}
                                         </div>

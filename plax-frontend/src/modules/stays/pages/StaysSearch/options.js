@@ -9,8 +9,8 @@ const placesOptions =
             value: 'Buenos Aires'
         },
         {
-            label: 'Neunquén',
-            value: 'Neunquén'
+            label: 'Neuquén',
+            value: 'Neuquén'
         },
         {
             label: 'Mendoza',

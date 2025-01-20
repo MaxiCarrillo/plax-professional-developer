@@ -6,6 +6,7 @@ import { ReservationCard } from '../../components/ReservationCard/ReservationCar
 import { useReservation } from '../../hook/useReservation';
 import './ReservationsUser.css';
 import { format } from 'date-fns';
+import { SearchOutlined } from '@ant-design/icons';
 
 
 export const ReservationsUser = () => {
@@ -72,12 +73,12 @@ export const ReservationsUser = () => {
     )
 }
 
-const CardEmpty = ({ title, description }) => {
+export const CardEmpty = ({ title, description }) => {
     return (
         <section className='ReservationsUser__empty'>
             <p><strong>{title}</strong></p>
             <p>{description}</p>
-            <Link to='/search' className='button button--base'>Explorar alojamientos</Link>
+            <Link to='/search' className='button button--base'><SearchOutlined />Explorar alojamientos</Link>
         </section>
     )
 }

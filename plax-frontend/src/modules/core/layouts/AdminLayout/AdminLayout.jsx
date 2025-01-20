@@ -1,7 +1,8 @@
-import './AdminLayout.css';
-import { NavLink, Link } from 'react-router-dom';
+import { HomeFilled } from '@ant-design/icons';
+import { Link, NavLink } from 'react-router-dom';
 import ImagePlax from '../../../../assets/images/plax-dashboard.png';
 import { FormModalProvider } from '../../context';
+import './AdminLayout.css';
 
 const routes = [
     {
@@ -46,6 +47,9 @@ export const AdminLayout = ({ children }) => {
                                 </li>
                             ))}
                         </ul>
+                        <Link to={'/'} className='button button--danger'>
+                            <HomeFilled />Volver al inicio
+                        </Link>
                     </nav>
                 </section>
                 <FormModalProvider>

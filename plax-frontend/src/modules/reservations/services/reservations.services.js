@@ -25,15 +25,14 @@ const reservationService = {
     },
 
     confirmReservation: async (id, token) => {
-        console.log(id);
-        console.log(token);
         return api.put(`/reservations/confirm/${id}`, {}, {
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${token}`
             }
-        }).catch(() => {
-            throw new Error('No se pudo confirmar la reserva. Por favor, intente nuevamente más tarde.');
+        }).catch((e) => {
+            console.log(e)
+            throw new Error(e.response.data);
         });
     }
 };

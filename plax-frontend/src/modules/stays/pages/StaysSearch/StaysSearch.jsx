@@ -1,7 +1,8 @@
-import { AutoComplete, DatePicker, Select } from 'antd';
+import { AutoComplete, DatePicker, Empty, Select } from 'antd';
 import locale from 'antd/es/date-picker/locale/es_ES';
-import moment from 'moment';
+import dayjs from 'dayjs';
 import { useEffect, useState } from 'react';
+import { Helmet } from 'react-helmet-async';
 import { ArrayParam, StringParam, useQueryParams } from 'use-query-params';
 import { useCategory } from '../../../categories/hooks/useCategory';
 import { Popover } from '../../../core/components/Popover/Popover';
@@ -9,7 +10,6 @@ import { StayCard } from '../../components';
 import { useStay } from '../../hooks/useStay';
 import placesOptions from './options';
 import './StaysSearch.css';
-import { Helmet } from 'react-helmet-async';
 
 export const StaysSearch = () => {
     const { RangePicker } = DatePicker;
@@ -21,10 +21,12 @@ export const StaysSearch = () => {
 
     useEffect(() => {
         setQuery((prev) => {
-            return { ...prev, checkIn: undefined, checkOut: undefined }
+            return { ...prev }
         });
         getAllCategories();
     }, []);
+
+    // , checkIn: undefined, checkOut: undefined
 
     useEffect(() => {
         if (categories) {
@@ -69,17 +71,13 @@ export const StaysSearch = () => {
 
         setQuery((prev) => ({
             ...prev,
-            checkIn: start.format('DD-MM-YYYY'),
-            checkOut: end.format('DD-MM-YYYY'),
+            checkIn: start.format('YYYY-MM-DD'),
+            checkOut: end.format('YYYY-MM-DD'),
         }));
     }
 
-    const initialDateRange = query.checkIn && query.checkOut
-        ? [moment(query.checkIn, 'DD-MM-yyyy'), moment(query.checkOut, 'DD-MM-yyyy')]
-        : null;
-
     useEffect(() => {
-        searchStays(query.categories, query.place);
+        searchStays(query.categories, query.place, query.checkIn, query.checkOut);
     }, [query])
 
     return (
@@ -126,9 +124,11 @@ export const StaysSearch = () => {
                                 id="date"
                                 className='form__date-rage-picker form__element'
                                 onChange={handleDateRangeOnChange}
+                                value={[query.checkIn && dayjs(query.checkIn), query.checkOut && dayjs(query.checkOut)]}
                                 format={'DD/MM/YYYY'}
                                 placeholder={['Fecha de Entrada', 'Fecha de Salida']}
                                 locale={locale}
+                                disabledDate={(current) => current && current < new Date()}
                             />
                         </div>
                     </div>
@@ -136,7 +136,10 @@ export const StaysSearch = () => {
             </section>
             <section className='StaySearch__stays-container'>
                 <div className='StaySearch__search-info'>
-                    <p>{stays ? stays.totalElements : 0} alojamientos encontrados.</p>
+                    {
+                        (stays && stays.totalElements > 0) &&
+                        <p>{stays.totalElements} alojamientos encontrados.</p>
+                    }
                     <Popover
                         content={
                             <Select
@@ -156,9 +159,21 @@ export const StaysSearch = () => {
                     </Popover>
                 </div>
                 <section className='StaySearch__search'>
-                    {loadingStays && <p>Cargando alojamientos...</p>}
-                    {error && <p>Error al cargar alojamientos</p>}
-                    {stays?.data && stays.data?.map(stay => <StayCard key={stay.id} stay={stay} />)}
+                    {
+                        loadingStays
+                            ?
+                            <p>Cargando alojamientos</p>
+                            :
+                            error
+                                ?
+                                <p>Error al cargar alojamientos</p>
+                                :
+                                (stays?.data && stays.data.length > 0)
+                                    ? stays.data.map(stay => <StayCard key={stay.id} stay={stay} />) :
+                                    <Empty
+                                        description="No encontramos estancias que coincidan con tus parámetros de búsqueda."
+                                    />
+                    }
                 </section>
             </section>
         </main>

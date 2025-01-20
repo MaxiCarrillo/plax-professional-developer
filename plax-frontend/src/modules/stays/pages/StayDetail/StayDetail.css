@@ -158,6 +158,11 @@
                     font-weight: 700;
                 }
             }
+
+            & .button {
+                text-align: center;
+                font-size: 13px;
+            }
         }
 
         & .StayDetail__description__container {

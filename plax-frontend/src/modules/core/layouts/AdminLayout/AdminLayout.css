@@ -19,8 +19,9 @@
 
         & .sidebar__nav {
             position: fixed;
-            display: flex;
-            flex-direction: column;
+            display: grid;
+            min-height: calc(100vh - 2rem);
+            grid-template-rows: auto 1fr auto;
             width: calc(250px - 2rem);
             gap: 2rem;
 
@@ -72,6 +73,10 @@
                 & li~li {
                     margin-top: .5rem;
                 }
+            }
+
+            & .button {
+                text-align: center;
             }
         }
     }

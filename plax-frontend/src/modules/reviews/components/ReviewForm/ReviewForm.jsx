@@ -22,6 +22,7 @@ export const ReviewForm = ({ reservation, onRefetch }) => {
         }),
         onSubmit: async (values) => {
             const body = {
+                id_reservation: reservation.id,
                 id_stay: reservation.stay.id,
                 ...values
             }
