@@ -9,6 +9,7 @@ export const useFeature = () => {
     const [error, setError] = useState(null);
     const [loading, setLoading] = useState(false);
     const [totalPages, setTotalPages] = useState(0);
+    const [success, setSuccess] = useState(false);
 
     const getFeatures = async (page = 0, size = 5) => {
         try {
@@ -24,6 +25,23 @@ export const useFeature = () => {
             setLoading(false);
         }
     };
+
+    const getAllFeatures = async () => {
+        setLoading(true);
+        setError(null);
+        setSuccess(false);
+        try {
+            const response = await featureService.getAllFeatures();
+            setFeatures(response);
+            setSuccess(true);
+            return response;
+        } catch (error) {
+            setError(error.message);
+            throw error;
+        } finally {
+            setLoading(false);
+        }
+    }
 
     const deleteFeature = async (id) => {
         try {
@@ -69,6 +87,7 @@ export const useFeature = () => {
         loading,
         totalPages,
         getFeatures,
+        getAllFeatures,
         deleteFeature,
         addFeature,
         editFeature

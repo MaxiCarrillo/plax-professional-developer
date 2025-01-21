@@ -66,7 +66,7 @@ export const useStay = () => {
     const addStay = async (data) => {
         try {
             setLoading(true);
-            await stayService.createStay(data);
+            await stayService.createStay(data, token);
             setError(false);
         } catch (e) {
             setError(true);
@@ -79,7 +79,7 @@ export const useStay = () => {
     const editStay = async (data) => {
         try {
             setLoading(true);
-            await stayService.editStay(data);
+            await stayService.editStay(data, token);
             setError(false);
         } catch (e) {
             setError(true);

@@ -17,7 +17,7 @@ export const StaysSearch = () => {
     const { categories, getAllCategories, loading: loadingCategories, error: errorCaterogies } = useCategory();
     const { stays, searchStays, loading: loadingStays, totalPages, error } = useStay();
     const [options, setOptions] = useState([]);
-    const [optionsPlace, setOptionsPlace] = useState(placesOptions);
+    const [optionsPlace] = useState(placesOptions);
 
     useEffect(() => {
         setQuery((prev) => {
@@ -25,8 +25,6 @@ export const StaysSearch = () => {
         });
         getAllCategories();
     }, []);
-
-    // , checkIn: undefined, checkOut: undefined
 
     useEffect(() => {
         if (categories) {

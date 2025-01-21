@@ -1,12 +1,13 @@
 import { useContext, useState } from 'react';
-import { FormModal, PaginateItems } from '../../../core/components';
+import { PaginateItems } from '../../../core/components';
+import { Modal } from '../../../core/components/Modal/Modal';
 import { FormModalContext } from '../../../core/context';
 import { StayForm } from '../../components';
 import { useStay } from '../../hooks/useStay';
 import './StaysList.css';
 
 export const StaysList = () => {
-    const { openCloseModal } = useContext(FormModalContext);
+    const { handleShowModal } = useContext(FormModalContext);
     const { stays, getStays, deleteStay, loading, totalPages, error } = useStay();
     const [contentModal, setContentModal] = useState(null);
     const [refetch, setRefetch] = useState(false);
@@ -22,7 +23,7 @@ export const StaysList = () => {
                 onRefetch={onRefetch}
             />
         );
-        openCloseModal();
+        handleShowModal();
     }
 
     const editStay = (stay) => {
@@ -33,7 +34,7 @@ export const StaysList = () => {
                 onRefetch={onRefetch}
             />
         );
-        openCloseModal();
+        handleShowModal();
     }
 
     return (
@@ -55,9 +56,9 @@ export const StaysList = () => {
                     onRefetch={onRefetch}
                 />
             </section>
-            <FormModal>
+            <Modal>
                 {contentModal}
-            </FormModal>
+            </Modal>
         </main>
     )
 }

@@ -1,13 +1,14 @@
+import { DropboxOutlined } from "@ant-design/icons";
 import { useFormik } from "formik";
-import * as Yup from "yup";
-import { useCategory } from "../../hooks/useCategory";
-import { useEffect, useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useDropzone } from "react-dropzone";
+import * as Yup from "yup";
 import { FormModalContext } from "../../../core/context";
+import { useCategory } from "../../hooks/useCategory";
 
 export const CategoryForm = ({ category, onRefetch }) => {
     const { loading, addCategory, editCategory } = useCategory();
-    const { openCloseModal } = useContext(FormModalContext);
+    const { handleCancel } = useContext(FormModalContext);
     const [files, setFiles] = useState([]);
 
     const formik = useFormik({
@@ -32,13 +33,13 @@ export const CategoryForm = ({ category, onRefetch }) => {
                 await editCategory(values);
                 formik.resetForm();
                 setFiles([]);
-                openCloseModal();
+                handleCancel();
                 onRefetch();
             } else {
                 await addCategory(values);
                 formik.resetForm();
                 setFiles([]);
-                openCloseModal();
+                handleCancel();
                 onRefetch();
             }
         },
@@ -124,6 +125,7 @@ export const CategoryForm = ({ category, onRefetch }) => {
                         {category ? 'Nueva imagen' : 'Imagen'}
                         <div {...getRootProps({ className: 'dropzone' })}>
                             <input {...getInputProps()} />
+                            <DropboxOutlined />
                             <p>Arrastra y suelta una imágen aquí, o haz clic para seleccionar una imágen</p>
                         </div>
                     </label>

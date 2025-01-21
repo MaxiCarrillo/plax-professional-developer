@@ -47,7 +47,7 @@ export const AdminLayout = ({ children }) => {
                                 </li>
                             ))}
                         </ul>
-                        <Link to={'/'} className='button button--danger'>
+                        <Link to={'/'} className='button button--base'>
                             <HomeFilled />Volver al inicio
                         </Link>
                     </nav>

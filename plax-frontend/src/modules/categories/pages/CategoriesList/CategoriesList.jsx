@@ -1,11 +1,12 @@
-import { PaginateItems, FormModal } from "../../../core/components";
-import { useCategory } from "../../hooks/useCategory";
-import { useState, useContext } from "react";
+import { useContext, useState } from "react";
+import { PaginateItems } from "../../../core/components";
+import { Modal } from "../../../core/components/Modal/Modal";
 import { FormModalContext } from "../../../core/context";
 import { CategoryForm } from "../../components";
+import { useCategory } from "../../hooks/useCategory";
 
 export const CategoriesList = () => {
-    const { openCloseModal } = useContext(FormModalContext);
+    const { handleShowModal } = useContext(FormModalContext);
     const { categories, getCategories, deleteCategory, loading, totalPages, error } = useCategory();
     const [contentModal, setContentModal] = useState(null);
     const [refetch, setRefetch] = useState(false);
@@ -16,23 +17,23 @@ export const CategoriesList = () => {
 
     const addCategory = () => {
         setContentModal(
-            <CategoryForm 
+            <CategoryForm
                 title={'Agregar Categoria'}
                 onRefetch={onRefetch}
             />
         );
-        openCloseModal();
+        handleShowModal();
     }
 
     const editCategory = (category) => {
         setContentModal(
-            <CategoryForm 
+            <CategoryForm
                 title={'Editar Categoria'}
                 onRefetch={onRefetch}
                 category={category}
             />
         );
-        openCloseModal();
+        handleShowModal();
     }
 
     return (
@@ -54,9 +55,10 @@ export const CategoriesList = () => {
                     onRefetch={setRefetch}
                 />
             </section>
-            <FormModal>
+            <Modal>
                 {contentModal}
-            </FormModal>
+            </Modal>
+
         </main>
     )
 }

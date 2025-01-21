@@ -7,7 +7,7 @@ export const Modal = ({ children }) => {
     const { isModalOpen, handleCancel, contentModal } = useContext(FormModalContext);
 
     return (
-        <ModalAntd open={isModalOpen} onCancel={handleCancel} footer={null} centered mask>
+        <ModalAntd open={isModalOpen} onCancel={handleCancel} footer={null} centered mask width={768}>
             {children ? children : contentModal}
         </ModalAntd>
     )

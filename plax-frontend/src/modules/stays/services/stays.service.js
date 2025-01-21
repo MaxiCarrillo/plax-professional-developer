@@ -36,7 +36,7 @@ const stayService = {
                 throw new Error('No se pudo eliminar el alojamiento. Por favor, intente nuevamente más tarde.');
             });
     },
-    createStay: async (data) => {
+    createStay: async (data, token) => {
         const formData = new FormData();
         const stay = {
             name: data.name,
@@ -44,6 +44,8 @@ const stayService = {
             description: data.description,
             address: data.address,
             category_id: data.category_id,
+            features: data.features,
+            policies: data.policies
         };
         formData.append('stay', new Blob([JSON.stringify(stay)], { type: 'application/json' }));
         data.images.forEach(image => {
@@ -53,7 +55,8 @@ const stayService = {
         api.post('/stays', formData, {
             headers: {
                 'Accept': 'application/json',
-                'Content-Type': 'multipart/form-data'
+                'Content-Type': 'multipart/form-data',
+                'Authorization': `Bearer ${token}`
             }
         }).then(response => {
             return response.data;
@@ -64,7 +67,7 @@ const stayService = {
             throw new Error('No se pudo crear el alojamiento. Por favor, intente nuevamente más tarde.');
         })
     },
-    editStay: async (data) => {
+    editStay: async (data, token) => {
         const formData = new FormData();
         const stay = {
             id: data.id,
@@ -73,6 +76,8 @@ const stayService = {
             description: data.description,
             address: data.address,
             category_id: data.category_id,
+            features: data.features,
+            policies: data.policies
         };
         formData.append('stay', new Blob([JSON.stringify(stay)], { type: 'application/json' }));
         data.images?.forEach(image => {
@@ -83,7 +88,8 @@ const stayService = {
         api.put('/stays', formData, {
             headers: {
                 'Accept': 'application/json',
-                'Content-Type': 'multipart/form-data'
+                'Content-Type': 'multipart/form-data',
+                'Authorization': `Bearer ${token}`
             }
         }).then(response => {
             return response.data;

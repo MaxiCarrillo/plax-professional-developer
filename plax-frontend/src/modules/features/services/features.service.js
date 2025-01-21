@@ -9,6 +9,14 @@ const featureService = {
                 throw new Error('No se pudieron obtener las características. Por favor, intente nuevamente más tarde');
             });
     },
+    getAllFeatures: () => {
+        return api.get('/features/all')
+            .then(response => {
+                return response.data;
+            }).catch(() => {
+                throw new Error('No se pudieron obtener las características. Por favor, intente nuevamente más tarde');
+            });
+    },
     getFeature: (id) => {
         return api.get(`/features/${id}`)
             .then(response => {

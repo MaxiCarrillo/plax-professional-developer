@@ -4,10 +4,11 @@ import { useFeature } from "../../hooks/useFeature"
 import { useContext, useEffect, useState } from "react"
 import { useDropzone } from "react-dropzone"
 import { FormModalContext } from "../../../core/context"
+import { DropboxOutlined } from "@ant-design/icons"
 
 export const FeatureForm = ({ feature, onRefetch }) => {
     const { loading, addFeature, editFeature } = useFeature()
-    const { openCloseModal } = useContext(FormModalContext)
+    const { handleCancel } = useContext(FormModalContext)
     const [files, setFiles] = useState([])
 
     const formik = useFormik({
@@ -28,13 +29,13 @@ export const FeatureForm = ({ feature, onRefetch }) => {
                 await editFeature(values)
                 formik.resetForm()
                 setFiles([])
-                openCloseModal()
+                handleCancel()
                 onRefetch()
             } else {
                 await addFeature(values)
                 formik.resetForm()
                 setFiles([])
-                openCloseModal()
+                handleCancel()
                 onRefetch()
             }
         },
@@ -117,6 +118,7 @@ export const FeatureForm = ({ feature, onRefetch }) => {
                         {feature ? 'Nuevo icono' : 'Icono'}
                         <div {...getRootProps({ className: 'dropzone' })}>
                             <input {...getInputProps()} />
+                            <DropboxOutlined />
                             <p>Arrastra y suelta una imágen aquí, o haz clic para seleccionar una icono</p>
                         </div>
                     </label>

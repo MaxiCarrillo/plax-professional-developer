@@ -1,11 +1,12 @@
-import { PaginateItems, FormModal } from '../../../core/components';
+import { useContext, useState } from 'react';
+import { PaginateItems } from '../../../core/components';
+import { Modal } from '../../../core/components/Modal/Modal';
+import { FormModalContext } from '../../../core/context';
 import { FeatureForm } from '../../components';
 import { useFeature } from '../../hooks/useFeature';
-import { useState, useContext } from 'react';
-import { FormModalContext } from '../../../core/context';
 
 export const FeaturesList = () => {
-    const { openCloseModal } = useContext(FormModalContext);
+    const { handleShowModal } = useContext(FormModalContext);
     const { features, getFeatures, deleteFeature, loading, totalPages, error } = useFeature();
     const [contentModal, setContentModal] = useState(null);
     const [refetch, setRefetch] = useState(false);
@@ -21,7 +22,7 @@ export const FeaturesList = () => {
                 onRefetch={onRefetch}
             />
         );
-        openCloseModal();
+        handleShowModal();
     }
 
     const editFeature = (feature) => {
@@ -32,7 +33,7 @@ export const FeaturesList = () => {
                 feature={feature}
             />
         );
-        openCloseModal();
+        handleShowModal();
     }
 
     return (
@@ -54,9 +55,9 @@ export const FeaturesList = () => {
                     onRefetch={onRefetch}
                 />
             </section>
-            <FormModal>
+            <Modal>
                 {contentModal}
-            </FormModal>
+            </Modal>
         </main>
     )
 }
