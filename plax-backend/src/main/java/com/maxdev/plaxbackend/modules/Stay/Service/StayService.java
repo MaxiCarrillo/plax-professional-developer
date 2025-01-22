@@ -2,6 +2,8 @@ package com.maxdev.plaxbackend.modules.Stay.Service;
 
 import com.maxdev.plaxbackend.modules.Exception.ResourceAlreadyExistsException;
 import com.maxdev.plaxbackend.modules.Exception.ResourceNotFoundException;
+import com.maxdev.plaxbackend.modules.Feature.Feature;
+import com.maxdev.plaxbackend.modules.Feature.Repository.FeatureRepository;
 import com.maxdev.plaxbackend.modules.Reservation.Repository.ReservationRepository;
 import com.maxdev.plaxbackend.modules.Reservation.Reservation;
 import com.maxdev.plaxbackend.modules.Review.DTO.ReviewSummaryDTO;
@@ -54,12 +56,14 @@ public class StayService implements IStayService, BaseUrl {
     private final StayImageRepository stayImageRepository;
     private final ReservationRepository reservationRepository;
     private final ReviewRepository reviewRepository;
+    private final FeatureRepository featureRepository;
 
-    public StayService(StayRepository stayRepository, StayImageRepository stayImageRepository, ReservationRepository reservationRepository, ReviewRepository reviewRepository) {
+    public StayService(StayRepository stayRepository, StayImageRepository stayImageRepository, ReservationRepository reservationRepository, ReviewRepository reviewRepository, FeatureRepository featureRepository) {
         this.stayRepository = stayRepository;
         this.stayImageRepository = stayImageRepository;
         this.reservationRepository = reservationRepository;
         this.reviewRepository = reviewRepository;
+        this.featureRepository = featureRepository;
     }
 
     @Override
@@ -82,9 +86,10 @@ public class StayService implements IStayService, BaseUrl {
         return StaySaveMapper.INSTANCE.entityToDto(stayToSave);
     }
 
+    // TODO: Arreglar
     @Override
     @Transactional
-    public StaySaveDTO update(StaySaveDTO stayDTO, MultipartFile[] images, Set<String> imagesToDelete)
+    public void update(StaySaveDTO stayDTO, MultipartFile[] images, Set<String> imagesToDelete)
             throws IOException {
         log.debug("Updating stay: {}", stayDTO.getId());
         boolean hasImageToDelete = imagesToDelete != null && !imagesToDelete.isEmpty();
@@ -94,10 +99,11 @@ public class StayService implements IStayService, BaseUrl {
         });
 
         if (!stayToUpdate.getName().equals(stayDTO.getName())) {
-            stayRepository.findByName(stayDTO.getName()).ifPresent(stay -> {
+            Optional<Stay> stayWithSameName = stayRepository.findByName(stayDTO.getName());
+            if (stayWithSameName.isPresent() && !stayWithSameName.get().getId().equals(stayDTO.getId())) {
                 log.error("Stay with name: {} already exists", stayDTO.getName());
                 throw new ResourceAlreadyExistsException("Stay with name: " + stayDTO.getName() + " already exists");
-            });
+            }
         }
 
         stayDTO.setImages(stayToUpdate.getImages().stream().map(StayImage::getUrl).collect(Collectors.toSet()));
@@ -112,19 +118,26 @@ public class StayService implements IStayService, BaseUrl {
 
         // Reutiliza las imagenes que ya existen en la base de datos
         stayToUpdate = StaySaveMapper.INSTANCE.dtoToEntity(stayDTO);
-        for (StayImage stayImage : stayToUpdate.getImages()) {
-            if (stayImageRepository.findByUrl(stayImage.getUrl()).isPresent())
-                stayImage.setId(stayImageRepository.findByUrl(stayImage.getUrl()).get().getId());
-        }
+//        for (StayImage stayImage : stayToUpdate.getImages()) {
+//            if (stayImageRepository.findByUrl(stayImage.getUrl()).isPresent())
+//                stayImage.setId(stayImageRepository.findByUrl(stayImage.getUrl()).get().getId());
+//        }
 
+        // Actualizar Features: reutilizar las existentes y agregar nuevas
+        if (stayDTO.getFeatures() != null) {
+            Set<Feature> updatedFeatures = stayDTO.getFeatures().stream()
+                    .map(featureDTO -> featureRepository.findById(featureDTO)
+                            .orElseThrow(() -> new ResourceNotFoundException("Feature with id: " + featureDTO + " not found")))
+                    .collect(Collectors.toSet());
+            stayToUpdate.setFeatures(updatedFeatures);
+        }
         stayToUpdate = stayRepository.save(stayToUpdate);
 
         if (hasImageToDelete) {
             stayImageRepository.deleteByUrls(imagesToDelete);
         }
 
-        log.info("Stay updated: {}", stayToUpdate.getName());
-        return StaySaveMapper.INSTANCE.entityToDto(stayToUpdate);
+        log.debug("Stay updated: {}", stayToUpdate.getName());
     }
 
     @Override
@@ -171,9 +184,9 @@ public class StayService implements IStayService, BaseUrl {
 
     @Override
     @Transactional
-    public Page<StaySummaryDTO> findAll(Pageable pageable) {
+    public Page<StayDTO> findAll(Pageable pageable) {
         log.debug("Finding all stays with pageable: {}", pageable);
-        Page<StaySummaryDTO> pageStays = stayRepository.findAll(pageable).map(StaySummaryMapper.INSTANCE::entityToDto);
+        Page<StayDTO> pageStays = stayRepository.findAll(pageable).map(StayMapper.INSTANCE::entityToDto);
         pageStays.forEach(stayDTO -> {
             stayDTO.setTotalReviews(reviewRepository.findByStayId(stayDTO.getId()).size());
             stayDTO.setImages(stayDTO.getImages().stream()

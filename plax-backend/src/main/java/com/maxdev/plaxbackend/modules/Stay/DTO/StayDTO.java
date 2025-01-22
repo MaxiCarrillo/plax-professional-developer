@@ -35,4 +35,5 @@ public class StayDTO implements Serializable {
     private Set<StayPolicy> policies;
     private Set<LocalDate> unavailableDates;
     private Set<ReviewSummaryDTO> reviews;
+    private Integer totalReviews;
 }

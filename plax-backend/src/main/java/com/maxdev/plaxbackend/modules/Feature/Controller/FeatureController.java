@@ -1,5 +1,6 @@
 package com.maxdev.plaxbackend.modules.Feature.Controller;
 
+import com.maxdev.plaxbackend.modules.Category.DTO.CategoryDTO;
 import com.maxdev.plaxbackend.modules.Feature.DTO.FeatureDTO;
 import com.maxdev.plaxbackend.modules.Feature.Service.FeatureService;
 import com.maxdev.plaxbackend.modules.Util.ApiPageResponse;
@@ -67,6 +68,16 @@ public class FeatureController {
                         (int) pageFeatures.getTotalElements(),
                         features,
                         "Features retrieved successfully"));
+    }
+
+    @GetMapping("/all")
+    public ResponseEntity<List<FeatureDTO>> getAllFeaturesWithoutPagination() {
+        log.debug("Received request to get all features without pagination");
+        List<FeatureDTO> features = featureService.findAllWithoutPagination();
+        log.info("Returning {} features", features.size());
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(features);
     }
 
     @GetMapping("/{name}")

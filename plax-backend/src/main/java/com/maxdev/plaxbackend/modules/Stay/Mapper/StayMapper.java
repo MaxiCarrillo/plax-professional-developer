@@ -27,6 +27,7 @@ public interface StayMapper {
     @Mapping(source = "appreciation", target = "appreciation")
     @Mapping(target = "unavailableDates", ignore = true)
     @Mapping(target = "reviews", ignore = true)
+    @Mapping(target = "totalReviews", ignore = true)
     StayDTO entityToDto(Stay stay);
 
     @Mapping(source = "images", target = "images", qualifiedByName = "stringsToStayImages")

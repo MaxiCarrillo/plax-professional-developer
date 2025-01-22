@@ -77,10 +77,16 @@ public class CategoryService implements ICategoryService, BaseUrl {
         if (image != null) {
             categoryDTO.setImage(saveImage(image));
             deleteImage(categoryToUpdate.getImage());
-        } else
+        } else {
             categoryDTO.setImage(categoryToUpdate.getImage());
+        }
 
-        categoryToUpdate = CategoryMapper.INSTANCE.dtoToEntity(categoryDTO);
+        // Actualiza las propiedades de la entidad existente en lugar de reemplazarla
+        categoryToUpdate.setName(categoryDTO.getName());
+        categoryToUpdate.setDescription(categoryDTO.getDescription());
+        categoryToUpdate.setImage(categoryDTO.getImage());
+
+        // No reemplazar la colección 'stays', mantener la referencia existente
         categoryRepository.save(categoryToUpdate);
         log.info("Category updated: {}", categoryToUpdate.getName());
         return CategoryMapper.INSTANCE.entityToDto(categoryToUpdate);

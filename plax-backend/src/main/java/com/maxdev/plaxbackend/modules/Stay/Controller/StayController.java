@@ -38,14 +38,14 @@ public class StayController {
     }
 
     @GetMapping
-    public ResponseEntity<ApiPageResponse<List<StaySummaryDTO>>> getAllStays(
+    public ResponseEntity<ApiPageResponse<List<StayDTO>>> getAllStays(
             @RequestParam(value = "page", defaultValue = "0") int page,
             @RequestParam(value = "size", defaultValue = "10") int size) {
         log.debug("Received request to get all stays with page: {} and size: {}", page, size);
         Pageable pageable = PageRequest.of(page, size);
-        Page<StaySummaryDTO> pageStays = stayService.findAll(pageable);
-        List<StaySummaryDTO> stayDTOS = pageStays.getContent();
-        log.info("Returning {} stays", stayDTOS.size());
+        Page<StayDTO> pageStays = stayService.findAll(pageable);
+        List<StayDTO> stayDTOS = pageStays.getContent();
+        log.debug("Returning {} stays", stayDTOS.size());
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(
@@ -62,10 +62,10 @@ public class StayController {
             @RequestParam(value = "searchTerm", required = false) String searchTerm,
             @RequestParam(value = "checkIn", required = false) LocalDate checkIn,
             @RequestParam(value = "checkOut", required = false) LocalDate checkOut
-            ) {
+    ) {
         log.debug("Received request to get stays by category ids: {}", categoryIds);
         Set<StaySummaryDTO> stays = stayService.findByCategoryIdsAndCountryOrCity(categoryIds, searchTerm, checkIn, checkOut);
-        log.info("Returning {} stays", stays.size());
+        log.debug("Returning {} stays", stays.size());
         return ResponseEntity.status(HttpStatus.OK)
                 .body(
                         new ApiPageResponse<>(
@@ -79,21 +79,20 @@ public class StayController {
     public ResponseEntity<StaySaveDTO> createStay(@RequestPart("stay") StaySaveDTO stayDTO,
                                                   @RequestPart("images") MultipartFile[] images) throws IOException, IllegalArgumentException {
         log.debug("Received request to create stay: {}", stayDTO);
-        log.info(stayDTO);
+        log.debug(stayDTO);
         StaySaveDTO savedStay = stayService.save(stayDTO, images);
-        log.info("Stay created: {}", savedStay.getName());
+        log.debug("Stay created: {}", savedStay.getName());
         return ResponseEntity.status(HttpStatus.CREATED).body(savedStay);
     }
 
     @PutMapping(consumes = {"multipart/form-data"})
-    public ResponseEntity<StaySaveDTO> updateStay(@RequestPart("stay") StaySaveDTO stayDTO,
-                                                  @RequestPart(value = "images", required = false) MultipartFile[] images,
-                                                  @RequestPart(value = "imagesToDelete", required = false) Set<String> imagesToDelete)
+    public ResponseEntity<String> updateStay(@RequestPart("stay") StaySaveDTO stayDTO,
+                                             @RequestPart(value = "images", required = false) MultipartFile[] images,
+                                             @RequestPart(value = "imagesToDelete", required = false) Set<String> imagesToDelete)
             throws ResourceNotFoundException, IOException {
         log.debug("Received request to update stay: {}", stayDTO.getId());
-        StaySaveDTO updatedStay = stayService.update(stayDTO, images, imagesToDelete);
-        log.info("Stay updated: {}", updatedStay.getName());
-        return ResponseEntity.status(HttpStatus.OK).body(updatedStay);
+        stayService.update(stayDTO, images, imagesToDelete);
+        return ResponseEntity.status(HttpStatus.OK).body("La estancia ha sido actualizada correctamente");
     }
 
     @GetMapping("/images/{imageName}")
@@ -109,7 +108,7 @@ public class StayController {
     public ResponseEntity<Set<StaySummaryDTO>> getRandomStays(@RequestParam(value = "size", defaultValue = "10") int size) {
         log.debug("Received request to get random stays with size: {}", size);
         Set<StaySummaryDTO> randomStays = stayService.getRandomStays(size);
-        log.info("Returning {} random stays", randomStays.size());
+        log.debug("Returning {} random stays", randomStays.size());
         return ResponseEntity.status(HttpStatus.OK).body(randomStays);
     }
 
@@ -117,7 +116,7 @@ public class StayController {
     public ResponseEntity<String> deleteStay(@PathVariable UUID id) throws ResourceNotFoundException, IOException {
         log.debug("Received request to delete stay with id: {}", id);
         stayService.delete(id);
-        log.info("Stay deleted with id: {}", id);
+        log.debug("Stay deleted with id: {}", id);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
@@ -125,7 +124,7 @@ public class StayController {
     public ResponseEntity<StayDTO> getStay(@PathVariable UUID id) throws ResourceNotFoundException {
         log.debug("Received request to get stay by id: {}", id);
         StayDTO stayFound = stayService.findById(id);
-        log.info("Stay retrieved: {}", stayFound);
+        log.debug("Stay retrieved: {}", stayFound);
         return ResponseEntity.status(HttpStatus.OK).body(stayFound);
     }
 }

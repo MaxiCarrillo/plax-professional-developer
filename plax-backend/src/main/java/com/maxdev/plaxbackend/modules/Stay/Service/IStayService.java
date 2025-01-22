@@ -20,11 +20,11 @@ public interface IStayService {
 
     StayDTO findByName(String name);
 
-    Page<StaySummaryDTO> findAll(Pageable pageable);
+    Page<StayDTO> findAll(Pageable pageable);
 
     Set<StaySummaryDTO> getRandomStays(int size);
 
-    StaySaveDTO update(StaySaveDTO stayDTO, MultipartFile[] images, Set<String> imagesToDelete) throws IOException;
+    void update(StaySaveDTO stayDTO, MultipartFile[] images, Set<String> imagesToDelete) throws IOException;
 
     StayDTO delete(UUID id) throws ResourceNotFoundException, IOException;
 

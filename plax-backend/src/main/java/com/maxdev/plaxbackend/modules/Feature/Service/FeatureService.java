@@ -22,6 +22,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 import java.util.UUID;
 
 import static java.time.LocalDateTime.now;
@@ -102,6 +103,19 @@ public class FeatureService implements IFeatureService {
             featureDTO.setIcon(svgUrl);
         });
         return pageFeatures;
+    }
+
+    @Override
+    public List<FeatureDTO> findAllWithoutPagination() {
+        log.debug("Retrieving all features without pagination");
+        List<FeatureDTO> features = featureRepository.findAll().stream()
+                .map(FeatureMapper.INSTANCE::entityToDto)
+                .toList();
+        features.forEach(featureDTO -> {
+            String svgUrl = getBaseUrl() + "svg/" + featureDTO.getIcon();
+            featureDTO.setIcon(svgUrl);
+        });
+        return features;
     }
 
     @Override
