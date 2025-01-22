@@ -9,7 +9,7 @@ import { NotificationContext } from '../../context/notificationContext';
 import './Home.css';
 
 export const Home = () => {
-    const [options, setOptions] = useState(placesOptions);
+    const [options] = useState(placesOptions);
     const { toaster } = useContext(NotificationContext);
     const [categories, setCategories] = useState([]);
     const [stays, setStays] = useState([]);

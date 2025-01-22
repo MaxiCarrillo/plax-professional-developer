@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { ItemList, ConfirmAction } from '../../components';
 import { Link, useLocation } from 'react-router-dom';
 import ReactPaginate from 'react-paginate';
+import { Empty } from 'antd';
 
 export const PaginateItems = ({ fetchData, loading, data, deleteItem, totalPages, error, editItem, refetch, onRefetch }) => {
     const [currentPage, setCurrentPage] = useState(0);
@@ -22,7 +23,7 @@ export const PaginateItems = ({ fetchData, loading, data, deleteItem, totalPages
     }
 
     return (
-        error ? <p>Ha ocurrido un error</p> :
+        error ? <Empty description="¡Ops! Ha ocurrido un error." /> :
             <>
                 {
                     loading ?
@@ -30,7 +31,7 @@ export const PaginateItems = ({ fetchData, loading, data, deleteItem, totalPages
                             <span className="visually-hidden">Cargando...</span>
                         </div> :
                         (
-                            data?.length === 0 ? <p>No hay elementos</p> :
+                            data?.length === 0 ? <Empty description="¡Ops! No hay datos cargados." /> :
                                 data?.map((item, index) => (
                                     <Link key={index} to={`${location.pathname}/${item.id}`}>
                                         <ItemList

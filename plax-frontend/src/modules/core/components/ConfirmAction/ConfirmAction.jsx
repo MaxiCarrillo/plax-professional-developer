@@ -1,8 +1,10 @@
+import { useContext, useEffect, useRef } from 'react';
+import { NotificationContext } from '../../context/notificationContext';
 import './ConfirmAction.css';
-import { useEffect, useRef } from 'react';
 
 export const ConfirmAction = ({ showModal, openCloseModal, deleteItem, onRefetch }) => {
 
+    const { toaster } = useContext(NotificationContext);
     const dialogRef = useRef(null);
 
     useEffect(() => {
@@ -15,7 +17,22 @@ export const ConfirmAction = ({ showModal, openCloseModal, deleteItem, onRefetch
 
     const handleClickDelete = async () => {
         openCloseModal();
-        await deleteItem();
+        try {
+            await deleteItem();
+            toaster['success']({
+                message: 'Item eliminado con exito.',
+                description:
+                    'El item ha sido eliminado.',
+                duration: 3
+            });
+        } catch (error) {
+            toaster['error']({
+                message: 'No se ha podido eliminar el item.',
+                description:
+                    error.message,
+                duration: 3
+            });
+        }
         onRefetch();
     }
 

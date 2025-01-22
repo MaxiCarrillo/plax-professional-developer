@@ -9,6 +9,7 @@ export const useCategory = () => {
     const [error, setError] = useState(null);
     const [loading, setLoading] = useState(false);
     const [totalPages, setTotalPages] = useState(0);
+    const [success, setSuccess] = useState(false);
 
     const getCategories = async () => {
         try {
@@ -40,11 +41,15 @@ export const useCategory = () => {
     }
 
     const deleteCategory = async (id) => {
+        setLoading(true);
+        setError(null);
         try {
-            setLoading(true);
-            await categoryService.deleteCategory(id, token);
-        } catch {
-            console.error("Error deleting category");
+            const response = await categoryService.deleteCategory(id, token);
+            setSuccess(true);
+            return response;
+        } catch (error) {
+            setError(error.message);
+            throw error;
         } finally {
             setLoading(false);
         }

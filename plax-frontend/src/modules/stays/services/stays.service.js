@@ -29,10 +29,14 @@ const stayService = {
                 throw new Error('No se pudo obtener el alojamiento. Por favor, intente nuevamente más tarde.');
             })
     },
-    deleteStay: (id) => {
-        api.delete(`/stays/${id}`)
+    deleteStay: (id, token) => {
+        return api.delete(`/stays/${id}`, {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        })
             .catch(error => {
-                if (error.response.status === 404) throw new Error('Alojamiento no encontrado.');
+                console.error(error);
                 throw new Error('No se pudo eliminar el alojamiento. Por favor, intente nuevamente más tarde.');
             });
     },

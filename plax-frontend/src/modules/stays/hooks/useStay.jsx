@@ -10,6 +10,7 @@ export const useStay = () => {
     const [error, setError] = useState(null);
     const [loading, setLoading] = useState(true);
     const [totalPages, setTotalPages] = useState(0);
+    const [success, setSuccess] = useState(false);
 
     const getStays = async (page = 0, size = 5) => {
         try {
@@ -53,11 +54,15 @@ export const useStay = () => {
     }
 
     const deleteStay = async (id) => {
+        setLoading(true);
+        setError(null);
         try {
-            setLoading(true);
-            await stayService.deleteStay(id);
-        } catch {
-            console.error('Error deleting stay');
+            const response = await stayService.deleteStay(id, token);
+            setSuccess(true);
+            return response;
+        } catch (error) {
+            setError(error.message);
+            throw error;
         } finally {
             setLoading(false);
         }

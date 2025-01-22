@@ -33,15 +33,14 @@ export const CategoryForm = ({ category, onRefetch }) => {
                 await editCategory(values);
                 formik.resetForm();
                 setFiles([]);
-                handleCancel();
-                onRefetch();
+
             } else {
                 await addCategory(values);
                 formik.resetForm();
                 setFiles([]);
-                handleCancel();
-                onRefetch();
             }
+            handleCancel();
+            onRefetch();
         },
     });
 

@@ -2,6 +2,7 @@ import { StarFilled } from '@ant-design/icons';
 import { useFormik } from 'formik';
 import { useContext } from 'react';
 import * as Yup from 'yup';
+import { FormModalContext } from '../../../core/context';
 import { NotificationContext } from '../../../core/context/notificationContext';
 import { useReview } from '../../hooks/useReview';
 import './ReviewForm.css';
@@ -10,6 +11,7 @@ export const ReviewForm = ({ reservation, onRefetch }) => {
 
     const { toaster } = useContext(NotificationContext);
     const { createReview, isLoading, success } = useReview();
+    const { handleCancel } = useContext(FormModalContext);
 
     const formik = useFormik({
         initialValues: {
@@ -41,7 +43,10 @@ export const ReviewForm = ({ reservation, onRefetch }) => {
                     description: error.message,
                     duration: 3
                 });
+            } finally {
+                handleCancel();
             }
+
         }
     })
 

@@ -1,12 +1,13 @@
 import { SmileOutlined } from '@ant-design/icons';
 import { useContext } from 'react';
-import { Link, Navigate, useParams } from 'react-router-dom';
+import { Link, Navigate, useNavigate, useParams } from 'react-router-dom';
 import { NotificationContext } from '../../../core/context/notificationContext';
 import { useReservation } from '../../hook/useReservation';
 import './ReservationConfirm.css';
 
 export const ReservationConfirm = () => {
 
+    const navigate = useNavigate();
     const { toaster } = useContext(NotificationContext);
     const { id } = useParams();
     const { confirmReservation, isLoading } = useReservation();
@@ -20,7 +21,7 @@ export const ReservationConfirm = () => {
                 description: `Su reserva con el código ${id} ha sido confirmada.`,
                 duration: 3
             });
-            Navigate('/mis-reservas');
+            navigate('/mis-reservas');
         } catch (error) {
             toaster['error']({
                 message: 'Error al confirmar reserva.',

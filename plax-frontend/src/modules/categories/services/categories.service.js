@@ -28,14 +28,15 @@ const categoryService = {
             });
     },
     deleteCategory: (id, token) => {
-        api.delete(`/categories/${id}`, {
+        id = "11fe630b-1541-4753-91b6-a7a83511f116"
+        return api.delete(`/categories/${id}`, {
             headers: {
                 'Authorization': `Bearer ${token}`
             }
         })
             .catch(error => {
-                if (error.response.status === 404) throw new Error('Categoría no encontrada.');
-                throw new Error('No se pudo eliminar la categoría. Por favor, intente nuevamente más tarde.');
+                console.error(error);
+                throw new Error(error.response.data);
             });
     },
     createCategory: (data, token) => {
