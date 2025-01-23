@@ -26,7 +26,7 @@ public interface IStayService {
 
     void update(StaySaveDTO stayDTO, MultipartFile[] images, Set<String> imagesToDelete) throws IOException;
 
-    StayDTO delete(UUID id) throws ResourceNotFoundException, IOException;
+    void delete(UUID id) throws ResourceNotFoundException, IOException;
 
     Set<StaySummaryDTO> findByCategoryIdsAndCountryOrCity(Set<UUID> categoryIds, String searchTerm, LocalDate checkIn, LocalDate checkOut);
 }

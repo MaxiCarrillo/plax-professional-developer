@@ -16,7 +16,7 @@ public interface IUserService {
 
     Page<UserDTO> findAll(Pageable pageable);
 
-    UserDTO delete(UUID id);
+    void delete(UUID id);
 
     UserDTO updateByAdmin(UserSaveDTO userSaveDTO);
 

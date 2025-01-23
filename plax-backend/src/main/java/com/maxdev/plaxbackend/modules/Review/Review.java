@@ -7,6 +7,8 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import lombok.*;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -33,7 +35,8 @@ public class Review {
     @JoinColumn(name = "id_user", nullable = false)
     private User user;
 
-    @ManyToOne(cascade = CascadeType.REMOVE)
-    @JoinColumn(name = "id_stay", nullable = false)
+    @ManyToOne
+    @JoinColumn(name = "id_stay", nullable = false, foreignKey = @ForeignKey(name = "FK_id_stay"))
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Stay stay;
 }

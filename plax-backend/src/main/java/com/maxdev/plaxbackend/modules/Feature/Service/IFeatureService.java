@@ -24,5 +24,5 @@ public interface IFeatureService {
 
     FeatureDTO update(FeatureDTO featureDTO, MultipartFile icon) throws IOException;
 
-    FeatureDTO delete(UUID id) throws IOException;
+    void delete(UUID id) throws IOException;
 }

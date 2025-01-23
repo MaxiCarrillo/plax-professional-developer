@@ -9,6 +9,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import java.time.LocalDate;
 import java.util.UUID;
@@ -40,7 +42,8 @@ public class Reservation {
 
     @NotNull(message = "Stay cannot be null")
     @ManyToOne
-    @JoinColumn(name = "id_stay")
+    @JoinColumn(name = "id_stay", foreignKey = @ForeignKey(name = "FK_id_stay"))
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Stay stay;
 
     @NotNull(message = "User cannot be null")

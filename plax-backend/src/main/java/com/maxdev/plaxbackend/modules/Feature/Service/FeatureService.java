@@ -6,6 +6,7 @@ import com.maxdev.plaxbackend.modules.Feature.DTO.FeatureDTO;
 import com.maxdev.plaxbackend.modules.Feature.Feature;
 import com.maxdev.plaxbackend.modules.Feature.Mapper.FeatureMapper;
 import com.maxdev.plaxbackend.modules.Feature.Repository.FeatureRepository;
+import com.maxdev.plaxbackend.modules.Stay.Repository.StayRepository;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
@@ -23,6 +24,7 @@ import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 import static java.time.LocalDateTime.now;
@@ -32,9 +34,11 @@ import static java.time.LocalDateTime.now;
 public class FeatureService implements IFeatureService {
 
     private final FeatureRepository featureRepository;
+    private final StayRepository stayRepository;
 
-    public FeatureService(FeatureRepository featureRepository) {
+    public FeatureService(FeatureRepository featureRepository, StayRepository stayRepository) {
         this.featureRepository = featureRepository;
+        this.stayRepository = stayRepository;
     }
 
     @Override
@@ -119,18 +123,23 @@ public class FeatureService implements IFeatureService {
     }
 
     @Override
-    public FeatureDTO delete(UUID id) throws ResourceNotFoundException, IOException {
+    public void delete(UUID id) throws ResourceNotFoundException, IOException {
         log.debug("Deleting feature by id: {}", id);
         Feature featureToDelete = featureRepository.findById(id).orElseThrow(() -> {
             log.error("Feature with id: {} not found", id);
             return new ResourceNotFoundException("Feature with id: " + id + " not found");
         });
+
+        stayRepository.findByFeatureIds(Set.of(id)).forEach(stay -> {
+            stay.getFeatures().remove(featureToDelete);
+            stayRepository.save(stay);
+        });
+
         featureRepository.delete(featureToDelete);
         if (!featureRepository.existsById(id)) {
             deleteIcon(featureToDelete.getIcon());
         }
         log.info("Feature deleted: {}", featureToDelete.getName());
-        return FeatureMapper.INSTANCE.entityToDto(featureToDelete);
     }
 
     public Resource getIcon(String iconName) throws MalformedURLException {

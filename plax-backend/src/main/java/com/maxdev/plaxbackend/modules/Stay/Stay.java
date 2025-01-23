@@ -8,6 +8,8 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PositiveOrZero;
 import lombok.*;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import java.util.Set;
 import java.util.UUID;
@@ -31,7 +33,7 @@ public class Stay {
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<StayImage> images;
 
-    @NotNull(message = "Features cannot be null")
+//    @NotNull(message = "Features cannot be null")
     @ManyToMany(cascade = {CascadeType.MERGE, CascadeType.DETACH})
     @JoinTable(
             name = "stay_feature",
@@ -45,7 +47,8 @@ public class Stay {
     private Double price;
 
     @ManyToOne
-    @JoinColumn(name = "id_category")
+    @JoinColumn(name = "id_category", foreignKey = @ForeignKey(name = "FK_id_category"))
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Category category;
 
     @NotNull(message = "Address cannot be null")

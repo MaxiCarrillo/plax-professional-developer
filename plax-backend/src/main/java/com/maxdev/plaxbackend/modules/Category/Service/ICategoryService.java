@@ -24,5 +24,5 @@ public interface ICategoryService {
 
     public List<CategoryDTO> findAllWithoutPagination();
 
-    CategoryDTO delete(UUID id) throws ResourceNotFoundException, IOException;
+    void delete(UUID id) throws ResourceNotFoundException, IOException;
 }

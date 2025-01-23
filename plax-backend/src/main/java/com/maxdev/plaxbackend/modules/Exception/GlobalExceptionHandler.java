@@ -16,6 +16,7 @@ import org.springframework.web.multipart.support.MissingServletRequestPartExcept
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.security.SignatureException;
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.stream.Collectors;
 
 @Log4j2
@@ -98,10 +99,22 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorMessage);
     }
 
+    @ExceptionHandler(SQLIntegrityConstraintViolationException.class)
+    public ResponseEntity<String> handleSQLIntegrityConstraintViolationException(SQLIntegrityConstraintViolationException ex) {
+        log.error("SQL integrity constraint violation", ex.getMessage());
+        return ResponseEntity.status(HttpStatus.CONFLICT).body("SQL integrity constraint violation");
+    }
+
     @ExceptionHandler(TransientPropertyValueException.class)
     public ResponseEntity<String> handleTransientPropertyValueException(TransientPropertyValueException ex) {
         log.error("Transient property value", ex.getMessage());
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Transient property value");
     }
+
+//    @ExceptionHandler(Exception.class)
+//    public ResponseEntity<String> handleException(Exception ex) {
+//        log.error("Internal server error", ex.getMessage());
+//        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ex.getMessage());
+//    }
 
 }

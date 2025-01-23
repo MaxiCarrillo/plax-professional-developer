@@ -11,10 +11,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.util.Collection;
-import java.util.List;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 @Data
 @Builder
@@ -37,12 +34,12 @@ public class User implements UserDetails {
     @Enumerated(EnumType.STRING)
     private Role role;
 
-    @ManyToMany(cascade = CascadeType.DETACH) // No se puede eliminar un stay si esta en favoritos
-    private Set<Stay> favorites;
+    @ManyToMany(cascade = CascadeType.DETACH)
+    private Set<Stay> favorites = new HashSet<>();
 
-
-    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE, orphanRemoval = true) // Si se elimina un usuario se eliminan sus reviews
-    private Set<Review> reviews;
+    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    // Si se elimina un usuario se eliminan sus reviews
+    private Set<Review> reviews = new HashSet<>();
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

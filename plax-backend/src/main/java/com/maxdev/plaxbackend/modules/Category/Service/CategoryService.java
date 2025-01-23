@@ -1,6 +1,21 @@
 package com.maxdev.plaxbackend.modules.Category.Service;
 
-import static java.time.LocalDateTime.now;
+import com.maxdev.plaxbackend.modules.Category.Category;
+import com.maxdev.plaxbackend.modules.Category.DTO.CategoryDTO;
+import com.maxdev.plaxbackend.modules.Category.Mapper.CategoryMapper;
+import com.maxdev.plaxbackend.modules.Category.Repository.CategoryRepository;
+import com.maxdev.plaxbackend.modules.Exception.ResourceAlreadyExistsException;
+import com.maxdev.plaxbackend.modules.Exception.ResourceNotFoundException;
+import com.maxdev.plaxbackend.modules.Stay.Repository.StayRepository;
+import com.maxdev.plaxbackend.modules.Util.BaseUrl;
+import lombok.extern.log4j.Log4j2;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -11,34 +26,21 @@ import java.nio.file.StandardCopyOption;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
 
-import org.springframework.core.io.Resource;
-import org.springframework.core.io.UrlResource;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
-
-import com.maxdev.plaxbackend.modules.Category.Category;
-import com.maxdev.plaxbackend.modules.Category.DTO.CategoryDTO;
-import com.maxdev.plaxbackend.modules.Category.Mapper.CategoryMapper;
-import com.maxdev.plaxbackend.modules.Category.Repository.CategoryRepository;
-import com.maxdev.plaxbackend.modules.Exception.ResourceAlreadyExistsException;
-import com.maxdev.plaxbackend.modules.Exception.ResourceNotFoundException;
-import com.maxdev.plaxbackend.modules.Util.BaseUrl;
-
-import lombok.extern.log4j.Log4j2;
+import static java.time.LocalDateTime.now;
 
 @Log4j2
 @Service
 public class CategoryService implements ICategoryService, BaseUrl {
 
     private final CategoryRepository categoryRepository;
+    private final StayRepository stayRepository;
 
-    public CategoryService(CategoryRepository categoryRepository) {
+    public CategoryService(CategoryRepository categoryRepository, StayRepository stayRepository) {
         this.categoryRepository = categoryRepository;
+        this.stayRepository = stayRepository;
     }
 
     @Override
@@ -134,17 +136,22 @@ public class CategoryService implements ICategoryService, BaseUrl {
 
     @Override
     @Transactional
-    public CategoryDTO delete(UUID id)
+    public void delete(UUID id)
             throws ResourceNotFoundException, IOException {
         log.debug("Deleting category with id: {}", id);
         Category categoryToDelete = categoryRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Category not found with id: " + id));
+
+        // Eliminar las relaciones de features de cada estancia asociada
+        stayRepository.findByCategory_IdIn(Set.of(categoryToDelete.getId())).forEach(stay -> {
+            stayRepository.delete(stay);
+        });
+
         categoryRepository.delete(categoryToDelete);
         if (!categoryRepository.existsById(id)) {
             deleteImage(categoryToDelete.getImage());
         }
         log.info("Category deleted with id: {}", id);
-        return CategoryMapper.INSTANCE.entityToDto(categoryToDelete);
     }
 
     public Resource getImage(String imageName) throws MalformedURLException {

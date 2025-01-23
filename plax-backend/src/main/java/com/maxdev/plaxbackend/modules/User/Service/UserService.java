@@ -1,16 +1,22 @@
 package com.maxdev.plaxbackend.modules.User.Service;
 
+import com.maxdev.plaxbackend.modules.Category.Repository.CategoryRepository;
 import com.maxdev.plaxbackend.modules.Exception.ResourceAlreadyExistsException;
 import com.maxdev.plaxbackend.modules.Exception.ResourceNotFoundException;
+import com.maxdev.plaxbackend.modules.Feature.Repository.FeatureRepository;
+import com.maxdev.plaxbackend.modules.Reservation.Repository.ReservationRepository;
 import com.maxdev.plaxbackend.modules.Stay.Repository.StayRepository;
 import com.maxdev.plaxbackend.modules.Stay.Stay;
 import com.maxdev.plaxbackend.modules.User.DTO.UserDTO;
 import com.maxdev.plaxbackend.modules.User.DTO.UserFavoriteDTO;
 import com.maxdev.plaxbackend.modules.User.DTO.UserSaveDTO;
+import com.maxdev.plaxbackend.modules.User.DTO.UserUpdateNameDTO;
 import com.maxdev.plaxbackend.modules.User.Mapper.UserMapper;
+import com.maxdev.plaxbackend.modules.User.Mapper.UserSaveMapper;
 import com.maxdev.plaxbackend.modules.User.Repository.UserRepository;
 import com.maxdev.plaxbackend.modules.User.User;
 import com.maxdev.plaxbackend.modules.Util.BaseUrl;
+import com.maxdev.plaxbackend.modules.Util.DashboardResponse;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -28,11 +34,17 @@ public class UserService implements IUserService, BaseUrl {
     private final StayRepository stayRepository;
 
     private final PasswordEncoder passwordEncoder;
+    private final FeatureRepository featureRepository;
+    private final CategoryRepository categoryRepository;
+    private final ReservationRepository reservationRepository;
 
-    public UserService(UserRepository userRepository, StayRepository stayRepository, PasswordEncoder passwordEncoder) {
+    public UserService(UserRepository userRepository, StayRepository stayRepository, PasswordEncoder passwordEncoder, FeatureRepository featureRepository, CategoryRepository categoryRepository, ReservationRepository reservationRepository) {
         this.userRepository = userRepository;
         this.stayRepository = stayRepository;
         this.passwordEncoder = passwordEncoder;
+        this.featureRepository = featureRepository;
+        this.categoryRepository = categoryRepository;
+        this.reservationRepository = reservationRepository;
     }
 
     @Override
@@ -49,12 +61,16 @@ public class UserService implements IUserService, BaseUrl {
     @Override
     public UserDTO findByEmail(String email) {
         log.debug("Finding user by email: {}", email);
-        return userRepository.findByEmail(email)
+        UserDTO userDTO = userRepository.findByEmail(email)
                 .map(UserMapper.INSTANCE::entityToDto)
                 .orElseThrow(() -> {
                     log.error("User with email: {} not found", email);
                     return new ResourceNotFoundException("User with email: " + email + " not found");
                 });
+        userDTO.getFavorites().forEach(favoriteStay -> favoriteStay.setImages(favoriteStay.getImages().stream()
+                .map(image -> getBaseUrl() + "/api/stays/images/" + image)
+                .collect(Collectors.toSet())));
+        return userDTO;
     }
 
     @Override
@@ -66,7 +82,7 @@ public class UserService implements IUserService, BaseUrl {
     }
 
     @Override
-    public UserDTO delete(UUID id) {
+    public void delete(UUID id) {
         log.debug("Deleting user: {}", id);
         User userToDelete = userRepository.findById(id).orElseThrow(() -> {
             log.error("User with id: {} not found", id);
@@ -74,7 +90,20 @@ public class UserService implements IUserService, BaseUrl {
         });
         userRepository.delete(userToDelete);
         log.info("User deleted: {}", userToDelete.getEmail());
-        return UserMapper.INSTANCE.entityToDto(userToDelete);
+    }
+
+    public void save(UserSaveDTO userSaveDTO) {
+        log.debug("Saving user: {}", userSaveDTO.getEmail());
+
+        if (userRepository.existsByEmail(userSaveDTO.getEmail())) {
+            log.error("User with email: {} already exists", userSaveDTO.getEmail());
+            throw new ResourceAlreadyExistsException("User with email: " + userSaveDTO.getEmail() + " already exists");
+        }
+
+        User user = UserSaveMapper.INSTANCE.dtoToEntity(userSaveDTO);
+        user.setPassword(passwordEncoder.encode(userSaveDTO.getPassword()));
+        userRepository.save(user);
+        log.info("User saved: {}", user.getEmail());
     }
 
     @Override
@@ -147,5 +176,29 @@ public class UserService implements IUserService, BaseUrl {
                 .map(image -> getBaseUrl() + "/api/stays/images/" + image)
                 .collect(Collectors.toSet())));
         return userDTO;
+    }
+
+    public DashboardResponse getDashboardInfo() {
+        log.debug("Getting dashboard info");
+        int totalUsers = userRepository.findAll().size();
+        int totalStays = stayRepository.findAll().size();
+        int totalFeatures = featureRepository.findAll().size();
+        int totalCategories = categoryRepository.findAll().size();
+        int totalReservations = reservationRepository.findAll().size();
+        log.info("Returning dashboard info");
+        return new DashboardResponse(totalUsers, totalStays, totalFeatures, totalCategories, totalReservations);
+    }
+
+    public UserDTO updateName(UserUpdateNameDTO userUpdateNameDTO, String email) {
+        log.debug("Updating name of user with email: {}", email);
+        User userToUpdate = userRepository.findByEmail(email).orElseThrow(() -> {
+            log.error("User with email: {} not found", email);
+            return new ResourceNotFoundException("User with email: " + email + " not found");
+        });
+        userToUpdate.setFirstname(userUpdateNameDTO.getFirstname());
+        userToUpdate.setLastname(userUpdateNameDTO.getLastname());
+        userRepository.save(userToUpdate);
+        log.info("Name of user with email: {} updated successfully", email);
+        return UserMapper.INSTANCE.entityToDto(userToUpdate);
     }
 }

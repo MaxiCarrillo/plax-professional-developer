@@ -20,6 +20,7 @@ import com.maxdev.plaxbackend.modules.Stay.Repository.StayImageRepository;
 import com.maxdev.plaxbackend.modules.Stay.Repository.StayRepository;
 import com.maxdev.plaxbackend.modules.Stay.Stay;
 import com.maxdev.plaxbackend.modules.Stay.StayImage;
+import com.maxdev.plaxbackend.modules.User.Repository.UserRepository;
 import com.maxdev.plaxbackend.modules.Util.BaseUrl;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.core.io.Resource;
@@ -57,13 +58,15 @@ public class StayService implements IStayService, BaseUrl {
     private final ReservationRepository reservationRepository;
     private final ReviewRepository reviewRepository;
     private final FeatureRepository featureRepository;
+    private final UserRepository userRepository;
 
-    public StayService(StayRepository stayRepository, StayImageRepository stayImageRepository, ReservationRepository reservationRepository, ReviewRepository reviewRepository, FeatureRepository featureRepository) {
+    public StayService(StayRepository stayRepository, StayImageRepository stayImageRepository, ReservationRepository reservationRepository, ReviewRepository reviewRepository, FeatureRepository featureRepository, UserRepository userRepository) {
         this.stayRepository = stayRepository;
         this.stayImageRepository = stayImageRepository;
         this.reservationRepository = reservationRepository;
         this.reviewRepository = reviewRepository;
         this.featureRepository = featureRepository;
+        this.userRepository = userRepository;
     }
 
     @Override
@@ -247,20 +250,21 @@ public class StayService implements IStayService, BaseUrl {
 
     @Override
     @Transactional
-    public StayDTO delete(UUID id) throws ResourceNotFoundException, IOException {
+    public void delete(UUID id) throws ResourceNotFoundException, IOException {
         log.debug("Deleting stay with id: {}", id);
         Stay stayToDelete = stayRepository.findById(id)
                 .orElseThrow(() -> {
                     log.error("Stay with id: {} not found", id);
-                    return new ResourceNotFoundException("Stay with id: " + id + " not found");
+                    return new ResourceNotFoundException("La estancia con id: " + id + " no se ha encontrado");
                 });
-
+        userRepository.findByFavoritesIds(Collections.singleton(id)).forEach(user ->
+                user.getFavorites().remove(stayToDelete)
+        );
         stayRepository.delete(stayToDelete);
         if (!stayRepository.existsById(id)) {
             deleteFileImages(stayToDelete.getImages());
         }
         log.info("Stay deleted: {}", stayToDelete.getName());
-        return StayMapper.INSTANCE.entityToDto(stayToDelete);
     }
 
     public Resource getImage(String imageName) throws MalformedURLException {

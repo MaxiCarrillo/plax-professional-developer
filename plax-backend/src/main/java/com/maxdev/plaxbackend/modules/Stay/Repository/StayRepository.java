@@ -36,4 +36,11 @@ public interface StayRepository extends JpaRepository<Stay, UUID> {
             @Param("checkIn") LocalDate checkIn,
             @Param("checkOut") LocalDate checkOut
     );
+
+    @Query("""
+                    SELECT s FROM stays s
+                    JOIN s.features f
+                    WHERE f.id IN :featureIds
+            """)
+    Set<Stay> findByFeatureIds(@Param("featureIds") Set<UUID> featureIds);
 }
