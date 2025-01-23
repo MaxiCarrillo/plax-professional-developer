@@ -28,7 +28,6 @@ const categoryService = {
             });
     },
     deleteCategory: (id, token) => {
-        id = "11fe630b-1541-4753-91b6-a7a83511f116"
         return api.delete(`/categories/${id}`, {
             headers: {
                 'Authorization': `Bearer ${token}`
@@ -48,13 +47,13 @@ const categoryService = {
         formData.append('category', new Blob([JSON.stringify(category)], { type: 'application/json' }));
         data.image[0] && formData.append('image', data.image[0]);
 
-        api.post('/categories', formData, {
+        return api.post('/categories', formData, {
             headers: {
                 'Accept': 'application/json',
                 'Authorization': `Bearer ${token}`
             }
         }).catch(error => {
-            if (error.response.status === 409) throw new Error('La categoría ya se encuentra registrada.');
+            console.error(error);
             throw new Error('No se pudo crear la categoría. Por favor, intente nuevamente más tarde.');
         });
     },
@@ -68,13 +67,13 @@ const categoryService = {
         formData.append('category', new Blob([JSON.stringify(category)], { type: 'application/json' }));
         data.image && formData.append('image', data.image[0]);
 
-        api.put('/categories', formData, {
+        return api.put('/categories', formData, {
             headers: {
                 'Accept': 'application/json',
                 'Authorization': `Bearer ${token}`
             }
         }).catch(error => {
-            if (error.response.status === 409) throw new Error('La categoría ya se encuentra registrada.');
+            console.error(error);
             throw new Error('No se pudo editar la categoría. Por favor, intente nuevamente más tarde');
         });
     }

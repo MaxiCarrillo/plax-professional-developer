@@ -1,12 +1,14 @@
+import { DropboxOutlined } from "@ant-design/icons"
 import { useFormik } from "formik"
-import * as Yup from "yup"
-import { useFeature } from "../../hooks/useFeature"
 import { useContext, useEffect, useState } from "react"
 import { useDropzone } from "react-dropzone"
+import * as Yup from "yup"
 import { FormModalContext } from "../../../core/context"
-import { DropboxOutlined } from "@ant-design/icons"
+import { NotificationContext } from "../../../core/context/notificationContext"
+import { useFeature } from "../../hooks/useFeature"
 
 export const FeatureForm = ({ feature, onRefetch }) => {
+    const { toaster } = useContext(NotificationContext);
     const { loading, addFeature, editFeature } = useFeature()
     const { handleCancel } = useContext(FormModalContext)
     const [files, setFiles] = useState([])
@@ -25,18 +27,44 @@ export const FeatureForm = ({ feature, onRefetch }) => {
         validateOnChange: true,
         onSubmit: async (values) => {
             if (feature) {
-                values.id = feature.id
-                await editFeature(values)
-                formik.resetForm()
-                setFiles([])
-                handleCancel()
-                onRefetch()
+                try {
+                    values.id = feature.id
+                    await editFeature(values)
+                    formik.resetForm()
+                    setFiles([])
+                    handleCancel()
+                    onRefetch()
+                    toaster['success']({
+                        message: 'Característica editada correctamente',
+                        description: 'La característica se ha editado correctamente',
+                        duration: 3
+                    });
+                } catch (error) {
+                    toaster['error']({
+                        message: 'Error al editar la característica',
+                        description: error.message,
+                        duration: 3
+                    });
+                }
             } else {
-                await addFeature(values)
-                formik.resetForm()
-                setFiles([])
-                handleCancel()
-                onRefetch()
+                try {
+                    await addFeature(values)
+                    formik.resetForm()
+                    setFiles([])
+                    handleCancel()
+                    onRefetch()
+                    toaster['success']({
+                        message: 'Característica agregada correctamente',
+                        description: 'La característica se ha agregado correctamente',
+                        duration: 3
+                    });
+                } catch (error) {
+                    toaster['error']({
+                        message: 'Error al agregar la característica',
+                        description: error.message,
+                        duration: 3
+                    });
+                }
             }
         },
     });

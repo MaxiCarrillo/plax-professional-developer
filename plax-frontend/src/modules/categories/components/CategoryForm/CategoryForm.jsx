@@ -4,9 +4,11 @@ import { useContext, useEffect, useState } from "react";
 import { useDropzone } from "react-dropzone";
 import * as Yup from "yup";
 import { FormModalContext } from "../../../core/context";
+import { NotificationContext } from '../../../core/context/notificationContext';
 import { useCategory } from "../../hooks/useCategory";
 
 export const CategoryForm = ({ category, onRefetch }) => {
+    const { toaster } = useContext(NotificationContext);
     const { loading, addCategory, editCategory } = useCategory();
     const { handleCancel } = useContext(FormModalContext);
     const [files, setFiles] = useState([]);
@@ -29,18 +31,47 @@ export const CategoryForm = ({ category, onRefetch }) => {
         validateOnChange: true,
         onSubmit: async (values) => {
             if (category) {
-                values.id = category.id;
-                await editCategory(values);
-                formik.resetForm();
-                setFiles([]);
-
+                try {
+                    values.id = category.id;
+                    await editCategory(values);
+                    formik.resetForm();
+                    setFiles([]);
+                    handleCancel();
+                    onRefetch();
+                    toaster['success']({
+                        message: 'Categoría editada correctamente',
+                        description: 'La categoría se ha editado correctamente',
+                        duration: 3
+                    });
+                } catch (error) {
+                    toaster['error']({
+                        message: 'Error al editar la categoría',
+                        description: error.message,
+                        duration: 3
+                    });
+                }
             } else {
-                await addCategory(values);
-                formik.resetForm();
-                setFiles([]);
+                try {
+                    await addCategory(values);
+                    formik.resetForm();
+                    setFiles([]);
+                    handleCancel();
+                    onRefetch();
+                    toaster['success']({
+                        message: 'Categoría agregada correctamente',
+                        description: 'La categoría se ha agregado correctamente',
+                        duration: 3
+                    });
+
+                } catch (error) {
+                    toaster['error']({
+                        message: 'Error al agregar la categoría',
+                        description: error.message,
+                        duration: 3
+                    });
+                }
             }
-            handleCancel();
-            onRefetch();
+
         },
     });
 

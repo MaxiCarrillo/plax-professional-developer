@@ -7,7 +7,7 @@ import {
 import {
     Home,
     HomeDashboard,
-    NotFound,
+    NotFound
 } from '../../core/pages';
 
 import { CategoriesList } from '../../categories/pages';
@@ -25,7 +25,8 @@ import { Login, Register } from '../../auth/pages';
 
 import { UsersList } from '../../users/pages';
 
-import { ReservationsUser, ReservationConfirm } from '../../reservations/pages';
+import { ReservationConfirm, ReservationsUser } from '../../reservations/pages';
+import { Profile } from '../pages/Profile/Profile';
 
 const publicRoutes = [
     {
@@ -68,6 +69,13 @@ const publicRoutes = [
         component: NotFound,
         layout: UserLayout,
         roles: [],
+        exact: true
+    },
+    {
+        path: '/perfil',
+        component: Profile,
+        layout: UserLayout,
+        roles: ['USER', 'ADMIN'],
         exact: true
     },
     {

@@ -44,37 +44,44 @@ export const useFeature = () => {
     }
 
     const deleteFeature = async (id) => {
+        setLoading(true);
+        setError(null);
         try {
-            setLoading(true);
-            await featureService.deleteFeature(id, token);
-        } catch {
-            console.error("Error deleting feature");
+            const response = await featureService.deleteFeature(id, token);
+            return response;
+        } catch (error) {
+            setError(error.message);
+            throw error;
         } finally {
             setLoading(false);
         }
     };
 
     const addFeature = async (data) => {
+        setLoading(true);
+        setError(null);
         try {
-            setLoading(true);
-            await featureService.createFeature(data, token);
-            setError(false);
+            const response = await featureService.createFeature(data, token);
+            setSuccess(true);
+            return response;
         } catch (e) {
-            setError(true);
-            console.error("Error creating feature", e);
+            setError(e.message);
+            throw e;
         } finally {
             setLoading(false);
         }
     }
 
     const editFeature = async (data) => {
+        setLoading(true);
+        setError(null);
         try {
-            setLoading(true);
-            await featureService.editFeature(data, token);
-            setError(false);
+            const response = await featureService.editFeature(data, token);
+            setSuccess(true);
+            return response;
         } catch (e) {
-            setError(true);
-            console.error("Error editing feature", e);
+            setError(e.message);
+            throw e;
         } finally {
             setLoading(false);
         }

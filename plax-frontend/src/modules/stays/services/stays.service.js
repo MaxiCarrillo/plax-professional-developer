@@ -56,7 +56,7 @@ const stayService = {
             formData.append('images', image);
         });
 
-        api.post('/stays', formData, {
+        return api.post('/stays', formData, {
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'multipart/form-data',
@@ -64,10 +64,8 @@ const stayService = {
             }
         }).then(response => {
             return response.data;
-        }).catch(() => {
-            if (error.response.status === 409) {
-                throw new Error('El alojamiento ya se encuentra registrado.');
-            }
+        }).catch(error => {
+            console.error(error);
             throw new Error('No se pudo crear el alojamiento. Por favor, intente nuevamente más tarde.');
         })
     },
@@ -89,7 +87,7 @@ const stayService = {
         });
         data.imagesToDelete.length > 0 && formData.append('imagesToDelete', new Blob([JSON.stringify(data.imagesToDelete)], { type: 'application/json' }));
 
-        api.put('/stays', formData, {
+        return api.put('/stays', formData, {
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'multipart/form-data',
@@ -97,10 +95,8 @@ const stayService = {
             }
         }).then(response => {
             return response.data;
-        }).catch(() => {
-            if (error.response.status === 409) {
-                throw new Error('El alojamiento ya se encuentra registrado.');
-            }
+        }).catch(error => {
+            console.error(error);
             throw new Error('No se pudo editar el alojamiento. Por favor, intente nuevamente más tarde.');
         })
     }

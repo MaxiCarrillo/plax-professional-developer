@@ -27,12 +27,12 @@ const featureService = {
             });
     },
     deleteFeature: (id, token) => {
-        api.delete(`/features/${id}`, {
+        return api.delete(`/features/${id}`, {
             headers: {
                 'Authorization': `Bearer ${token}`
             }
         }).catch(error => {
-            if (error.response.status === 404) throw new Error('Característica no encontrada');
+            console.error(error);
             throw new Error('No se pudo eliminar la característica. Por favor, intente nuevamente más tarde');
         });
     },
@@ -44,13 +44,13 @@ const featureService = {
         formData.append('feature', new Blob([JSON.stringify(feature)], { type: 'application/json' }));
         data.icon[0] && formData.append('icon', data.icon[0]);
 
-        api.post('/features', formData, {
+        return api.post('/features', formData, {
             headers: {
                 'Accept': 'application/json',
                 'Authorization': `Bearer ${token}`
             }
         }).catch(error => {
-            if (error.response.status === 409) throw new Error('La característica ya se encuentra registrada');
+            console.error(error);
             throw new Error('No se pudo crear la característica. Por favor, intente nuevamente más tarde');
         });
     },
@@ -63,13 +63,13 @@ const featureService = {
         formData.append('feature', new Blob([JSON.stringify(feature)], { type: 'application/json' }));
         data.icon && formData.append('icon', data.icon[0]);
 
-        api.put('/features', formData, {
+        return api.put('/features', formData, {
             headers: {
                 'Accept': 'application/json',
                 'Authorization': `Bearer ${token}`
             }
         }).catch(error => {
-            if (error.response.status === 404) throw new Error('Característica no encontrada');
+            console.error(error);
             throw new Error('No se pudo editar la característica. Por favor, intente nuevamente más tarde');
         });
     }

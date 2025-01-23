@@ -69,26 +69,30 @@ export const useStay = () => {
     };
 
     const addStay = async (data) => {
+        setLoading(true);
+        setError(null);
         try {
-            setLoading(true);
-            await stayService.createStay(data, token);
-            setError(false);
-        } catch (e) {
-            setError(true);
-            console.error('Error creating stay', e);
+            const response = await stayService.createStay(data, token);
+            setSuccess(true);
+            return response;
+        } catch (error) {
+            setError(error.message);
+            throw error;
         } finally {
             setLoading(false);
         }
     };
 
     const editStay = async (data) => {
+        setLoading(true);
+        setError(null);
         try {
-            setLoading(true);
-            await stayService.editStay(data, token);
-            setError(false);
-        } catch (e) {
-            setError(true);
-            console.error('Error editing stay', e);
+            const response = await stayService.editStay(data, token);
+            setSuccess(true);
+            return response;
+        } catch (error) {
+            setError(error.message);
+            throw error;
         } finally {
             setLoading(false);
         }

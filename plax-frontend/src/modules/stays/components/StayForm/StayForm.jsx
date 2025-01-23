@@ -6,6 +6,7 @@ import { useDropzone } from 'react-dropzone';
 import * as Yup from 'yup';
 import { useCategory } from '../../../categories/hooks/useCategory';
 import { FormModalContext } from '../../../core/context';
+import { NotificationContext } from '../../../core/context/notificationContext';
 import { useFeature } from '../../../features/hooks/useFeature';
 import { useStay } from '../../hooks/useStay';
 import './StayForm.css';
@@ -69,6 +70,7 @@ const createSchema = Yup.object().shape({
 
 
 export const StayForm = ({ stay, onRefetch }) => {
+    const { toaster } = useContext(NotificationContext);
     const { handleCancel } = useContext(FormModalContext);
     const { addStay, editStay, loading } = useStay();
     const [files, setFiles] = useState([]);
@@ -114,26 +116,52 @@ export const StayForm = ({ stay, onRefetch }) => {
         validationSchema: stay ? editSchema : createSchema,
         validateOnChange: true,
         onSubmit: async (values) => {
-            console.log(values);
             if (stay) {
                 if (imagesToDelete.length === stay.images.length && !formik.values.images) {
                     alert('No se pueden eliminar todas las imagenes y no agregar nuevas');
                 } else {
-                    values.id = stay.id;
-                    values.imagesToDelete = imagesToDelete;
-                    await editStay(values);
-                    formik.resetForm();
-                    setFiles([]);
-                    setImagesToDelete([]);
-                    handleCancel();
-                    onRefetch();
+                    try {
+                        values.id = stay.id;
+                        values.imagesToDelete = imagesToDelete;
+                        await editStay(values);
+                        formik.resetForm();
+                        setFiles([]);
+                        setImagesToDelete([]);
+                        handleCancel();
+                        onRefetch();
+                        toaster['success']({
+                            message: 'Alojamiento editado correctamente',
+                            description: 'El alojamiento fue editado correctamente.',
+                            duration: 3
+                        });
+                    } catch (e) {
+                        toaster['error']({
+                            message: 'Error al editar el alojamiento',
+                            description: e.message,
+                            duration: 3
+                        });
+                    }
                 }
             } else {
-                await addStay(values);
-                formik.resetForm();
-                setFiles([]);
-                handleCancel();
-                onRefetch();
+                try {
+                    await addStay(values);
+                    formik.resetForm();
+                    setFiles([]);
+                    handleCancel();
+                    onRefetch();
+                    toaster['success']({
+                        message: 'Alojamiento creado correctamente',
+                        description: 'El alojamiento fue creado correctamente.',
+                        duration: 3
+                    });
+                } catch (e) {
+                    toaster['error']({
+                        message: 'Error al crear el alojamiento',
+                        description: e.message,
+                        duration: 3
+                    });
+
+                }
             }
         }
     });

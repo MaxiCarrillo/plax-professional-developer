@@ -36,29 +36,42 @@ export const UserForm = ({ user, onRefetch }) => {
         validateOnChange: true,
         onSubmit: async (values) => {
             if (user) {
-                values.id = user.id;
-                const error = await editUser(values);
-                if (error.error) {
-                    toaster['error']({
-                        message: 'Error al editar el usuario',
-                        description: error.message,
-                        duration: 3
-                    });
-                } else {
+                try {
+                    values.id = user.id;
+                    await editUser(values);
                     formik.resetForm();
                     handleCancel();
                     onRefetch();
                     toaster['success']({
                         message: 'Usuario editado correctamente',
-                        description: 'El usuario fue editado correctamente.',
+                        description: 'El usuario se ha editado correctamente',
+                        duration: 3
+                    });
+                } catch (error) {
+                    toaster['error']({
+                        message: 'Error al editar el usuario',
+                        description: error.message,
                         duration: 3
                     });
                 }
             } else {
-                await addUser(values);
-                formik.resetForm();
-                handleCancel();
-                onRefetch();
+                try {
+                    await addUser(values);
+                    formik.resetForm();
+                    handleCancel();
+                    onRefetch();
+                    toaster['success']({
+                        message: 'Usuario agregado correctamente',
+                        description: 'El usuario se ha agregado correctamente',
+                        duration: 3
+                    });
+                } catch (error) {
+                    toaster['error']({
+                        message: 'Error al agregar el usuario',
+                        description: error.message,
+                        duration: 3
+                    });
+                }
             }
         }
     })

@@ -3,10 +3,17 @@ import { useAuth } from '../../../auth/context/AuthContext';
 import { CardEmpty } from '../../../reservations/pages/ReservationsUser/ReservationsUser';
 import { StayCard } from '../../components';
 import './StayFavorites.css';
+import { useUser } from '../../../users/hooks/useUser';
+import { useEffect } from 'react';
 
 export const StayFavorites = () => {
 
+    const { getUserAuthenticated, loading } = useUser();
     const { user } = useAuth();
+
+    useEffect(() => {
+        getUserAuthenticated();
+    }, []);
 
     return (
         <main className='StayFavorites__container'>

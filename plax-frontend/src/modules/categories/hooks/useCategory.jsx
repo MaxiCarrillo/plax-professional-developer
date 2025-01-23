@@ -56,26 +56,30 @@ export const useCategory = () => {
     };
 
     const addCategory = async (data) => {
+        setLoading(true);
+        setError(null);
         try {
-            setLoading(true);
-            await categoryService.createCategory(data, token);
-            setError(false);
-        } catch (e) {
-            setError(true);
-            console.error("Error creating category", e);
+            const response = await categoryService.createCategory(data, token);
+            setSuccess(true);
+            return response;
+        } catch (error) {
+            setError(error.message);
+            throw error;
         } finally {
             setLoading(false);
         }
     }
 
     const editCategory = async (data) => {
+        setLoading(true);
+        setError(null);
         try {
-            setLoading(true);
-            await categoryService.editCategory(data, token);
-            setError(false);
-        } catch (e) {
-            setError(true);
-            console.error("Error editing category", e);
+            const response = await categoryService.editCategory(data, token);
+            setSuccess(true);
+            return response;
+        } catch (error) {
+            setError(error.message);
+            throw error;
         } finally {
             setLoading(false);
         }

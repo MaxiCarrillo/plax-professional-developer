@@ -14,25 +14,56 @@ const userService = {
         });
     },
     deleteUser: (id, token) => {
-        api.delete(`/users/${id}`, {
+        return api.delete(`/users/${id}`, {
             headers: {
                 'Authorization': `Bearer ${token}`
             }
-        }).catch(() => {
+        }).catch((error) => {
+            console.error(error);
             throw new Error('No se pudo eliminar el usuario. Por favor, intente nuevamente más tarde.');
         });
     },
-    editUser: (values, token) => {
-        api.put('/users', values, {
+    getUserAuthenticated: (token) => {
+        return api.get('/users/me', {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        }).then(response => {
+            return response.data;
+        }).catch(() => {
+            throw new Error('No se pudo obtener el usuario. Por favor, intente nuevamente más tarde.');
+        });
+    },
+    createUser: (values, token) => {
+        return api.post('/users', values, {
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${token}`
             }
         }).catch(error => {
-            if (error.response.status === 409) {
-                throw new Error('El email ya se encuentra registrado.');
+            throw new Error(error.response.data);
+        });
+    },
+    editUser: (values, token) => {
+        return api.put('/users', values, {
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
             }
-            throw new Error('No se pudo editar el usuario. Por favor, intente nuevamente más tarde.');
+        }).catch(error => {
+            console.log(error);
+            throw new Error(error.response.data);
+        });
+    },
+    updateName: (values, token) => {
+        return api.put('/users/update-name', values, {
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            }
+        }).catch((error) => {
+            console.error(error);
+            throw new Error('No se pudo actualizar el nombre. Por favor, intente nuevamente más tarde.');
         });
     },
     addFavoriteStay: (values, token) => {
