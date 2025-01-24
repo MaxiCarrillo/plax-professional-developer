@@ -1,0 +1,34 @@
+.ReservationsUser__container {
+    margin-block-start: 2rem;
+    width: 100%;
+    max-width: 1280px;
+    padding-inline: 1rem;
+    margin-inline: auto;
+
+    & .ReservationsUser__container__option {
+        text-decoration: none;
+        cursor: pointer;
+        font-weight: 500;
+        color: var(--color-base-500);
+
+        &:hover {
+            color: #D9376E;
+        }
+    }
+
+    & .ReservationCard__container~.ReservationCard__container {
+        margin-block-start: 1rem;
+    }
+}
+
+.ReservationsUser__empty {
+    & p:first-child {
+        font-weight: 700;
+        font-size: 1.3rem;
+    }
+
+    &>a {
+        margin-block-start: 1rem;
+        display: inline-block;
+    }
+}

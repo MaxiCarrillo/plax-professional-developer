@@ -1,0 +1,293 @@
+.StayDetail__container {
+    padding-inline: 1rem;
+    width: 100%;
+    max-width: 900px;
+    margin-block: 1rem;
+    margin-inline: auto;
+
+    & .StayDetail__header {
+
+        &>.StayDetail__back {
+            font-family: 'Urbanist', sans-serif;
+            font-weight: 600;
+            color: var(--color-primary-700);
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            gap: .3rem;
+
+            & svg {
+                transition: transform .2s ease;
+            }
+
+            &:hover {
+                & svg {
+                    transform: translateX(-.2rem);
+                }
+            }
+        }
+
+        &~.StayDetail__galery {
+            margin-block-start: .8rem;
+        }
+
+        & .StayDetail__header-info {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+
+            & .StayDetail__header-actions {
+                display: flex;
+                gap: 4px;
+            }
+        }
+    }
+
+    & .StayDetail__galery {
+        position: relative;
+        display: grid;
+        gap: .5rem;
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        grid-template-rows: repeat(2, 1fr);
+        border-radius: 16px;
+        overflow: hidden;
+
+        &>.stayGalery__button {
+            position: absolute;
+            bottom: 1rem;
+            left: 1rem;
+        }
+
+        & figure {
+            aspect-ratio: 1 / 1;
+            height: 100%;
+            overflow: hidden;
+
+            &>img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+            }
+        }
+
+        & figure:nth-child(1) {
+            grid-column: 1 / 3;
+            grid-row: 1 / 3;
+        }
+
+        @media (width <=665px) {
+            grid-template-columns: 1fr;
+            grid-template-rows: 1fr;
+
+            & figure:nth-child(1) {
+                grid-column: 1 / 2;
+                grid-row: 1 / 2;
+            }
+
+            & figure:nth-child(2),
+            figure:nth-child(3),
+            figure:nth-child(4),
+            figure:nth-child(5) {
+                display: none;
+            }
+        }
+    }
+
+    & .StayDetail__info {
+        position: relative;
+        margin-block-start: 1.6rem;
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+
+        & .StayDetail__information-container {
+            order: 1;
+
+            & h2 {
+                font-size: 1.2rem;
+                color: var(--color-base-700);
+            }
+
+            & .StayDetail__description {
+                margin-block-start: .4rem;
+
+                &>p:first-child {
+                    font-size: .9rem;
+                    font-weight: bold;
+                    color: var(--color-primary-700);
+                }
+            }
+        }
+
+        & .StayDetail__location {
+            display: flex;
+            align-items: center;
+        }
+
+
+        & .StayDetail__booking {
+            align-self: flex-start;
+            order: 0;
+            padding: 1rem;
+            border-radius: 12px;
+            border: 1px solid var(--color-base-200);
+            background-color: #fff;
+            display: grid;
+            gap: 1rem;
+            box-shadow: rgba(0, 0, 0, 0.1) 0px 3px 8px;
+
+            & .StayDetail__pricePerNight {
+
+                &>span {
+                    font-size: 2rem;
+                    font-weight: 700;
+                }
+            }
+
+            & .StayDetail__price {
+                display: flex;
+                justify-content: space-between;
+                border-top: 1px solid var(--color-base-0);
+                padding-top: 1rem;
+
+                &>p {
+                    font-size: 1.1rem;
+                    font-weight: 700;
+                }
+            }
+
+            & .button {
+                text-align: center;
+                font-size: 13px;
+            }
+        }
+
+        & .StayDetail__description__container {
+            display: grid;
+            gap: 1rem;
+        }
+
+        @media (width > 768px) {
+            grid-template-columns: 2fr 1fr;
+            gap: 1rem;
+
+            & .StayDetail__booking {
+                order: 1;
+                position: sticky;
+                top: 70px;
+            }
+
+            & .StayDetail__information-container {
+                order: 0;
+            }
+
+        }
+    }
+
+    & .stayDetail__features {
+        &>h2 {
+            font-size: 1.2rem;
+            color: var(--color-base-700);
+        }
+
+        &>ul {
+            margin-block-start: .8rem;
+            display: grid;
+            justify-content: space-between;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            list-style: none;
+
+            & li {
+                padding-block: .2rem;
+                display: flex;
+                gap: .5rem;
+                align-items: center;
+                justify-content: start;
+                font-weight: 600;
+                color: var(--color-base-700);
+            }
+        }
+    }
+
+    & .stayDetail__reviews {
+
+        &>h2 {
+            font-size: 1.2rem;
+            color: var(--color-base-700);
+        }
+
+        & .stayDetail__reviews-comments {
+            margin-top: 1rem;
+            display: grid;
+            gap: 1rem;
+
+            @media (width > 768px) {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 1rem;
+            }
+        }
+
+
+    }
+}
+
+.dialogGallery__dialog {
+    border: none;
+
+    & .dialogGallery__container {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        margin: auto;
+        display: flex;
+        gap: 1rem;
+        flex-direction: column;
+        align-items: start;
+        justify-content: center;
+        width: 100%;
+        max-width: 500px;
+        height: fit-content;
+        padding-block: 1rem;
+        padding-inline: 1rem;
+        background-color: var(--color-base-100);
+        box-shadow: 0 0 8px rgba(0, 0, 0, .5);
+        border-radius: 16px;
+
+        & .dialogGallery__close {
+            align-self: flex-end;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            & svg {
+                transition: transform .2s ease, fill .2s ease;
+                fill: var(--color-base-700);
+            }
+
+            &:hover {
+                & svg {
+                    transform: scale(1.2);
+                    fill: var(--color-base-900);
+                }
+            }
+        }
+
+        & .gallery__container {
+            width: 100%;
+
+            & img {
+                aspect-ratio: 16/9;
+                background-color: var(--color-base-400);
+                object-fit: contain;
+            }
+
+        }
+    }
+}

@@ -1,0 +1,25 @@
+.stayForm__title {
+    margin-bottom: 1rem;
+}
+
+.stayForm__form {
+    display: flex;
+    flex-direction: column;
+    gap: .6rem;
+    max-height: 480px;
+    overflow-y: auto;
+
+    @media (width > 768px) {
+        max-height: 75dvh;
+    }
+}
+
+& .stayForm__form--overflow {
+    padding-inline-end: 4px;
+}
+
+.form__col-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+}
