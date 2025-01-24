@@ -145,7 +145,8 @@ PLAX es una plataforma en línea que te permite reservar tu próximo alojamiento
 
 - Asegúrate de que el backend esté configurado para conectar con una base de datos activa.
 - Si necesitas configurar credenciales o URLs personalizadas, edita el archivo `application.properties` en el backend.
-- La aplicación cuenta con una base de datos con datos (Es necesario ejecutar manualmente el script SQL)
+- La aplicación cuenta con una base de datos con datos `src/main/resources/data.sql` (Es necesario ejecutar manualmente el script SQL).
+- Si desea que el script se ejecute automáticamente, descomente las líneas del archivo `application.properties` en el backend. Tenga en cuenta que hay problemas con UTF-8.
 - Usuarios predefinidos:
      - Todos los usuarios tienen la contraseña: `12345678`.
      - El administrador tiene la contraseña: `admin123` y su correo es `admin@gmail.com`
