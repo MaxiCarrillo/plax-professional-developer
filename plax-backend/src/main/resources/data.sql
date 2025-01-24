@@ -2,7 +2,7 @@ INSERT INTO users (id, email, firstname, lastname, password, role)
 VALUES (UUID_TO_BIN('8b07383c-cfbe-4dfe-b122-3ee0f5ac4230'), 'admin@gmail.com', 'admin', 'admin',
         '$2a$12$lVJtPYap0O4AM.jNpV8eYeDzTYuVZlDmGLTWZ0BxPbcYfbfusfzq2', 'ADMIN'),
        (UUID_TO_BIN('8b07383c-cfbe-4dfe-b122-3ee0f5ac4231'), 'maxi11carrillo@gmail.com', 'Maximiliano', 'Carrillo',
-        '$2a$10$OihT73n.ut7G9nk9FXoSfehRQA9O46XQcHxkFIaDWY8HZjMPut9Oy', 'ADMIN'),
+        '$2a$12$3QmyP5Ad4l/o4082KVPpmuaqtzjEaDlSVE2zMeBILbykC17OJKBbi', 'ADMIN'),
        (UUID_TO_BIN('8b07383c-cfbe-4dfe-b122-3ee0f5ac4232'), 'sofi@gmail.com', 'Sofia', 'Carrillo',
         '$2a$12$Fh9FRwrIJAHLHs9KTSe8n.EBzErIlNyZYaxeR1PwHZSPzEi9le5T6', 'USER'),
        (UUID_TO_BIN('8b07383c-cfbe-4dfe-b122-3ee0f5ac4233'), 'zoe@gmail.com', 'Zoe', 'Carrillo',
@@ -81,30 +81,6 @@ VALUES (UUID_TO_BIN('fccf90c9-288e-451c-9543-d03375c9efab'), 'Prohibido la entra
        (UUID_TO_BIN('4f21d2f0-63c3-41e9-b91d-8c81f83a9678'), 'Check-out antes de las 12hs',
         'El check-out se realiza antes de las 12hs');
 
-INSERT INTO stays_policies
-    (stays_id, policies_id)
-VALUES
---     DUNA
-(UUID_TO_BIN('8a9b6e3d-27b2-4a0d-9992-d35031e5c7a8'), UUID_TO_BIN('fccf90c9-288e-451c-9543-d03375c9efab')),
-(UUID_TO_BIN('8a9b6e3d-27b2-4a0d-9992-d35031e5c7a8'), UUID_TO_BIN('b1b1b1b1-288e-451c-9543-d03375c9efab')),
-(UUID_TO_BIN('8a9b6e3d-27b2-4a0d-9992-d35031e5c7a8'), UUID_TO_BIN('c2c2c2c2-288e-451c-9543-d03375c9efab')),
-(UUID_TO_BIN('8a9b6e3d-27b2-4a0d-9992-d35031e5c7a8'), UUID_TO_BIN('d3d3d3d3-288e-451c-9543-d03375c9efab')),
---     SOL
-(UUID_TO_BIN('a3b2e1f4-9e02-49ea-b0d1-b6f5d9536891'), UUID_TO_BIN('be39b7dd-fe38-44f4-8ada-451681d01c7f')),
-(UUID_TO_BIN('a3b2e1f4-9e02-49ea-b0d1-b6f5d9536891'), UUID_TO_BIN('be39b7dd-fe38-44f4-8ada-451681d01c8f')),
-(UUID_TO_BIN('a3b2e1f4-9e02-49ea-b0d1-b6f5d9536891'), UUID_TO_BIN('be39b7dd-fe38-44f4-8ada-451681d01c6f')),
-(UUID_TO_BIN('a3b2e1f4-9e02-49ea-b0d1-b6f5d9536891'), UUID_TO_BIN('be39b7dd-fe38-44f4-8ada-451681d01c5f')),
---     LIBERTAD
-(UUID_TO_BIN('d5f8f0f4-ec7e-406d-8d96-5d5053b4f1f0'), UUID_TO_BIN('be39b7dd-fe38-44f4-8ada-451681d01c4f')),
-(UUID_TO_BIN('d5f8f0f4-ec7e-406d-8d96-5d5053b4f1f0'), UUID_TO_BIN('fe9f0734-33c2-44d1-94a2-3fe1b76c35e9')),
-(UUID_TO_BIN('d5f8f0f4-ec7e-406d-8d96-5d5053b4f1f0'), UUID_TO_BIN('4f21d2f0-63c3-41e9-b91d-8c81f83a9688')),
---     LAGO
-(UUID_TO_BIN('c3e2d8f5-2731-4e12-91d5-c8f5ff01392c'), UUID_TO_BIN('5676c57b-d988-4044-b9ff-4674de90d1c7')),
-(UUID_TO_BIN('c3e2d8f5-2731-4e12-91d5-c8f5ff01392c'), UUID_TO_BIN('4f21d2f0-63c3-41e9-b91d-8c81f83a9668')),
---     VALLE
-(UUID_TO_BIN('f8a83214-182b-4204-b44a-31e82f9c5ca4'), UUID_TO_BIN('fe9f0734-33c2-44d1-94a2-3fe1b76c45e9')),
-(UUID_TO_BIN('f8a83214-182b-4204-b44a-31e82f9c5ca4'), UUID_TO_BIN('4f21d2f0-63c3-41e9-b91d-8c81f83a9678'));
-
 INSERT INTO stays (id, appreciation, description, name, price, id_address, id_category)
 VALUES (UUID_TO_BIN('8a9b6e3d-27b2-4a0d-9992-d35031e5c7a8'), 0, 'Hotel frente al mar, con todas las comodidades',
         'Hotel Duna', 50000, UUID_TO_BIN('fccf90c9-288e-451c-9543-d03375c9efab'),
@@ -141,6 +117,31 @@ VALUES (UUID_TO_BIN('8a9b6e3d-27b2-4a0d-9992-d35031e5c7a8'), 0, 'Hotel frente al
 --   (35000, UUID_TO_BIN('fbcfb736-d3eb-40ff-bb63-cd4054de2297'), UUID_TO_BIN('be39b7dd-fe38-44f4-8ada-451681d01c7f'), 'Avenida del Sol 901, Mar del Plata', 'Hotel moderno con excelente servicio', 'Hotel Roma'),
 --   (32000, UUID_TO_BIN('bcf324b5-38da-4b45-9b99-2d2c3be48c78'), UUID_TO_BIN('be39b7dd-fe38-44f4-8ada-451681d01c8f'), 'Calle Luna 123, Rosario', 'Departamento amueblado, ideal para familias', 'Departamento Luna');
 --
+
+INSERT INTO stays_policies
+(stays_id, policies_id)
+VALUES
+--     DUNA
+(UUID_TO_BIN('8a9b6e3d-27b2-4a0d-9992-d35031e5c7a8'), UUID_TO_BIN('fccf90c9-288e-451c-9543-d03375c9efab')),
+(UUID_TO_BIN('8a9b6e3d-27b2-4a0d-9992-d35031e5c7a8'), UUID_TO_BIN('b1b1b1b1-288e-451c-9543-d03375c9efab')),
+(UUID_TO_BIN('8a9b6e3d-27b2-4a0d-9992-d35031e5c7a8'), UUID_TO_BIN('c2c2c2c2-288e-451c-9543-d03375c9efab')),
+(UUID_TO_BIN('8a9b6e3d-27b2-4a0d-9992-d35031e5c7a8'), UUID_TO_BIN('d3d3d3d3-288e-451c-9543-d03375c9efab')),
+--     SOL
+(UUID_TO_BIN('a3b2e1f4-9e02-49ea-b0d1-b6f5d9536891'), UUID_TO_BIN('be39b7dd-fe38-44f4-8ada-451681d01c7f')),
+(UUID_TO_BIN('a3b2e1f4-9e02-49ea-b0d1-b6f5d9536891'), UUID_TO_BIN('be39b7dd-fe38-44f4-8ada-451681d01c8f')),
+(UUID_TO_BIN('a3b2e1f4-9e02-49ea-b0d1-b6f5d9536891'), UUID_TO_BIN('be39b7dd-fe38-44f4-8ada-451681d01c6f')),
+(UUID_TO_BIN('a3b2e1f4-9e02-49ea-b0d1-b6f5d9536891'), UUID_TO_BIN('be39b7dd-fe38-44f4-8ada-451681d01c5f')),
+--     LIBERTAD
+(UUID_TO_BIN('d5f8f0f4-ec7e-406d-8d96-5d5053b4f1f0'), UUID_TO_BIN('be39b7dd-fe38-44f4-8ada-451681d01c4f')),
+(UUID_TO_BIN('d5f8f0f4-ec7e-406d-8d96-5d5053b4f1f0'), UUID_TO_BIN('fe9f0734-33c2-44d1-94a2-3fe1b76c35e9')),
+(UUID_TO_BIN('d5f8f0f4-ec7e-406d-8d96-5d5053b4f1f0'), UUID_TO_BIN('4f21d2f0-63c3-41e9-b91d-8c81f83a9688')),
+--     LAGO
+(UUID_TO_BIN('c3e2d8f5-2731-4e12-91d5-c8f5ff01392c'), UUID_TO_BIN('5676c57b-d988-4044-b9ff-4674de90d1c7')),
+(UUID_TO_BIN('c3e2d8f5-2731-4e12-91d5-c8f5ff01392c'), UUID_TO_BIN('4f21d2f0-63c3-41e9-b91d-8c81f83a9668')),
+--     VALLE
+(UUID_TO_BIN('f8a83214-182b-4204-b44a-31e82f9c5ca4'), UUID_TO_BIN('fe9f0734-33c2-44d1-94a2-3fe1b76c45e9')),
+(UUID_TO_BIN('f8a83214-182b-4204-b44a-31e82f9c5ca4'), UUID_TO_BIN('4f21d2f0-63c3-41e9-b91d-8c81f83a9678'));
+
 INSERT INTO stay_feature (feature_id, stay_id)
 VALUES
     -- Hotel Duna
