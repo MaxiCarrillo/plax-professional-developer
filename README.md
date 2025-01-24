@@ -136,10 +136,19 @@ PLAX es una plataforma en línea que te permite reservar tu próximo alojamiento
    mvn spring-boot:run
    ```
 
+#### Inicializar base de datos
+
+2. La aplicación está configurada para inicializar datos automáticamente al iniciar el servidor.
+  
+       
 ### Notas adicionales
 
 - Asegúrate de que el backend esté configurado para conectar con una base de datos activa.
 - Si necesitas configurar credenciales o URLs personalizadas, edita el archivo `application.properties` en el backend.
+- La aplicación cuenta con una base de datos con datos (Es necesario ejecutar manualmente el script SQL)
+- Usuarios predefinidos:
+     - Todos los usuarios tienen la contraseña: `12345678`.
+     - El administrador tiene la contraseña: `admin123` y su correo es `admin@gmail.com`
 
 <p align="right">(<a href="#top">Volver arriba</a>)</p>
 
