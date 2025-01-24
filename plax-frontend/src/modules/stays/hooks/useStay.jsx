@@ -8,7 +8,7 @@ export const useStay = () => {
     const [stay, setStay] = useState(null);
     const [stays, setStays] = useState(null);
     const [error, setError] = useState(null);
-    const [loading, setLoading] = useState(true);
+    const [loading, setLoading] = useState(false);
     const [totalPages, setTotalPages] = useState(0);
     const [success, setSuccess] = useState(false);
 

@@ -1,4 +1,4 @@
-import { DropboxOutlined } from "@ant-design/icons"
+import { DropboxOutlined, Loading3QuartersOutlined, PlusCircleOutlined } from "@ant-design/icons"
 import { useFormik } from "formik"
 import { useContext, useEffect, useState } from "react"
 import { useDropzone } from "react-dropzone"
@@ -155,7 +155,10 @@ export const FeatureForm = ({ feature, onRefetch }) => {
                         {thumbs}
                     </aside>
                 </div>
-                <button type="submit" className='button button--primary' disabled={loading}>{feature ? 'Editar' : 'Agregar'}</button>
+                <button type="submit" className='button button--primary' disabled={loading}>
+                    {loading ? <Loading3QuartersOutlined className='spin-animation' /> : <PlusCircleOutlined />}
+                    {feature ? 'Editar' : 'Agregar'}
+                </button>
             </form>
         </>
     )

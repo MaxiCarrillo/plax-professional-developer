@@ -1,13 +1,16 @@
 import { useFormik } from 'formik';
 import { useContext, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import * as Yup from "yup";
 import { NotificationContext } from '../../../core/context/notificationContext';
+import authService from '../../services/auth.service';
 import './Register.css';
+import { Loading3QuartersOutlined, UserAddOutlined, UserOutlined } from '@ant-design/icons';
 
 export const Register = () => {
     const { toaster } = useContext(NotificationContext);
     const [loading, setLoading] = useState(false);
+    const navigate = useNavigate();
 
     const formik = useFormik({
         initialValues: {
@@ -23,20 +26,31 @@ export const Register = () => {
             password: Yup.string().trim().required('La contraseña es obligatoria').min(6, 'La contraseña debe tener al menos 6 caracteres')
         }),
         validateOnChange: true,
-        onSubmit: (newUser) => {
-            setLoading(true);
-            console.log(newUser);
-            toaster['success']({
-                message: 'Registro exitoso.',
-                description: '¡Bienvenido a Plax!',
-                duration: 3
-            })
+        onSubmit: async (newUser) => {
+            try {
+                setLoading(true);
+                await authService.register(newUser);
+                toaster['success']({
+                    message: 'Registro exitoso.',
+                    description: '¡Bienvenido a Plax!',
+                    duration: 3
+                })
+                navigate('/iniciar-sesion');
+            } catch (error) {
+                toaster['error']({
+                    message: 'Error al registrarse.',
+                    description: error.message,
+                    duration: 3
+                })
+            } finally {
+                setLoading(false);
+            }
         }
     })
 
     return (
         <>
-            <Link className='button button--secondary auth__button' to={'/iniciar-sesion'}>Login</Link>
+            <Link className='button button--secondary auth__button' to={'/iniciar-sesion'}><UserOutlined />Iniciar Sesión</Link>
             <form className='auth__form' onSubmit={formik.handleSubmit}>
                 <h2>Crear una cuenta</h2>
                 <p>Ingresa tus datos acá abajo para crear una cuenta.</p>
@@ -79,7 +93,10 @@ export const Register = () => {
                     }
                 </div>
                 <div className='form__container'>
-                    <button type='submit' className='button button--base'>Registrarme</button>
+                    <button type='submit' className='button button--base' disabled={loading}>
+                        {loading ? <Loading3QuartersOutlined className='spin-animation' /> : <UserAddOutlined />}
+                        Registrarme
+                    </button>
                 </div>
                 <p className='form__terms'><small>Al registrarse está aceptando los terminos y condiciones de Plax.</small></p>
             </form>

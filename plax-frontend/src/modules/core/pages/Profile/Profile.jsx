@@ -1,4 +1,4 @@
-import { CloseOutlined, EditOutlined, SaveFilled } from '@ant-design/icons';
+import { CloseOutlined, EditOutlined, Loading3QuartersOutlined, SaveFilled } from '@ant-design/icons';
 import { useFormik } from 'formik';
 import { useContext, useState } from 'react';
 import * as Yup from 'yup';
@@ -10,7 +10,7 @@ import './Profile.css';
 export const Profile = () => {
 
     const [edit, setEdit] = useState(false);
-    const { updateName } = useUser();
+    const { updateName, loading } = useUser();
     const { user, updateUser } = useAuth();
     const { toaster } = useContext(NotificationContext);
 
@@ -80,7 +80,10 @@ export const Profile = () => {
                         (form.errors.lastname && form.touched.lastname) && <label className='label--error'>{form.errors.lastname}</label>
                     }
                 </div>
-                <button type="submit" className='button button--primary' disabled={!edit}><SaveFilled />Guardar nombre</button>
+                <button type="submit" className='button button--primary' disabled={!edit || loading}>
+                    {loading ? <Loading3QuartersOutlined className='spin-animation' /> : <SaveFilled />}
+                    Guardar nombre
+                </button>
             </form>
         </main>
     )

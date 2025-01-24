@@ -1,13 +1,14 @@
-import { HeartFilled, HeartOutlined } from '@ant-design/icons';
-import { useContext } from 'react';
+import { HeartFilled, HeartOutlined, Loading3QuartersOutlined } from '@ant-design/icons';
+import numeral from 'numeral';
+import { useContext, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../../../auth/context/AuthContext';
 import { NotificationContext } from '../../../core/context/notificationContext';
 import userService from '../../../users/services/user.service';
 import './StayCard.css';
-import numeral from 'numeral';
 
 export const StayCard = ({ stay }) => {
+    const [loading, setLoading] = useState(false);
     const { toaster } = useContext(NotificationContext);
     const { user, token, updateUser } = useAuth();
 
@@ -19,6 +20,7 @@ export const StayCard = ({ stay }) => {
         }
 
         try {
+            setLoading(true);
             const response = await userService.addFavoriteStay(body, token);
             updateUser(response.data);
             toaster['success']({
@@ -32,6 +34,8 @@ export const StayCard = ({ stay }) => {
                 description: error.message,
                 duration: 3
             })
+        } finally{
+            setLoading(false);
         }
     }
 
@@ -42,6 +46,7 @@ export const StayCard = ({ stay }) => {
         }
 
         try {
+            setLoading(true);
             const response = await userService.removeFavoriteStay(body, token);
             updateUser(response.data);
             toaster['success']({
@@ -56,6 +61,8 @@ export const StayCard = ({ stay }) => {
                 description: error.message,
                 duration: 3
             })
+        } finally {
+            setLoading(false);
         }
     }
 
@@ -67,12 +74,18 @@ export const StayCard = ({ stay }) => {
                     user.favorites.find(item => {
                         return item.id === id
                     }) ? (
-                        <button className='stayCard__favorite stayCard__favorite--active' onClick={handleRemoveFavorite}>
-                            <HeartFilled />
+                        <button className='stayCard__favorite stayCard__favorite--active'
+                            onClick={handleRemoveFavorite}
+                            disabled={loading}
+                        >
+                            {loading ? <Loading3QuartersOutlined className='spin-animation' /> : <HeartFilled />}
                         </button>
                     ) : (
-                        <button className='stayCard__favorite' onClick={handleAddFavorite}>
-                            <HeartOutlined />
+                        <button className='stayCard__favorite'
+                            onClick={handleAddFavorite}
+                            disabled={loading}
+                        >
+                            {loading ? <Loading3QuartersOutlined className='spin-animation' /> : <HeartOutlined />}
                         </button>
                     )
                 )

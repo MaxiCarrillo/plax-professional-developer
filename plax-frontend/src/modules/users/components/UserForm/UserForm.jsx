@@ -5,6 +5,7 @@ import * as Yup from "yup";
 import { FormModalContext } from "../../../core/context";
 import { NotificationContext } from "../../../core/context/notificationContext";
 import { useUser } from "../../hooks/useUser";
+import { Loading3QuartersOutlined, PlusCircleOutlined } from '@ant-design/icons';
 
 export const UserForm = ({ user, onRefetch }) => {
 
@@ -136,7 +137,10 @@ export const UserForm = ({ user, onRefetch }) => {
                     </label>
                     {formik.errors.password && <label className="label--error">{formik.errors.password}</label>}
                 </div>
-                <button type="submit" className="button button--primary" disabled={loading}>{user ? 'Editar' : 'Agregar'}</button>
+                <button type="submit" className="button button--primary" disabled={loading}>
+                    {loading ? <Loading3QuartersOutlined className='spin-animation' /> : <PlusCircleOutlined />}
+                    {user ? 'Editar' : 'Agregar'}
+                </button>
             </form>
         </>
     )

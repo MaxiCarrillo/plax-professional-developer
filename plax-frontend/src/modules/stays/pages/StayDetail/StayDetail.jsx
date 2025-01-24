@@ -1,4 +1,4 @@
-import { ArrowLeftOutlined, CalendarOutlined, CameraOutlined, HeartFilled, HeartOutlined, ShareAltOutlined, StarFilled, UserOutlined } from '@ant-design/icons';
+import { ArrowLeftOutlined, CalendarOutlined, CameraOutlined, HeartFilled, HeartOutlined, Loading3QuartersOutlined, ShareAltOutlined, StarFilled, UserOutlined } from '@ant-design/icons';
 import { DatePicker, Empty, Skeleton } from 'antd';
 import locale from 'antd/es/date-picker/locale/es_ES';
 import { differenceInDays } from 'date-fns';
@@ -25,6 +25,7 @@ import './StayDetail.css';
 export const StayDetail = () => {
 
     const { toaster } = useContext(NotificationContext);
+    const [loadingFavorite, setLoadingFavorite] = useState(false);
     const { user, token, updateUser } = useAuth();
     const [reservation, setReservation] = useState({
         total: 0,
@@ -65,6 +66,7 @@ export const StayDetail = () => {
         }
 
         try {
+            setLoadingFavorite(true);
             const response = await userService.addFavoriteStay(body, token);
             updateUser(response.data);
             toaster['success']({
@@ -78,6 +80,8 @@ export const StayDetail = () => {
                 description: error.message,
                 duration: 3
             })
+        } finally {
+            setLoadingFavorite(false);
         }
     }
 
@@ -88,6 +92,7 @@ export const StayDetail = () => {
         }
 
         try {
+            setLoadingFavorite(true);
             const response = await userService.removeFavoriteStay(body, token);
             updateUser(response.data);
             toaster['success']({
@@ -102,6 +107,8 @@ export const StayDetail = () => {
                 description: error.message,
                 duration: 3
             })
+        } finally {
+            setLoadingFavorite(false);
         }
     }
 
@@ -252,12 +259,18 @@ export const StayDetail = () => {
                                                 user.favorites.find(item => {
                                                     return item.id === id
                                                 }) ? (
-                                                    <button className='stayCard__favorite stayCard__favorite--active' onClick={handleRemoveFavorite}>
-                                                        <HeartFilled />
+                                                    <button className='stayCard__favorite stayCard__favorite--active'
+                                                        onClick={handleRemoveFavorite}
+                                                        disabled={loadingFavorite}
+                                                    >
+                                                        {loadingFavorite ? <Loading3QuartersOutlined className='spin-animation' /> : <HeartFilled />}
                                                     </button>
                                                 ) : (
-                                                    <button className='stayCard__favorite' onClick={handleAddFavorite}>
-                                                        <HeartOutlined />
+                                                    <button className='stayCard__favorite'
+                                                        onClick={handleAddFavorite}
+                                                        disabled={loading}
+                                                    >
+                                                        {loadingFavorite ? <Loading3QuartersOutlined className='spin-animation' /> : <HeartOutlined />}
                                                     </button>
                                                 )
                                             )
@@ -347,7 +360,7 @@ export const StayDetail = () => {
                                                 onClick={handleReservation}
                                                 disabled={isLoading}
                                             >
-                                                <CalendarOutlined />
+                                                {isLoading ? <Loading3QuartersOutlined className='spin-animation' /> : <CalendarOutlined />}
                                                 Reservar
                                             </button> :
                                             <Link

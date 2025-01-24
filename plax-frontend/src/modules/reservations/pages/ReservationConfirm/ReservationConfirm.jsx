@@ -1,6 +1,6 @@
-import { SmileOutlined } from '@ant-design/icons';
+import { CheckCircleOutlined, Loading3QuartersOutlined, SmileOutlined } from '@ant-design/icons';
 import { useContext } from 'react';
-import { Link, Navigate, useNavigate, useParams } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import { NotificationContext } from '../../../core/context/notificationContext';
 import { useReservation } from '../../hook/useReservation';
 import './ReservationConfirm.css';
@@ -43,7 +43,9 @@ export const ReservationConfirm = () => {
                     className='button button--primary'
                     onClick={handleConfirm}
                     disabled={isLoading}
-                >Confirmar reserva
+                >
+                    {isLoading ? <Loading3QuartersOutlined className='spin-animation' /> : <CheckCircleOutlined />}
+                    Confirmar reserva
                 </button>
                 <Link to='/mis-reservas' className='button button--secondary'>Ir a reservas</Link>
             </section>

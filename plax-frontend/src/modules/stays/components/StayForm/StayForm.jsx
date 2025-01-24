@@ -1,4 +1,4 @@
-import { DeleteFilled, DropboxOutlined, PlusCircleOutlined } from '@ant-design/icons';
+import { DeleteFilled, DropboxOutlined, Loading3QuartersOutlined, PlusCircleOutlined } from '@ant-design/icons';
 import { Select } from 'antd';
 import { FieldArray, FormikProvider, useFormik } from 'formik';
 import { Fragment, useContext, useEffect, useRef, useState } from 'react';
@@ -448,7 +448,10 @@ export const StayForm = ({ stay, onRefetch }) => {
                         )}
                     </FieldArray>
                 </FormikProvider>
-                <button type="submit" className='button button--primary'>{stay ? 'Editar' : 'Agregar'}</button>
+                <button type="submit" className='button button--primary' disabled={loading}>
+                    {loading ? <Loading3QuartersOutlined className='spin-animation' /> : <PlusCircleOutlined />}
+                    {stay ? 'Editar' : 'Agregar'}
+                </button>
             </form>
         </>
     )

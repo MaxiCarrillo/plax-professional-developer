@@ -1,3 +1,4 @@
+import { CalendarOutlined, DashboardOutlined, HeartOutlined, LogoutOutlined, UserAddOutlined, UserOutlined } from '@ant-design/icons'
 import { Avatar, Dropdown } from 'antd'
 import { useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
@@ -22,29 +23,29 @@ export const TopMenu = () => {
     const AvatarCharacter = useMemo(() => {
         const items = [
             {
-                label: <Link to="/favoritos">Favoritos</Link>,
+                label: <Link to="/favoritos"><HeartOutlined /> Favoritos</Link>,
                 key: '0',
             },
             {
-                label: <Link to="/perfil">Perfil</Link>,
+                label: <Link to="/perfil"><UserOutlined /> Perfil</Link>,
                 key: '1',
             },
             {
-                label: <Link to="/mis-reservas">Reservas</Link>,
+                label: <Link to="/mis-reservas"><CalendarOutlined /> Reservas</Link>,
                 key: '2',
             },
             {
                 type: 'divider',
             },
             {
-                label: <Link to="/" onClick={handleLogout}>Cerrar Sesión</Link>,
+                label: <Link to="/" onClick={handleLogout}><LogoutOutlined /> Cerrar Sesión</Link>,
                 key: '3',
             },
         ];
 
         if (user?.role === 'ADMIN') {
             items.unshift({
-                label: <Link to="/administracion">Administración</Link>,
+                label: <Link to="/administracion"><DashboardOutlined /> Administración</Link>,
                 key: '5',
             });
         }
@@ -88,28 +89,28 @@ export const TopMenu = () => {
                                 {
                                     user.role === 'ADMIN' &&
                                     <li className='navbar__link'>
-                                        <Link to="/administracion">Administración</Link>
+                                        <Link to="/administracion"><DashboardOutlined /> Administración</Link>
                                     </li>
                                 }
                                 <li className='navbar__link'>
-                                    <Link to="/favoritos">Favoritos</Link>
+                                    <Link to="/favoritos"><HeartOutlined /> Favoritos</Link>
                                 </li>
                                 <li className='navbar__link'>
-                                    <Link to="/perfil">Perfil</Link>
+                                    <Link to="/perfil"><UserOutlined /> Perfil</Link>
                                 </li>
                                 <li className='navbar__link'>
-                                    <Link to="/mis-reservas">Reservas</Link>
+                                    <Link to="/mis-reservas"><CalendarOutlined /> Reservas</Link>
                                 </li>
                                 <li className='navbar__link'>
-                                    <Link to="/" onClick={handleLogout}>Cerrar Sesión</Link>
+                                    <Link to="/" onClick={handleLogout}><LogoutOutlined /> Cerrar Sesión</Link>
                                 </li>
                             </> :
                             <>
                                 <li>
-                                    <Link to="/registro">Crear Cuenta</Link>
+                                    <Link to="/registro"><UserAddOutlined /> Crear Cuenta</Link>
                                 </li>
                                 <li>
-                                    <Link to="/iniciar-sesion">Iniciar Sesión</Link>
+                                    <Link to="/iniciar-sesion"><UserOutlined /> Iniciar Sesión</Link>
                                 </li>
                             </>
                     }

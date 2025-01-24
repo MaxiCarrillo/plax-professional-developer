@@ -1,4 +1,4 @@
-import { StarFilled } from '@ant-design/icons';
+import { LoadingOutlined, SendOutlined, StarFilled } from '@ant-design/icons';
 import { useFormik } from 'formik';
 import { useContext } from 'react';
 import * as Yup from 'yup';
@@ -10,7 +10,7 @@ import './ReviewForm.css';
 export const ReviewForm = ({ reservation, onRefetch }) => {
 
     const { toaster } = useContext(NotificationContext);
-    const { createReview, isLoading, success } = useReview();
+    const { createReview, isLoading } = useReview();
     const { handleCancel } = useContext(FormModalContext);
 
     const formik = useFormik({
@@ -106,7 +106,10 @@ export const ReviewForm = ({ reservation, onRefetch }) => {
                     </label>
                 </div>
                 <div>
-                    <button type='submit' className='button button--primary' disabled={!formik.isValid || !formik.dirty}>Enviar opinión</button>
+                    <button type='submit' className='button button--primary' disabled={!formik.isValid || !formik.dirty || isLoading}>
+                        {isLoading ? <LoadingOutlined /> : <SendOutlined />}
+                        Enviar opinión
+                    </button>
                 </div>
             </form>
         </>

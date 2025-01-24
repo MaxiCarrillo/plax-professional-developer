@@ -11,6 +11,7 @@
     justify-content: center;
 
     &>figure {
+        margin-inline: auto;
         display: flex;
         justify-content: center;
         align-items: center;

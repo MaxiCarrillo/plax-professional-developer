@@ -1,4 +1,4 @@
-import { CheckCircleOutlined } from '@ant-design/icons';
+import { CheckCircleOutlined, Loading3QuartersOutlined } from '@ant-design/icons';
 import { format } from 'date-fns';
 import { useContext } from 'react';
 import { FormModalContext } from '../../../core/context';
@@ -69,7 +69,10 @@ export const ReservationCard = ({ reservation, onRefetch }) => {
                     reservation.confirmed ?
                         <p className='ReservationCard__confirm' ><CheckCircleOutlined className='icon' /> Confirmada</p>
                         :
-                        <button className='button button--primary' onClick={handleConfirm} disabled={isLoading}>Confirmar reserva</button>
+                        <button className='button button--primary' onClick={handleConfirm} disabled={isLoading}>
+                            {isLoading ? <Loading3QuartersOutlined className='spin-animation' /> : <CheckCircleOutlined/>}
+                            Confirmar reserva
+                        </button>
                 }
             </section>
 

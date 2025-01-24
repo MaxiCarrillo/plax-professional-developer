@@ -5,6 +5,7 @@ import * as Yup from "yup";
 import { NotificationContext } from '../../../core/context/notificationContext';
 import { useAuth } from '../../context/AuthContext';
 import authService from '../../services/auth.service';
+import { Loading3QuartersOutlined, LoadingOutlined, UserAddOutlined, UserOutlined } from '@ant-design/icons';
 
 export const Login = () => {
     const [loading, setLoading] = useState(false);
@@ -33,7 +34,6 @@ export const Login = () => {
                     description: '¡Bienvenido a Plax!',
                     duration: 3
                 })
-
             } catch (error) {
                 toaster['error']({
                     message: 'Error al iniciar sesión.',
@@ -48,7 +48,7 @@ export const Login = () => {
 
     return (
         <>
-            <Link className='button button--secondary auth__button' to={'/registro'}>Crear Cuenta</Link>
+            <Link className='button button--secondary auth__button' to={'/registro'}><UserAddOutlined />Crear Cuenta</Link>
             <form className='auth__form' onSubmit={formik.handleSubmit}>
                 <h2>Iniciar Sesión</h2>
                 <p>Ingresa tus datos acá abajo para iniciar sesión.</p>
@@ -73,7 +73,10 @@ export const Login = () => {
                     }
                 </div>
                 <div className='form__container'>
-                    <button type='submit' className='button button--base' disabled={loading}>Ingresar</button>
+                    <button type='submit' className='button button--base' disabled={loading}>
+                        {loading ? <Loading3QuartersOutlined className='spin-animation' /> : <UserOutlined />}
+                        Ingresar
+                    </button>
                 </div>
                 <p className='form__terms'><small>Recuerde no compartir sus datos personales con ninguna persona.</small></p>
             </form>

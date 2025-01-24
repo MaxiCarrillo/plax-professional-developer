@@ -84,7 +84,7 @@ form * {
   }
 
   &:has(svg) {
-    & svg {
+    & span {
       margin-inline-end: 0.5rem;
     }
   }
@@ -245,6 +245,10 @@ form * {
   border-radius: 100%;
 
   animation: spin 1s infinite;
+}
+
+.spin-animation{
+  animation: spin 1s linear infinite;
 }
 
 @keyframes spin {
