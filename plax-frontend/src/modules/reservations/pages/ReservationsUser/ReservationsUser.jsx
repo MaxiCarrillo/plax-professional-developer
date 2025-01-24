@@ -1,3 +1,6 @@
+import { SearchOutlined } from '@ant-design/icons';
+import { Empty, Skeleton } from 'antd';
+import { format } from 'date-fns';
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { BooleanParam, useQueryParam } from 'use-query-params';
@@ -5,8 +8,6 @@ import { Modal } from '../../../core/components/Modal/Modal';
 import { ReservationCard } from '../../components/ReservationCard/ReservationCard';
 import { useReservation } from '../../hook/useReservation';
 import './ReservationsUser.css';
-import { format } from 'date-fns';
-import { SearchOutlined } from '@ant-design/icons';
 
 
 export const ReservationsUser = () => {
@@ -46,10 +47,13 @@ export const ReservationsUser = () => {
             <hr className='separator' />
             {
                 isLoading ?
-                    <p>Cargando...</p>
+                    <Skeleton
+                        active
+                        title={{ width: '100%', style: { height: "250px" } }}
+                        paragraph={{ rows: 0 }} />
                     :
                     error ?
-                        <p>{error}</p>
+                        <Empty description='No se pudieron cargar las reservas' />
                         :
                         (success && reservations.length > 0) ? < section className='ReservationsUser__list'>
                             {

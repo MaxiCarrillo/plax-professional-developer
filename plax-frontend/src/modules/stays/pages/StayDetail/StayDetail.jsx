@@ -1,5 +1,5 @@
-import { ArrowLeftOutlined, HeartFilled, HeartOutlined, ShareAltOutlined, StarFilled, UserOutlined } from '@ant-design/icons';
-import { DatePicker } from 'antd';
+import { ArrowLeftOutlined, CalendarOutlined, CameraOutlined, HeartFilled, HeartOutlined, ShareAltOutlined, StarFilled, UserOutlined } from '@ant-design/icons';
+import { DatePicker, Empty, Skeleton } from 'antd';
 import locale from 'antd/es/date-picker/locale/es_ES';
 import { differenceInDays } from 'date-fns';
 import dayjs from 'dayjs';
@@ -200,9 +200,26 @@ export const StayDetail = () => {
         <main className='StayDetail__container'>
             {
                 loading ? (
-                    <p>Cargando...</p>
+                    <>
+                        <Skeleton
+                            active
+                            title={{ style: { height: "16px" } }}
+                            paragraph={{ rows: 0 }} />
+                        <Skeleton
+                            active
+                            title={{ width: "100%", style: { height: "700px" } }}
+                            paragraph={{ rows: 0 }} />
+                    </>
                 ) : (
-                    !stay ? <p>Estancia no encontrada</p> :
+                    !stay ? <>
+                        <header className='StayDetail__header'>
+                            <button className='StayDetail__back' onClick={handleBackClick}>
+                                <ArrowLeftOutlined />
+                                Volver atrás
+                            </button>
+                        </header>
+                        <Empty description='No se encontró la estancia' />
+                    </> :
                         <>
                             <Helmet>
                                 <title>{stay.name} | Plax</title>
@@ -256,6 +273,7 @@ export const StayDetail = () => {
                                     className='stayGalery__button button button--secondary'
                                     onClick={() => handleClickShowImages()}
                                 >
+                                    <CameraOutlined />
                                     Mostrar todas las fotos
                                 </button>
                             </section>
@@ -329,6 +347,7 @@ export const StayDetail = () => {
                                                 onClick={handleReservation}
                                                 disabled={isLoading}
                                             >
+                                                <CalendarOutlined />
                                                 Reservar
                                             </button> :
                                             <Link

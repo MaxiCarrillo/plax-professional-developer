@@ -1,4 +1,5 @@
 import { ApartmentOutlined, AppstoreAddOutlined, CalendarOutlined, HomeOutlined, UserOutlined } from '@ant-design/icons';
+import { Empty, Skeleton } from 'antd';
 import { useEffect, useState } from 'react';
 import { useAuth } from '../../../auth/context/AuthContext';
 import api from '../../api';
@@ -38,33 +39,42 @@ export const HomeDashboard = () => {
                     <p>Plax</p>
                     <h1>Bienvenido al panel de administación</h1>
                 </article>
-                <div className='homeDashboard__cardContainer'>
-                    <CardDash
-                        title='Usuarios'
-                        total={info.data?.totalUsers}
-                        Icon={<UserOutlined />}
-                    />
-                    <CardDash
-                        title='Estancias'
-                        total={info.data?.totalStays}
-                        Icon={<HomeOutlined />}
-                    />
-                    <CardDash
-                        title='Características'
-                        total={info.data?.totalFeatures}
-                        Icon={<AppstoreAddOutlined />}
-                    />
-                    <CardDash
-                        title='Categorías'
-                        total={info.data?.totalCategories}
-                        Icon={<ApartmentOutlined />}
-                    />
-                    <CardDash
-                        title='Reservas'
-                        total={info.data?.totalReservations}
-                        Icon={<CalendarOutlined />}
-                    />
-                </div>
+                {
+                    info.loading ? <Skeleton
+                        active
+                        title={{ width: '100%', style: { height: "320px", marginTop: "1rem" } }}
+                        paragraph={{ rows: 0 }}
+                    /> :
+                        info.error ? <Empty description={info.error} /> :
+                            info.data && <div className='homeDashboard__cardContainer'>
+                                <CardDash
+                                    title='Usuarios'
+                                    total={info.data?.totalUsers}
+                                    Icon={<UserOutlined />}
+                                />
+                                <CardDash
+                                    title='Estancias'
+                                    total={info.data?.totalStays}
+                                    Icon={<HomeOutlined />}
+                                />
+                                <CardDash
+                                    title='Características'
+                                    total={info.data?.totalFeatures}
+                                    Icon={<AppstoreAddOutlined />}
+                                />
+                                <CardDash
+                                    title='Categorías'
+                                    total={info.data?.totalCategories}
+                                    Icon={<ApartmentOutlined />}
+                                />
+                                <CardDash
+                                    title='Reservas'
+                                    total={info.data?.totalReservations}
+                                    Icon={<CalendarOutlined />}
+                                />
+                            </div>
+                }
+
             </section>
             <section className='homeDashboard__userSection'>
                 <div className='homeDashboard__userAvatar'>

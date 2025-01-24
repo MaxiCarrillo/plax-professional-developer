@@ -4,11 +4,12 @@ import { useContext, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { CategoryCard } from '../../../categories/components';
 import { useCategory } from '../../../categories/hooks/useCategory';
-import { StayCard } from '../../../stays/components/';
+import { StayCard, StaySkeleton } from '../../../stays/components/';
 import { useStay } from '../../../stays/hooks/useStay';
 import placesOptions from '../../../stays/pages/StaysSearch/options';
 import { NotificationContext } from '../../context/notificationContext';
 import './Home.css';
+import { SearchOutlined } from '@ant-design/icons';
 
 export const Home = () => {
     const [options] = useState(placesOptions);
@@ -81,6 +82,7 @@ export const Home = () => {
                             />
                         </label>
                         <button className='button button--base'>
+                            <SearchOutlined />
                             Buscar
                         </button>
                     </form>
@@ -92,9 +94,13 @@ export const Home = () => {
             <section className='home__categorySection'>
                 <h2>Buscar por tipo de alojamiento</h2>
                 {
-                    loadingCategories ? <Skeleton style={{
-                        height: '100%',
-                    }} /> :
+                    loadingCategories ? <div className='categorySection__container'>
+                        <Skeleton
+                            active
+                            title={{ width: '100%', style: { height: "200px" } }}
+                            paragraph={{ rows: 0 }}
+                        />
+                    </div> :
                         errorCategories ? <Empty description="Ha ocurrido un error obteniendo todas las categorias." /> :
                             (successCategories && categories.length > 0) ?
                                 <div className='categorySection__container'>
@@ -107,7 +113,13 @@ export const Home = () => {
             <section className='home__recommendationsSection'>
                 <h2>Nuestras recomendaciones</h2>
                 {
-                    loadingStays ? <Skeleton /> :
+                    loadingStays ? <div className='recommendationsSection__container'>
+                        <StaySkeleton />
+                        <StaySkeleton />
+                        <StaySkeleton />
+                        <StaySkeleton />
+                    </div>
+                        :
                         errorStays ? <Empty description="Ha ocurrido un error obteniendo las estancias." /> :
                             (successStays && stays.length > 0) ?
                                 <div className='recommendationsSection__container'>

@@ -6,7 +6,7 @@ import { Helmet } from 'react-helmet-async';
 import { ArrayParam, StringParam, useQueryParams } from 'use-query-params';
 import { useCategory } from '../../../categories/hooks/useCategory';
 import { Popover } from '../../../core/components/Popover/Popover';
-import { StayCard } from '../../components';
+import { StayCard, StaySkeleton } from '../../components';
 import { useStay } from '../../hooks/useStay';
 import placesOptions from './options';
 import './StaysSearch.css';
@@ -160,7 +160,11 @@ export const StaysSearch = () => {
                     {
                         loadingStays
                             ?
-                            <p>Cargando alojamientos</p>
+                            <>
+                                <StaySkeleton />
+                                <StaySkeleton />
+                                <StaySkeleton />
+                            </>
                             :
                             error
                                 ?
