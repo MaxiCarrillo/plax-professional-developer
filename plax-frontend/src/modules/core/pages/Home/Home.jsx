@@ -1,9 +1,11 @@
-import { AutoComplete, DatePicker } from 'antd';
+import { AutoComplete, DatePicker, Empty, Skeleton } from 'antd';
 import locale from 'antd/es/date-picker/locale/es_ES';
 import { useContext, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { CategoryCard } from '../../../categories/components/';
+import { CategoryCard } from '../../../categories/components';
+import { useCategory } from '../../../categories/hooks/useCategory';
 import { StayCard } from '../../../stays/components/';
+import { useStay } from '../../../stays/hooks/useStay';
 import placesOptions from '../../../stays/pages/StaysSearch/options';
 import { NotificationContext } from '../../context/notificationContext';
 import './Home.css';
@@ -11,8 +13,8 @@ import './Home.css';
 export const Home = () => {
     const [options] = useState(placesOptions);
     const { toaster } = useContext(NotificationContext);
-    const [categories, setCategories] = useState([]);
-    const [stays, setStays] = useState([]);
+    const { categories, getAllCategories, loading: loadingCategories, error: errorCategories, success: successCategories } = useCategory();
+    const { stays, getRandomStays, loading: loadingStays, error: errorStays, success: successStays } = useStay();
     const [dateRange, setDateRange] = useState([]);
     const [place, setPlace] = useState('');
     const navigate = useNavigate();
@@ -45,16 +47,8 @@ export const Home = () => {
     }
 
     useEffect(() => {
-        fetch('http://localhost:8080/api/categories')
-            .then(response => response.json())
-            .then(data => {
-                setCategories(data.data);
-            });
-        fetch('http://localhost:8080/api/stays/random')
-            .then(response => response.json())
-            .then(data => {
-                setStays(data);
-            });
+        getAllCategories();
+        getRandomStays();
     }, [])
 
     return (
@@ -97,19 +91,30 @@ export const Home = () => {
             </section>
             <section className='home__categorySection'>
                 <h2>Buscar por tipo de alojamiento</h2>
-                <div className='categorySection__container'>
-                    {
-                        categories.map(category => <CategoryCard key={category.id} category={category} />)
-                    }
-                </div>
+                {
+                    loadingCategories ? <Skeleton style={{
+                        height: '100%',
+                    }} /> :
+                        errorCategories ? <Empty description="Ha ocurrido un error obteniendo todas las categorias." /> :
+                            (successCategories && categories.length > 0) ?
+                                <div className='categorySection__container'>
+                                    {categories?.map(category => <CategoryCard key={category.id} category={category} />)}
+                                </div>
+                                :
+                                <Empty description="No hay categorias disponibles." />
+                }
             </section>
             <section className='home__recommendationsSection'>
                 <h2>Nuestras recomendaciones</h2>
-                <div className='recommendationsSection__container'>
-                    {
-                        stays.map(stay => <StayCard key={stay.id} stay={stay} />)
-                    }
-                </div>
+                {
+                    loadingStays ? <Skeleton /> :
+                        errorStays ? <Empty description="Ha ocurrido un error obteniendo las estancias." /> :
+                            (successStays && stays.length > 0) ?
+                                <div className='recommendationsSection__container'>
+                                    {stays.map(stay => <StayCard key={stay.id} stay={stay} />)}
+                                </div> :
+                                <Empty description="No hay estancias disponibles." />
+                }
             </section>
         </main >
     )

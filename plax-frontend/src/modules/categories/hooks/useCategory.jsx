@@ -27,14 +27,16 @@ export const useCategory = () => {
     };
 
     const getAllCategories = async () => {
+        setLoading(true);
+        setError(null);
         try {
-            setLoading(true);
             const response = await categoryService.getAllCategories();
             setCategories(response);
-            setError(false);
-        } catch {
-            console.error("Error fetching categories");
-            setError(true);
+            setSuccess(true);
+            return response;
+        } catch (error) {
+            setError(error.message);
+            throw error;
         } finally {
             setLoading(false);
         }
@@ -89,6 +91,7 @@ export const useCategory = () => {
         categories,
         category,
         error,
+        success,
         loading,
         totalPages,
         getCategories,

@@ -39,6 +39,22 @@ export const useStay = () => {
         }
     };
 
+    const getRandomStays = async () => {
+        setLoading(true);
+        setError(null);
+        try {
+            const response = await stayService.getRandomStays();
+            setStays(response);
+            setSuccess(true);
+            return response;
+        } catch (error) {
+            setError(error.message);
+            throw error;
+        } finally {
+            setLoading(false);
+        }
+    }
+
     const searchStays = async (categoryIds = [], searchTerm = '', checkIn = null, checkOut = null) => {
         try {
             setLoading(true);
@@ -103,8 +119,10 @@ export const useStay = () => {
         stays,
         loading,
         error,
+        success,
         totalPages,
         getStays,
+        getRandomStays,
         searchStays,
         getStay,
         deleteStay,

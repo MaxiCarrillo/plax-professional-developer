@@ -9,6 +9,15 @@ const stayService = {
                 throw new Error('No se pudieron obtener los alojamientos. Por favor, intente nuevamente más tarde.');
             });
     },
+    getRandomStays: () => {
+        return api.get('/stays/random')
+            .then(response => {
+                return response.data;
+            }).catch(() => {
+                throw new Error("No se pudieron obtener los alojamientos. Por favor, intente nuevamente más tarde.");
+            })
+    }
+    ,
     searchStays: (categoryIds, searchTerm, checkIn, checkOut) => {
         categoryIds = categoryIds.map(id => `categoryIds=${id}`).join('&');
         searchTerm && (categoryIds += `&searchTerm=${searchTerm}`);
