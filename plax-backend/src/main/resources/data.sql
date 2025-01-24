@@ -2,7 +2,7 @@ INSERT INTO users (id, email, firstname, lastname, password, role)
 VALUES (UUID_TO_BIN('8b07383c-cfbe-4dfe-b122-3ee0f5ac4230'), 'admin@gmail.com', 'admin', 'admin',
         '$2a$12$lVJtPYap0O4AM.jNpV8eYeDzTYuVZlDmGLTWZ0BxPbcYfbfusfzq2', 'ADMIN'),
        (UUID_TO_BIN('8b07383c-cfbe-4dfe-b122-3ee0f5ac4231'), 'maxi11carrillo@gmail.com', 'Maximiliano', 'Carrillo',
-        '$2a$10$OihT73n.ut7G9nk9FXoSfehRQA9O46XQcHxkFIaDWY8HZjMPut9Oy', 'ADMIN'),
+        '$2a$12$3QmyP5Ad4l/o4082KVPpmuaqtzjEaDlSVE2zMeBILbykC17OJKBbi', 'ADMIN'),
        (UUID_TO_BIN('8b07383c-cfbe-4dfe-b122-3ee0f5ac4232'), 'sofi@gmail.com', 'Sofia', 'Carrillo',
         '$2a$12$Fh9FRwrIJAHLHs9KTSe8n.EBzErIlNyZYaxeR1PwHZSPzEi9le5T6', 'USER'),
        (UUID_TO_BIN('8b07383c-cfbe-4dfe-b122-3ee0f5ac4233'), 'zoe@gmail.com', 'Zoe', 'Carrillo',
