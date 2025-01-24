@@ -150,6 +150,7 @@ PLAX es una plataforma en línea que te permite reservar tu próximo alojamiento
 - Usuarios predefinidos:
      - Todos los usuarios tienen la contraseña: `12345678`.
      - El administrador tiene la contraseña: `admin123` y su correo es `admin@gmail.com`
+- Si desea utilizar las imágenes para los datos de la base de datos de prueba, descargue la siguiente [carpeta](https://drive.google.com/drive/u/2/folders/19C_wjccB14O12rTNiEG7p8PvRYbvgtn7) y pegue la carpeta `uploads` en el directorio raíz `./plax-backend`
 
 <p align="right">(<a href="#top">Volver arriba</a>)</p>
 
