@@ -1,3 +1,4 @@
+import { useDebounce } from '@uidotdev/usehooks';
 import { AutoComplete, DatePicker, Empty, Select } from 'antd';
 import locale from 'antd/es/date-picker/locale/es_ES';
 import dayjs from 'dayjs';
@@ -18,6 +19,9 @@ export const StaysSearch = () => {
     const { stays, searchStays, loading: loadingStays, totalPages, error } = useStay();
     const [options, setOptions] = useState([]);
     const [optionsPlace] = useState(placesOptions);
+    const [place, setPlace] = useState(query.place ? query.place : null);
+
+    const debouncedPlace = useDebounce(place, 500);
 
     useEffect(() => {
         setQuery((prev) => {
@@ -44,17 +48,20 @@ export const StaysSearch = () => {
         })
     }
 
-    // TODO: Implementar DeBounce
-    const handlePlaceChange = (value) => {
-        if (!value) {
+    useEffect(() => {
+        if (!debouncedPlace) {
             setQuery((prev) => {
                 return { ...prev, place: undefined }
             });
             return;
         }
         setQuery((prev) => {
-            return { ...prev, place: value }
+            return { ...prev, place: debouncedPlace }
         })
+    }, [debouncedPlace]);
+
+    const handlePlaceChange = (value) => {
+        setPlace(value);
     }
 
     const handleDateRangeOnChange = (dateRange) => {
@@ -99,7 +106,7 @@ export const StaysSearch = () => {
                                 filterOption={(inputValue, option) => option.value.toUpperCase().indexOf(inputValue.toUpperCase()) !== -1}
                                 placeholder='Por favor seleccione un lugar'
                                 listHeight={128}
-                                value={query.place}
+                                value={place}
                             />
                         </div>
                         <div>
