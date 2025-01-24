@@ -1,15 +1,12 @@
 <a name="readme-top"></a>
 <div align="center">
-<!--
-<a href="url">
-  <img width="300px" src="url" alt="Logo" width="800" />
-</a>
--->
   
 [![Contributors][contributors-shield]][contributors-url]
 [![Forks][forks-shield]][forks-url]
 [![Stargazers][stars-shield]][stars-url]
 [![Issues][issues-shield]][issues-url]
+
+![IsologotipoPlax](https://github.com/user-attachments/assets/51626830-aebf-4062-a50f-060beaf6218b)
   
 ## PLAX
 PLAX es una plataforma en línea que te permite reservar tu próximo alojamiento de forma rápida y sencilla. Encuentra el lugar perfecto para tus vacaciones o viaje de negocios.
