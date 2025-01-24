@@ -111,9 +111,9 @@ PLAX es una plataforma en línea que te permite reservar tu próximo alojamiento
 3. Inicia la aplicación:
 
    ```sh
-   npm start
+   npm run
    # O con Yarn
-   yarn start
+   yarn run
    ```
 
 #### Backend
