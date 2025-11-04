@@ -1,6 +1,5 @@
 package com.maxdev.plaxbackend.modules.Security.Service;
 
-import com.maxdev.plaxbackend.modules.Email.Service.EmailService;
 import com.maxdev.plaxbackend.modules.Exception.ResourceAlreadyExistsException;
 import com.maxdev.plaxbackend.modules.Exception.ResourceNotFoundException;
 import com.maxdev.plaxbackend.modules.Security.DTO.AuthenticationRequest;
@@ -30,7 +29,6 @@ public class AuthenticationService implements BaseUrl {
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
-    private final EmailService emailService;
 
     public AuthenticationResponse register(RegisterRequest request) {
         var user = User.builder()
@@ -46,11 +44,6 @@ public class AuthenticationService implements BaseUrl {
         }
 
         userRepository.save(user);
-        try {
-            emailService.sendConfirmationEmail(user.getFirstname(), user.getLastname(), user.getEmail());
-        } catch (Exception e) {
-            log.error("Error sending email: {}", e.getMessage());
-        }
 
         var jwt = jwtService.generateToken(user);
         return AuthenticationResponse.builder()

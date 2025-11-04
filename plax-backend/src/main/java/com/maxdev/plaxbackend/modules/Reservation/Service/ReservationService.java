@@ -1,6 +1,5 @@
 package com.maxdev.plaxbackend.modules.Reservation.Service;
 
-import com.maxdev.plaxbackend.modules.Email.Service.EmailService;
 import com.maxdev.plaxbackend.modules.Exception.ResourceNotFoundException;
 import com.maxdev.plaxbackend.modules.Reservation.DTO.ReservationCreateDTO;
 import com.maxdev.plaxbackend.modules.Reservation.DTO.ReservationDTO;
@@ -26,12 +25,10 @@ public class ReservationService implements IReservationService, BaseUrl {
 
     private final ReservationRepository reservationRepository;
     private final StayRepository stayRepository;
-    private final EmailService emailService;
 
-    public ReservationService(ReservationRepository reservationRepository, StayRepository stayRepository, EmailService emailService) {
+    public ReservationService(ReservationRepository reservationRepository, StayRepository stayRepository) {
         this.reservationRepository = reservationRepository;
         this.stayRepository = stayRepository;
-        this.emailService = emailService;
     }
 
     @Override
@@ -127,11 +124,6 @@ public class ReservationService implements IReservationService, BaseUrl {
         reservation.setConfirmed(true);
         reservationRepository.save(reservation);
         log.info("Reservation confirmed: {}", id);
-        try {
-            emailService.sendConfirmReservation(reservation.getUser().getFirstname(), reservation.getUser().getLastname(), reservation.getUser().getEmail());
-        } catch (Exception e) {
-            log.error("Error enviando el mail: {}", e.getMessage());
-        }
         return ReservationMapper.INSTANCE.entityToDto(reservation);
     }
 
